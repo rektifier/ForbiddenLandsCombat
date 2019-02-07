@@ -1,0 +1,16 @@
+{
+    "rooms":{
+        "Svärdets Sång":{ 
+            "name":"Svärdets Sång",
+            "users":{
+                "Brosk":{ 
+                    "name":"Brosk"
+                },
+                "Hamlet":{ 
+                    "name":"Hamlet"
+                }
+
+            }
+        }
+    }
+}

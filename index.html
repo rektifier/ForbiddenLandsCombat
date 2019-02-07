@@ -1,17 +1,97 @@
-<html>
-<head>
-  <title>Forbidden Lands Fighting Pit</title>
-  <meta name="description" content="Forbidden Lands Fighting Pit">
-  <meta name="author" content="Mikael Ribeiro">
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">    
+    <meta name="description" content="Forbidden Lands Fighting Pit">
+    <meta name="author" content="Mikael Ribeiro">
+    <title>Forbidden Lands Fighting Pit</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
 
-</head>
 
-<body>
+  </head>
+  <body>
+    <div class="container-fluid">
 
 
-    Ta mig till fighten! <br>
-    <input type="text" id="username" /> <button title="Logga in"></button>
+
+
+        <div id="alert_placeholder">
+        </div>
+
+        <div class="card" id="login">
+            <div class="card-body">
+                <form>
+                        <div class="form-group">
+                            <label for="login-username-input">Logga in</label>
+                            <input type="text" class="form-control" id="login-username-input" aria-describedby="nameHelp" placeholder="Vem är det som ska slåss?">
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="login-rooms-select">
+                                <option>Välj rum</option>
+                            </select>
+                        </div>
+                    
+                    <button id="login-button" type="button" class="btn btn-primary">Ta mig till fighten!</button>
+                </form>
+            </div>
+        </div>
+        <div id="room">
+            
+            <div class="row">
+                <div class="col-2">
+                    <div class="card-body">
+                        <ul class="list-group" id="userslist">
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-10">col-10</div>
+            </div>
+            <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-10">SPELKORT</div>
+            </div>
+
+        </div>
+    </div>
     
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAB0e1I8EbIuBqXQmXOzegJFJgOx76_PVE",
+        authDomain: "fbcombat-11ea1.firebaseapp.com",
+        databaseURL: "https://fbcombat-11ea1.firebaseio.com",
+        projectId: "fbcombat-11ea1",
+        storageBucket: "fbcombat-11ea1.appspot.com",
+        messagingSenderId: "984580986109"
+      };
+      firebase.initializeApp(config);
+    </script>
+
+        <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    
+
+    <script src="scripts/main.js"></script>
+
+    <script>
+            $( function() {
+              $( "#userslist" ).sortable();
+              $( "#userslist" ).disableSelection();
+            } );
+            </script>
+    
+
 </body>
 </html>
