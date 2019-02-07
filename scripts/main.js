@@ -116,18 +116,4 @@ $(document).ready(function(){
         console.log("You have selected the room - " + selectedRoom);
     });
 
-
-/*
-    // Bind Sign out button.
-    signOutButton.addEventListener('click', function() {
-      firebase.auth().signOut();
-    });
-
-    myPostsMenuButton.onclick = function() {
-        //showSection(userPostsSection, myPostsMenuButton);
-      };
-      myTopPostsMenuButton.onclick = function() {
-        //showSection(topUserPostsSection, myTopPostsMenuButton);
-      };
-*/
 });
