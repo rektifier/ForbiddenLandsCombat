@@ -11,14 +11,34 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
+    <style>
 
+
+    .cardimage {
+        transition: transform .2s; /* Animation */
+        width: 100px;
+        margin: 0 auto;
+    }
+
+    .cardimage:hover {
+        transform: scale(2.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    }
+
+    </style>
 
   </head>
   <body>
-    <div class="container-fluid">
+      
+    <div class="container">
 
-        <div id="alert_placeholder">
+        <div class="row">
+            <br/>
+            <div class="col-12">
+                <div id="alert_placeholder"></div>
         </div>
+            
+        </div>
+        
 
         <div class="card" id="login">
             <div class="card-body">
@@ -37,6 +57,7 @@
                 </form>
             </div>
         </div>
+
         <div id="room">
             
             <div class="row">
@@ -46,17 +67,19 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-10"></div>
+                <div id="div1" class="col-10" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
             </div>
             <div class="row">
-                    <div class="col-2"></div>
-                    <div class="col-10">SPELKORT<br>
-                    <a><img src="https://via.placeholder.com/150"></a>
-                    <a><img src="https://via.placeholder.com/150"></a>
-                    <a><img src="https://via.placeholder.com/150"></a>
-                    <a><img src="https://via.placeholder.com/150"></a>
-                    <a><img src="https://via.placeholder.com/150"></a>
-                    <a><img src="https://via.placeholder.com/150"></a>
+                    <div class="col-2" ></div>                        
+                    </div>
+                    <div class="col-10">
+                            <img src="images/attackera.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
+                            <img src="images/avvakta.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
+                            <img src="images/dubblera.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
+                            <img src="images/forbereda.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
+                            <img src="images/forsvara.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
+                            <img src="images/hindra.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
+                            <img src="images/manovrera.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
                     </div>
             </div>
 
@@ -86,6 +109,7 @@
   
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     
+    <script src="https://unpkg.com/interactjs@1.3.4/dist/interact.min.js"></script>
 
     <script src="scripts/main.js"></script>
 

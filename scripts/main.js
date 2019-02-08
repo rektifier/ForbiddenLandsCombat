@@ -4,6 +4,10 @@ var currentRoom;
 
 var database = firebase.database();
 
+var cards = {
+
+};
+
 
 // Shortcuts to DOM Elements.
 //var messageForm = document.getElementById('message-form');
@@ -15,7 +19,22 @@ var signInButton = document.getElementById('login-button');
 
 
 
+function allowDrop(ev) {
+    ev.preventDefault();
+  }
+  
+  function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+  }
+  
+  function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+  }
 
+
+  
 var bootstrapAlert = function () { }
 bootstrapAlert.info = function (message, type, header) {
     $('#alert_placeholder').html('<div class="alert alert-' + type + '"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><strong>' + header + '</strong> ' + message + '</div>');
@@ -116,4 +135,9 @@ $(document).ready(function(){
         console.log("You have selected the room - " + selectedRoom);
     });
 
+
+
+
 });
+
+
