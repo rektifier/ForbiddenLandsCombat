@@ -24,66 +24,96 @@
         transform: scale(2.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
     }
 
+    .row {
+        background-color: white;
+    }
+
+    .card-body{        
+        height: 400px;
+    }
+
+    .alert-row{
+        height: 50px;
+    }
+
     </style>
 
   </head>
   <body>
       
     <div class="container">
-
-        <div class="row">
-            <br/>
-            <div class="col-12">
-                <div id="alert_placeholder"></div>
-        </div>
-            
-        </div>
         
 
-        <div class="card" id="login">
-            <div class="card-body">
-                <form>
-                        <div class="form-group">
-                            <label for="login-username-input">Logga in</label>
-                            <input type="text" class="form-control" id="login-username-input" aria-describedby="nameHelp" placeholder="Vem är det som ska slåss?">
-                        </div>
-                        <div class="form-group">
-                            <select class="form-control" id="login-rooms-select">
-                                <option>Välj rum</option>
-                            </select>
-                        </div>
-                    
-                    <button id="login-button" type="button" class="btn btn-primary">Ta mig till fighten!</button>
-                </form>
-            </div>
+        <div class="row alert-row">
+            <div class="col-12">
+                <div class="alert alert-success" id="info-alert">
+                    <button type="button" class="close" data-dismiss="alert">x</button>
+                    <strong>! </strong><span id="alerttext"></span>
+                </div>
+            </div>            
         </div>
+        
+        <div class="row" id="login">
 
-        <div id="room">
-            
-            <div class="row">
-                <div class="col-2">
-                    <div class="card-body">
-                        <ul class="list-group" id="userslist">
-                        </ul>
+                <div class="col"></div>
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <form>
+                                    <div class="form-group">
+                                        <label for="login-username-input">Join a fight!</label>
+                                        <input type="text" class="form-control" id="login-username-input" aria-describedby="nameHelp" placeholder="Vem är det som ska slåss?">
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control" id="login-rooms-select">
+                                            <option>Välj rum</option>
+                                        </select>
+                                    </div>
+                                
+                                <button id="login-button" type="button" class="btn btn-primary">Ta mig till fighten!</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <div id="div1" class="col-10" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-            </div>
-            <div class="row">
-                    <div class="col-2" ></div>                        
-                    </div>
-                    <div class="col-10">
-                            <img src="images/attackera.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
-                            <img src="images/avvakta.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
-                            <img src="images/dubblera.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
-                            <img src="images/forbereda.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
-                            <img src="images/forsvara.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
-                            <img src="images/hindra.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
-                            <img src="images/manovrera.jpg" width="100" class="cardimage" draggable="true" ondragstart="drag(event)">
-                    </div>
-            </div>
+                <div class="col"></div>
+           
 
         </div>
+
+
+
+        <div class="row" id="room">
+
+            <div class="row">
+                <div class="col-2">
+                    <div>
+                        <ul class="list-group" id="userslist">
+                        </ul>
+                        <div>
+                            <form>
+                                <div class="form-group">
+                                        <button id="leave-room-button" type="button" class="btn btn-primary">Lämna</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>      
+                </div>
+                <div id="droppable" class="col-10 card-body"></div>
+            </div>
+            <div class="row">
+                    <div class="col-2" ></div>                      
+                    <div class="col-10">
+                            <img src="images/attackera.jpg" width="100" class="cardimage" draggable="true">
+                            <img src="images/avvakta.jpg" width="100" class="cardimage" draggable="true">
+                            <img src="images/dubblera.jpg" width="100" class="cardimage" draggable="true">
+                            <img src="images/forbereda.jpg" width="100" class="cardimage" draggable="true" >
+                            <img src="images/forsvara.jpg" width="100" class="cardimage" draggable="true">
+                            <img src="images/hindra.jpg" width="100" class="cardimage" draggable="true" >
+                            <img src="images/manovrera.jpg" width="100" class="cardimage" draggable="true" >
+                    </div>
+            </div>
+        </div>
+        
     </div>
     
 
@@ -108,17 +138,28 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
   
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-    
+
     <script src="https://unpkg.com/interactjs@1.3.4/dist/interact.min.js"></script>
 
     <script src="scripts/main.js"></script>
 
     <script>
-            $( function() {
-              $( "#userslist" ).sortable();
-              $( "#userslist" ).disableSelection();
-            } );
-            </script>
+        $( function() {
+            $("#info-alert").hide();
+            $( "#userslist" ).sortable();
+            $( "#userslist" ).disableSelection();
+            $( "#droppable" ).droppable({
+                drop: function( event, ui ) {
+                            $( this )
+                            .addClass( "ui-state-highlight" )
+                            .find( "p" )
+                                .html( "Dropped!" );
+                        }
+                    });
+        } );
+
+
+    </script>
 
 
 </body>
