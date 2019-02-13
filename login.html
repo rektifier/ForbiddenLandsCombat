@@ -35,24 +35,30 @@
             <div class="col-6">
                 <div class="card">
                     <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="login-username-input">Join a fight!</label>
-                                <input type="text" class="form-control" id="login-username-input"
-                                    aria-describedby="nameHelp" placeholder="Vem är det som ska slåss?"><button
-                                    id="logout-button" type="button" class="btn btn-primary">Logga ut</button>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="room-input" aria-describedby="nameHelp"
-                                    placeholder="Vilket rum?">
-                            </div>
-                            <div class="form-group">
-                                <button id="login-button" type="button" class="btn btn-primary">Ta mig till
-                                    fighten!</button>
+                            <label for="input-group mb-3">Join a fight!</label>
+                            <div class="input-group mb-3">                                
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Fighter</span>
+                                </div>
+                                <input type="text" id="login-username-input" class="form-control" aria-label="Fighter" aria-describedby="inputGroup-sizing-default">
+                                <div class="input-group-append">
+                                    <button id="logout-button" type="button" class="btn btn-primary">Logga ut</button>
+                                </div>
+                                
                             </div>
 
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-room">Rum</span>
+                                </div>
+                                <input type="text" id="room-input" class="form-control" aria-label="Rum" aria-describedby="inputGroup-sizing-room">
+                                
+                            </div>
 
-                        </form>
+                            <div class="form-group">
+                                <button id="login-button" type="button" class="btn btn-primary">Ta mig till fighten!</button>
+                            </div>
+
                     </div>
                 </div>
             </div>
@@ -95,11 +101,10 @@
                         if (currentUser) {
                             currentUser.updateProfile({
                                 displayName: username
-                            });
-
-                            //check if room exists
-                            //
-                            database.ref('rooms/' + roomname).once("value").then(function (snapshot) {
+                            }).then(()=>{
+                                 //check if room exists
+                                //
+                                database.ref('rooms/' + roomname).once("value").then(function (snapshot) {
 
                                 if (snapshot.exists()) {
 
@@ -117,7 +122,7 @@
                                     //
                                     // set current user as owner
                                     //
-                                    database.ref('rooms/' + roomname).set({ "owner": username }).then(() => {
+                                    database.ref('rooms/' + roomname).set({ "owner": username, "name": roomname}).then(() => {
 
                                         database.ref('rooms/' + roomname + '/users/' + username).set({ "name": username, "messages": {}, "sortOrder": 99 }).then(() => {
 
@@ -128,7 +133,10 @@
 
 
 
+                                });
+
                             });
+
                         }
 
                     }).catch(function (error) {

@@ -71,7 +71,6 @@
             <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
             <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
             <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>-->
-                <a href="#" class="list-group-item list-group-item-action bg-light">Status</a>
             </div>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -80,7 +79,7 @@
         <div id="page-content-wrapper">
 
             <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-                <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
+                <button class="btn btn-primary" id="menu-toggle" data-toggle="tooltip" data-placement="top" title="Dölj meny"> Menu</button>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -105,7 +104,7 @@
                                 <a class="dropdown-item" href="#">Action</a>
                                 <a class="dropdown-item" href="#">Another action</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                                <a id="logout-button" class="dropdown-item" href="javascript:void(0)">Something else here</a>
                             </div>
                         </li>
                     </ul>
@@ -123,33 +122,34 @@
                     </div>
                 </div>
            -->
-                        <div id="playground" style="height: 400px;"></div>
-                        <div>
-                            <table class="table" style="width:95%">
-                                <thead>
-                                    <th><img src="images/attackera.jpg" width="100" class="cardimage" draggable="true"></th>
-                                    <th><img src="images/avvakta.jpg" width="100" class="cardimage" draggable="true"></th>
-                                    <th><img src="images/dubblera.jpg" width="100" class="cardimage" draggable="true"></th>
-                                    <th><img src="images/forbereda.jpg" width="100" class="cardimage" draggable="true"></th>
-                                    <th><img src="images/forsvara.jpg" width="100" class="cardimage" draggable="true"></th>
-                                    <th><img src="images/hindra.jpg" width="100" class="cardimage" draggable="true"></th>
-                                    <th><img src="images/manovrera.jpg" width="100" class="cardimage" draggable="true"></th>
-                                </thead>
-                                <tbody>
-                                    <td>Attackera</td>
-                                    <td>Avvakta</td>
-                                    <td>Dubblera</td>
-                                    <td>Förbereda</td>
-                                    <td>Försvara</td>
-                                    <td>Hindra</td>
-                                    <td>Manövrera</td>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="alert alert-success" id="info-alert">
-                                <button type="button" class="close" data-dismiss="alert">x</button>
-                                <strong>! </strong><span id="alerttext"></span>
-                            </div>
+                <div id="playground" style="height: 400px;"></div>
+                <div>
+                    <table class="table" style="width:95%">
+                        <thead>
+                            <th><img src="images/attackera.jpg" width="100" class="cardimage" draggable="true"></th>
+                            <th><img src="images/avvakta.jpg" width="100" class="cardimage" draggable="true"></th>
+                            <th><img src="images/dubblera.jpg" width="100" class="cardimage" draggable="true"></th>
+                            <th><img src="images/forbereda.jpg" width="100" class="cardimage" draggable="true"></th>
+                            <th><img src="images/forsvara.jpg" width="100" class="cardimage" draggable="true"></th>
+                            <th><img src="images/hindra.jpg" width="100" class="cardimage" draggable="true"></th>
+                            <th><img src="images/manovrera.jpg" width="100" class="cardimage" draggable="true"></th>
+                        </thead>
+                        <tbody>
+                            <td>Attackera</td>
+                            <td>Avvakta</td>
+                            <td>Dubblera</td>
+                            <td>Förbereda</td>
+                            <td>Försvara</td>
+                            <td>Hindra</td>
+                            <td>Manövrera</td>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- <div class="alert alert-success" id="info-alert">
+                    <button type="button" class="close" data-dismiss="alert">x</button>
+                    <strong>! </strong><span id="alerttext"></span>
+                </div> -->
 
              
 
@@ -161,53 +161,6 @@
         </div>
         <!-- /#wrapper -->
 
-
-            <!--
-    <div class="container">
-        
-
-        <div class="row alert-row">
-            <div class="col-12">
-                <div class="alert alert-success" id="info-alert">
-                    <button type="button" class="close" data-dismiss="alert">x</button>
-                    <strong>! </strong><span id="alerttext"></span>
-                </div>
-            </div>            
-        </div>
-        
-        <div class="row" id="room">
-
-            <div class="row">
-                <div class="col-3">
-                    <div>
-                        <ul class="list-group" id="userslist"></ul>
-                        <div>
-                            <form>
-                                <div class="form-group">
-                                        <button id="leave-room-button" type="button" class="btn btn-primary">Lämna</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>      
-                </div>
-                <div id="droppable" class="col-9 card-body"></div>
-            </div>
-            <div class="row">
-                    <div class="col-3" ></div>                      
-                    <div class="col-9">
-                            <img src="images/attackera.jpg" width="100" class="cardimage" draggable="true">
-                            <img src="images/avvakta.jpg" width="100" class="cardimage" draggable="true">
-                            <img src="images/dubblera.jpg" width="100" class="cardimage" draggable="true">
-                            <img src="images/forbereda.jpg" width="100" class="cardimage" draggable="true" >
-                            <img src="images/forsvara.jpg" width="100" class="cardimage" draggable="true">
-                            <img src="images/hindra.jpg" width="100" class="cardimage" draggable="true" >
-                            <img src="images/manovrera.jpg" width="100" class="cardimage" draggable="true" >
-                    </div>
-            </div>
-        </div>
-        
-    </div>
--->
 
             <!-- Optional JavaScript -->
             <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -230,17 +183,14 @@
 
             <!-- Menu Toggle Script -->
             <script type="text/javascript">
-                $(document).ready(function () {
-
-                    $("#roomNameHeader").html(getParameterByName('room'));
-
-                });
-
-
+               
                 $("#menu-toggle").click(function (e) {
                     e.preventDefault();
                     $("#wrapper").toggleClass("toggled");
                 });
+
+
+
             </script>
 
 </body>

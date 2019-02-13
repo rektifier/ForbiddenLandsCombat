@@ -1,44 +1,22 @@
 
 var currentUser;
 var currentRoom;
+var latestMessage = '';
+var userMessages = {};
+var currentRoomName;
 
-var database = firebase.database();
+currentRoomName = getParameterByName('room');
+if (currentRoomName === null || currentRoomName === "") {
+    window.location.href = "login.html";
+}
+
 
 var cards = {
 
 };
 
 
-// Shortcuts to DOM Elements.
-//var messageForm = document.getElementById('message-form');
-var loginDiv = document.getElementById('login');
-var usernameInput = document.getElementById('login-username-input');
-var signInButton = document.getElementById('login-button');
-var leaveRoomButton = document.getElementById('leave-room-button');
-var latestMessage = '';
-var userMessages = {};
 
-
-
-
-var showAlert = function () { }
-showAlert.displayInfo = function (message) {
-    $("#alerttext").text(message);
-    $("#info-alert").slideDown('slow').delay(2000).slideUp('slow')
-}
-showAlert.setInfo = function (message) {
-
-    if (message !== latestMessage) {
-        latestMessage = message;
-
-        var newMessageRef = database.ref('rooms/' + currentRoom + '/message/').push();
-        newMessageRef.set({
-            "sender": "robot",
-            "message": message,
-            "sentOn": Date.toString()
-        });
-    }
-}
 
 
 function updateUserListOrder() {
@@ -51,7 +29,7 @@ function updateUserListOrder() {
         users[text] = { "name": text, "sortOrder": index }
     }));
 
-    database.ref('rooms/' + currentRoom + '/users/').update(users);
+    database.ref('rooms/' + currentRoom.name + '/users/').update(users);
 }
 
 
@@ -86,9 +64,9 @@ function initGame() {
 
     //initUserListeners(currentUser);
     //
-    var messageRef = database.ref('rooms/' + currentRoom + '/message/');
-    var usersRef = database.ref('rooms/' + currentRoom + '/users/');
-    var currentUserRef = database.ref('rooms/' + currentRoom + '/users/' + currentUser);
+    var messageRef = database.ref('rooms/' + currentRoomName + '/message/');
+    var usersRef = database.ref('rooms/' + currentRoomName + '/users/');
+    var currentUserRef = database.ref('rooms/' + currentRoomName + '/users/' + currentUser.displayName);
 
 
 
@@ -103,7 +81,7 @@ function initGame() {
             userMessages = user.messages;
 
         } else {
-            database.ref('rooms/' + currentRoom + '/users/' + currentUser).set({ "name": currentUser, "messages": {}, "sortOrder": 99 });
+            database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).set({ "name": currentUser.displayName, "messages": {}, "sortOrder": 99 });
         }
 
     });
@@ -130,7 +108,7 @@ function initGame() {
 
         removeUserFromList(removedUser.name);
 
-        if (removedUser.name !== currentUser) {
+        if (removedUser.name !== currentUser.displayName) {
             //showAlert.displayInfo(removedUser.name + " left the fight!");
             //showAlert.setInfo(removedUser.name + " left the fight!");
         }
@@ -143,7 +121,7 @@ function initGame() {
 
         //addUserToList(newUser.name);
 
-        if (newUser.name !== currentUser) {
+        if (newUser.name !== currentUser.displayName) {
             //showAlert.displayInfo(newUser.name + " joined the fight!");
             //showAlert.setInfo(newUser.name + " joined the fight!");
         }
@@ -168,46 +146,11 @@ function initGame() {
 
 }
 
-//################ LOGIN  ###########################
 
-// function loadRoomDropdown(){
-//     database.ref('rooms').once("value").then(function(snapshot) {
-
-//         console.log('loadRoomDropdown()');
-
-//         //var key = snapshot.key; 
-//         if(snapshot.exists()){
-
-//             snapshot.forEach(function(child) {
-//                 var room = child.val();  
-//                 $("#login-rooms-select").append($("<option></option>").attr("value",room.name).text(room.name));  
-//               });
-//         }
-//       });
-// }
+$(function () {
+    
 
 
-
-
-
-//$(function () {
-$(document).ready(function () {
-
-    var room = sessionStorage.getItem("room");
-    var user = sessionStorage.getItem("user");
-
-    if (room !== null) {
-        currentRoom = room;
-    }
-
-    if (user !== null) {
-        currentUser = user;
-    }
-
-    if (room !== null && user != null) {
-        initGame();
-        return;
-    }
 
 
 
@@ -226,41 +169,64 @@ $(document).ready(function () {
 
 
 
-$(function () {
+$(document).ready(function () {
 
     //validate querystring
     //
-    currentRoom = getParameterByName('room');
-    if (currentRoom === null || currentRoom === "") {
-        window.location.href = "login.html";
-    }
+
+
+    
+
+
+
+    
+
+
+
 
     firebase.auth().onAuthStateChanged(function (user) {
 
         if (user) {
-
             window.user = user;
 
+            //load current room
+            //
+            database.ref('rooms/' + currentRoomName).once("value").then(function (snapshot) {
+
+                if (snapshot.exists()) {
+
+                    currentRoom = snapshot.val();
+                    
+                    $("#roomNameHeader").html(currentRoomName);
+
+                        //load current user
+                        //
+                        currentUser = firebase.auth().currentUser;
+                        if (currentUser != null) {
+                            initGame();
+                        }else{
+                            window.location.href = "login.html";
+                        }
+
+                } else {
+                    window.location.href = "login.html";
+                }
+            });
         } else {
             window.location.href = "login.html";
         }
     });
 
-    leaveRoomButton.addEventListener('click', function () {
+    $("#logout-button").click(function (e) {
+        e.preventDefault();
 
-        var user = firebase.auth().currentUser;
-        if (user) {
-            database.ref('rooms/' + currentRoom + '/users/' + user.displayName).remove();
-        }
+        // var user = firebase.auth().currentUser;
+        // if (user) {
+        database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).remove();
+        // }
 
         firebase.auth().signOut();
-        //removeUserFromRoom(currentUser);
-
-
-
-        //clear local session data
-        //
-        sessionStorage.clear();
+        
     });
 
 
