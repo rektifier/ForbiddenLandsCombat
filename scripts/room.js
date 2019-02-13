@@ -34,22 +34,22 @@ function updateUserListOrder() {
 }
 
 
-function addUserToList(username) {
-    console.log('addUserToList(' + username + ')');
+function addUserToList(key,user) {
+    console.log('addUserToList(' + user.name + ')');
 
     var exists = false;
     if ($("#userslist li").each(function (index) {
-        //var text = $(this).text();
+        
         var text = $(this).attr('id');
-        if (text == username) {
+        if (text == key) {
             exists = true;
         }
     }));
 
-    console.log('addUserToList(' + username + ') exists: ' + exists);
+    console.log('addUserToList(' + user.name + ') exists: ' + exists);
 
     if (exists === false) {
-        $("#userslist").append('<li id="'+username+'" class="list-group-item list-group-item-action bg-light">' + username +'</li>');
+        $("#userslist").append('<li id="'+key+'" class="list-group-item list-group-item-action bg-light">' + user.name +'</li>');
     }
 }
 
@@ -136,10 +136,11 @@ function initGame() {
         $("#userslist").empty();
 
         querySnapshot.forEach(function (userSnapshot) {
+            var userId = userSnapshot.key;
             var user = userSnapshot.val();
             console.log(user);
 
-            addUserToList(user.name);
+            addUserToList(userId,user);
         });
 
     });
