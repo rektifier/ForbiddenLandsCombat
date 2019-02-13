@@ -1,4 +1,4 @@
-
+var isRoomAdmin = false;
 var currentUser;
 var currentRoom;
 var latestMessage = '';
@@ -25,11 +25,12 @@ function updateUserListOrder() {
     //
     var users = {};
     if ($("#userslist li").each(function (index) {
-        var text = $(this).text();
+        var text = $(this).attr('id');
+        //var text = $(this).text();
         users[text] = { "name": text, "sortOrder": index }
     }));
 
-    database.ref('rooms/' + currentRoom.name + '/users/').update(users);
+    database.ref('rooms/' + currentRoomName + '/users/').update(users);
 }
 
 
@@ -38,7 +39,8 @@ function addUserToList(username) {
 
     var exists = false;
     if ($("#userslist li").each(function (index) {
-        var text = $(this).text();
+        //var text = $(this).text();
+        var text = $(this).attr('id');
         if (text == username) {
             exists = true;
         }
@@ -47,13 +49,13 @@ function addUserToList(username) {
     console.log('addUserToList(' + username + ') exists: ' + exists);
 
     if (exists === false) {
-        $("#userslist").append('<li class="list-group-item list-group-item-action bg-light">' + username + '</li>');
+        $("#userslist").append('<li id="'+username+'" class="list-group-item list-group-item-action bg-light">' + username +'</li>');
     }
 }
 
 function removeUserFromList(username) {
     console.log('removeUserFromList(' + username + ')');
-    $('#userslist li').filter(function () { return $.text([this]) === username; }).remove();
+    $('#userslist li').filter(function () { return $.attr('id')([this]) === username; }).remove();
 }
 
 function initGame() {
@@ -147,43 +149,10 @@ function initGame() {
 }
 
 
-$(function () {
-    
-
-
-
-
-
-    // $("#login-rooms-select").change(function(){
-
-    //     var selectedRoom = $(this).children("option:selected").val();
-    //     currentRoom = selectedRoom;
-
-    //     sessionStorage.setItem("room",currentRoom);
-
-    //     console.log("You have selected the room - " + selectedRoom);
-
-    // });
-
-});
-
-
 
 $(document).ready(function () {
 
-    //validate querystring
-    //
-
-
     
-
-
-
-    
-
-
-
-
     firebase.auth().onAuthStateChanged(function (user) {
 
         if (user) {
@@ -196,6 +165,8 @@ $(document).ready(function () {
                 if (snapshot.exists()) {
 
                     currentRoom = snapshot.val();
+
+                    
                     
                     $("#roomNameHeader").html(currentRoomName);
 
@@ -203,6 +174,15 @@ $(document).ready(function () {
                         //
                         currentUser = firebase.auth().currentUser;
                         if (currentUser != null) {
+
+                            //is the logged in user the room admin?
+                            //
+                            if(currentRoom.owner === currentUser.displayName)
+                            {
+                                isRoomAdmin = true;
+                                activateAdminFeatures();
+                            }
+
                             initGame();
                         }else{
                             window.location.href = "login.html";
@@ -217,7 +197,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#logout-button").click(function (e) {
+    $("#leave-room-button").click(function (e) {
         e.preventDefault();
 
         // var user = firebase.auth().currentUser;
@@ -225,26 +205,73 @@ $(document).ready(function () {
         database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).remove();
         // }
 
-        firebase.auth().signOut();
+        //firebase.auth().signOut();
+        window.location.href = "login.html";
         
     });
 
+    // $("#kick-user-button").click(function(e){
+    // //$(".kick-user-button").click(function (e) {
+    //     e.preventDefault();
+
+    //     var userTokick = $(this).closest('li').attr('id');
+
+    //     // var user = firebase.auth().currentUser;
+    //     // if (user) {
+    //     database.ref('rooms/' + currentRoom.name + '/users/' + userTokick).remove();
+    //     // }
+
+    //     //firebase.auth().signOut();
+        
+    // });
+    
+
 
     $("#info-alert").hide();
-    $("#userslist").sortable({
-        update: function (event, ui) {
-            updateUserListOrder();
-        }
-    });
-    $("#userslist").disableSelection();
-    $("#droppable").droppable({
-        drop: function (event, ui) {
-            $(this)
-                .addClass("ui-state-highlight")
-                .find("p")
-                .html("Dropped!");
-        }
-    });
+    $(".admingroup").hide();
+
+    function activateAdminFeatures(){
+
+        $(".admingroup").show();
+        $("#userslist").sortable({
+            revert: true,
+            update: function (event, ui) {
+                updateUserListOrder();
+            }
+        });
+        $("#userslist").disableSelection();
+        $("#kickActionDroppable").droppable({
+            accept: "#userslist > li",
+            classes: {
+              "ui-droppable-active": "ui-state-highlight",
+              "ui-droppable-hover": "bg-danger"
+            },
+            drop: function( event, ui ) {
+    
+    
+                console.log(event);
+                console.log(ui);
+    
+                var userToKick = ui.draggable[0].id;
+    
+                database.ref('rooms/' + currentRoom.name + '/users/' + userToKick).remove();
+            }
+        });
+
+        $("#add-enemy-button").click(function (e) {
+            e.preventDefault();
+
+            var enemyName = $("#add-enemy-input").val();
+
+            //add enemy to room
+            //
+            database.ref('rooms/' + currentRoom.name + '/users/' + enemyName).set({ "name": enemyNamePrefix + enemyName, "sortOrder": 99 }).then(()=>{
+                $("#add-enemy-input").val('');
+            });
+        });
+    }
+
+    
 });
 
 

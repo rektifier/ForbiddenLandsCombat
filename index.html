@@ -85,7 +85,7 @@
         <div class="row" id="room">
 
             <div class="row">
-                <div class="col-2">
+                <div class="col-3">
                     <div>
                         <ul class="list-group" id="userslist">
                         </ul>
@@ -98,11 +98,11 @@
                         </div>
                     </div>      
                 </div>
-                <div id="droppable" class="col-10 card-body"></div>
+                <div id="droppable" class="col-9 card-body"></div>
             </div>
             <div class="row">
-                    <div class="col-2" ></div>                      
-                    <div class="col-10">
+                    <div class="col-3" ></div>                      
+                    <div class="col-9">
                             <img src="images/attackera.jpg" width="100" class="cardimage" draggable="true">
                             <img src="images/avvakta.jpg" width="100" class="cardimage" draggable="true">
                             <img src="images/dubblera.jpg" width="100" class="cardimage" draggable="true">
@@ -118,18 +118,7 @@
     
 
     <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyAB0e1I8EbIuBqXQmXOzegJFJgOx76_PVE",
-        authDomain: "fbcombat-11ea1.firebaseapp.com",
-        databaseURL: "https://fbcombat-11ea1.firebaseio.com",
-        projectId: "fbcombat-11ea1",
-        storageBucket: "fbcombat-11ea1.appspot.com",
-        messagingSenderId: "984580986109"
-      };
-      firebase.initializeApp(config);
-    </script>
+    <script src="scripts/config.js"></script>
 
         <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -143,23 +132,6 @@
 
     <script src="scripts/main.js"></script>
 
-    <script>
-        $( function() {
-            $("#info-alert").hide();
-            $( "#userslist" ).sortable();
-            $( "#userslist" ).disableSelection();
-            $( "#droppable" ).droppable({
-                drop: function( event, ui ) {
-                            $( this )
-                            .addClass( "ui-state-highlight" )
-                            .find( "p" )
-                                .html( "Dropped!" );
-                        }
-                    });
-        } );
-
-
-    </script>
 
 
 </body>

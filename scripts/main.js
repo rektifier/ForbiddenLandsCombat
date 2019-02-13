@@ -16,169 +16,269 @@ var roomDiv = document.getElementById('room');
 var roomselect = document.getElementById('login-rooms-select');
 var usernameInput = document.getElementById('login-username-input');
 var signInButton = document.getElementById('login-button');
-var leaveRoomButton = document.getElementById('leave-rrom-button');
+var leaveRoomButton = document.getElementById('leave-room-button');
+var latestMessage = '';
+var userMessages = {};
 
-/*
-function allowDrop(ev) {
-    ev.preventDefault();
-  }
-  
-  function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
-  }
-  
-  function drop(ev) {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    ev.target.appendChild(document.getElementById(data));
-  }
 
-*/
-  
-var showAlert = function () { }
-showAlert.info = function (message) {
-    
-    $("#alerttext").text(message);
-    $("#info-alert").show();
 
-    $("#info-alert").fadeTo(2000, 500).slideUp(500, function(){
-            $("#info-alert").slideUp(500);
-         });  
 
-    //$('#alert_placeholder').html('<div class="alert alert-' + type + '"><a href="#" class="close" data-dismiss="alert" aria-label="close">×</a><strong>' + header + '</strong> ' + message + '</div>');
+
+
+
+function updateUserListOrder() {
+    console.log('updateUserListOrder()');
+    //populate new users object
+    //
+    var users = {};
+    if ($("#userslist li").each(function (index) {
+        var text = $(this).text();
+        users[text] = { "name": text, "sortOrder": index }
+    }));
+
+    database.ref('rooms/' + currentRoom + '/users/').update(users);
 }
 
 
-//################ ROOM ###########################
+function addUserToList(username) {
+    console.log('addUserToList(' + username + ')');
 
+    var exists = false;
+    if ($("#userslist li").each(function (index) {
+        var text = $(this).text();
+        if (text == username) {
+            exists = true;
+        }
+    }));
 
-function loadUsersList(){
+    console.log('addUserToList(' + username + ') exists: ' + exists);
 
-    if(currentRoom)
-    {
-        var usersRef = database.ref('rooms/'+currentRoom+'/users');
-        usersRef.on("child_added", function(snapshot, prevChildKey) {
-            var newUser = snapshot.val();       
-            console.log(newUser);   
-            $("#userslist").append('<li class="list-group-item">'+ newUser.name +'</li>');
-
-            showAlert.info(newUser.name + " joined the fight!");
-        });
-
-
-        usersRef.onDisconnect().remove();
-
-
+    if (exists === false) {
+        $("#userslist").append('<li class="list-group-item">' + username + '</li>');
     }
 }
 
-
-function addUserToRoom(user){
-
-    database.ref('rooms/'+currentRoom+'/users/'+currentUser).update({"name":user});
+function removeUserFromList(username) {
+    console.log('removeUserFromList(' + username + ')');
+    $('#userslist li').filter(function () { return $.text([this]) === username; }).remove();
 }
 
+function initGame() {
 
-//################ ROOM END ###########################
 
-function initGame(){
 
-    loadUsersList();
+    //loadUsersList();
 
-    addUserToRoom(currentUser);
+    //initUserListeners(currentUser);
+    //
+    var messageRef = database.ref('rooms/' + currentRoom + '/message/');
+    var usersRef = database.ref('rooms/' + currentRoom + '/users/');
+    var currentUserRef = database.ref('rooms/' + currentRoom + '/users/' + currentUser);
+
+
+
+
+    //get user if we have one
+    //
+    currentUserRef.once("value").then(function (snapshot) {
+
+        if (snapshot.exists()) {
+
+            var user = snapshot.val();
+            userMessages = user.messages;
+
+        } else {
+            database.ref('rooms/' + currentRoom + '/users/' + currentUser).set({ "name": currentUser, "messages": {}, "sortOrder": 99 });
+        }
+
+    });
+
+    currentUserRef.onDisconnect().remove();
+
+
+
+    messageRef.on('value', function (snapshot) {
+        console.log('message.on');
+        var message = snapshot.val();
+
+        if (message !== latestMessage) {
+            //showAlert.displayInfo(message);
+            showAlert.displayInfo(message);
+        }
+    });
+
+    //remove user when disconnected
+    //
+    usersRef.on("child_removed", function (snapshot) {
+        console.log('child_removed');
+        var removedUser = snapshot.val();
+
+        removeUserFromList(removedUser.name);
+
+        if (removedUser.name !== currentUser) {
+            //showAlert.displayInfo(removedUser.name + " left the fight!");
+            //showAlert.setInfo(removedUser.name + " left the fight!");
+        }
+    });
+
+    //when a new user i connected
+    usersRef.on("child_added", function (snapshot, prevChildKey) {
+        console.log('child_added');
+        var newUser = snapshot.val();
+
+        //addUserToList(newUser.name);
+
+        if (newUser.name !== currentUser) {
+            //showAlert.displayInfo(newUser.name + " joined the fight!");
+            //showAlert.setInfo(newUser.name + " joined the fight!");
+        }
+
+    });
+
+    usersRef.orderByChild("sortOrder").on("value", function (querySnapshot) {
+        console.log('sortOrder');
+
+        $("#userslist").empty();
+
+        querySnapshot.forEach(function (userSnapshot) {
+            var user = userSnapshot.val();
+            console.log(user);
+
+            addUserToList(user.name);
+        });
+
+    });
+
+
 
 }
 
 //################ LOGIN  ###########################
 
-function loadRoomDropdown(){
-    database.ref('rooms').once("value").then(function(snapshot) {
-        //var key = snapshot.key; 
-        if(snapshot.exists()){
+function loadRoomDropdown() {
+    database.ref('rooms').once("value").then(function (snapshot) {
 
-            snapshot.forEach(function(child) {
-                var room = child.val();  
-                $("#login-rooms-select").append($("<option></option>").attr("value",room.name).text(room.name));  
-              });
+        console.log('loadRoomDropdown()');
+
+        //var key = snapshot.key; 
+        if (snapshot.exists()) {
+
+            snapshot.forEach(function (child) {
+                var room = child.val();
+                $("#login-rooms-select").append($("<option></option>").attr("value", room.name).text(room.name));
+            });
         }
-      });
+    });
 }
 
-// Bind Sign in button.
-signInButton.addEventListener('click', function() {
-
-    if (typeof currentRoom !== 'undefined')
-    {
-        if(usernameInput.value !== null)
-        {
-            loginDiv.style.display = 'none'; 
-            roomDiv.style.display = 'block';
-        
-            currentUser = usernameInput.value;
-
-            localStorage.setItem("user",currentUser);
-        
-            initGame();
-        }
-    }
 
 
-});
+
+
+
+function showRoom() {
+    loginDiv.style.display = 'none';
+    roomDiv.style.display = 'block';
+}
 
 // #################### LOGIN END ###############################
 
+function initLogin() {
+    loginDiv.style.display = 'block';
+    roomDiv.style.display = 'none';
 
- 
+    loadRoomDropdown();
+
+}
+
 
 //$(function () {
-$(document).ready(function(){  
+$(document).ready(function () {
 
-    var room = localStorage.getItem("room");
-    var user = localStorage.getItem("user");
+    var room = sessionStorage.getItem("room");
+    var user = sessionStorage.getItem("user");
 
-    if(room !== null)
-    {
+    if (room !== null) {
         currentRoom = room;
     }
 
-    if(user !== null)
-    {
+    if (user !== null) {
         currentUser = user;
     }
 
-    if(room !== null && user != null)
-    {
-        loginDiv.style.display = 'none'; 
+    if (room !== null && user != null) {
+        loginDiv.style.display = 'none';
         roomDiv.style.display = 'block';
 
         initGame();
         return;
     }
 
-    console.log("document ready");
-
-    roomDiv.style.display = 'none'; 
+    roomDiv.style.display = 'none';
 
     loadRoomDropdown();
-  
 
-    $("#login-rooms-select").change(function(){
+
+    $("#login-rooms-select").change(function () {
 
         var selectedRoom = $(this).children("option:selected").val();
         currentRoom = selectedRoom;
 
-        localStorage.setItem("room",currentRoom);
+        sessionStorage.setItem("room", currentRoom);
 
         console.log("You have selected the room - " + selectedRoom);
 
     });
 
+});
 
-    leaveRoomButton.addEventListener('click', function() {
-        
+$(function () {
+
+    firebase.auth().onAuthStateChanged(function (user) {
+
+        if (user) {
+
+            window.user = user;
+
+
+        } else {
+            window.location.href = "login.html";
+        }
+    });
+
+    leaveRoomButton.addEventListener('click', function () {
+
+        var user = firebase.auth().currentUser;
+        if (user) {
+            database.ref('rooms/' + currentRoom + '/users/' + user.displayName).remove();
+        }
+
+        firebase.auth().signOut();
+        //removeUserFromRoom(currentUser);
+
+
+
+        //clear local session data
+        //
+        sessionStorage.clear();
     });
 
 
+    $("#info-alert").hide();
+    $("#userslist").sortable({
+        update: function (event, ui) {
+            updateUserListOrder();
+        }
+    });
+    $("#userslist").disableSelection();
+    $("#droppable").droppable({
+        drop: function (event, ui) {
+            $(this)
+                .addClass("ui-state-highlight")
+                .find("p")
+                .html("Dropped!");
+        }
+    });
 });
 
 
