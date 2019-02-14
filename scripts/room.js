@@ -11,13 +11,6 @@ if (currentRoomName === null || currentRoomName === "") {
 }
 
 
-var cards = {
-
-};
-
-
-
-
 
 function updateUserListOrder() {
     console.log('updateUserListOrder()');
@@ -34,12 +27,12 @@ function updateUserListOrder() {
 }
 
 
-function addUserToList(key,user) {
+function addUserToList(key, user) {
     console.log('addUserToList(' + user.name + ')');
 
     var exists = false;
     if ($("#userslist li").each(function (index) {
-        
+
         var text = $(this).attr('id');
         if (text == key) {
             exists = true;
@@ -49,7 +42,15 @@ function addUserToList(key,user) {
     console.log('addUserToList(' + user.name + ') exists: ' + exists);
 
     if (exists === false) {
-        $("#userslist").append('<li id="'+key+'" class="list-group-item list-group-item-action bg-light">' + user.name +'</li>');
+
+        var combatClass = 'notincombat';
+
+        if (user.inCombat) {
+            combatClass = 'incombat';
+        }
+
+        $("#userslist").append('<li id="' + key + '" class="list-group-item list-group-item-action ' + combatClass + '">' + user.name + '</li>');
+
     }
 }
 
@@ -60,18 +61,12 @@ function removeUserFromList(username) {
 
 function initGame() {
 
-
-
-    //loadUsersList();
-
     //initUserListeners(currentUser);
     //
+    var cardsRef = database.ref('rooms/' + currentRoomName + '/cards/');
     var messageRef = database.ref('rooms/' + currentRoomName + '/message/');
     var usersRef = database.ref('rooms/' + currentRoomName + '/users/');
     var currentUserRef = database.ref('rooms/' + currentRoomName + '/users/' + currentUser.displayName);
-
-
-
 
     //get user if we have one
     //
@@ -83,14 +78,12 @@ function initGame() {
             userMessages = user.messages;
 
         } else {
-            database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).set({ "name": currentUser.displayName, "messages": {}, "sortOrder": 99 });
+            database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).set({ "name": currentUser.displayName, "messages": {}, "sortOrder": 99, "inCombat":false });
         }
 
     });
 
     currentUserRef.onDisconnect().remove();
-
-
 
     messageRef.on('value', function (snapshot) {
         console.log('message.on');
@@ -130,6 +123,36 @@ function initGame() {
 
     });
 
+    usersRef.on("child_changed", function (snapshot) {
+        console.log('child_updated');
+
+        var user = snapshot.val();
+        var key = snapshot.key;
+  
+
+        var menuitem = $("#userslist li").find('#'+key);
+
+        $(menuitem).toggleClass('notincombat');
+        $(menuitem).toggleClass('incombat');
+        
+
+        if (user.name === currentUser.displayName) {
+            
+            //is user in combat? activate the cards!
+
+            //else deactivate the cards!
+
+            if(user.inCombat)
+            {
+                console.log("activate the cards!");
+            }
+            else{
+                console.log("deactivate the cards!");
+            }
+        }
+
+    });
+
     usersRef.orderByChild("sortOrder").on("value", function (querySnapshot) {
         console.log('sortOrder');
 
@@ -140,11 +163,31 @@ function initGame() {
             var user = userSnapshot.val();
             console.log(user);
 
-            addUserToList(userId,user);
+            addUserToList(userId, user);
         });
 
     });
 
+
+    cardsRef.on('value', function (cardsSnapshot) {
+        console.log('cards');
+
+        $("#playground").empty();
+
+        cardsSnapshot.forEach(function (cardSnapshot) {
+            var cardId = cardSnapshot.key;
+            var card = cardSnapshot.val();
+            console.log(card);
+
+            var cardSrc = getCardSrcById('baksida');
+            if (card.isVisible) {
+                cardSrc = getCardSrcById(cardId);
+            }
+
+            $("#playground").append('<img src="' + cardSrc + '" width="175" class="cardimage-playground">');
+        });
+
+    });
 
 
 }
@@ -153,7 +196,7 @@ function initGame() {
 
 $(document).ready(function () {
 
-    
+
     firebase.auth().onAuthStateChanged(function (user) {
 
         if (user) {
@@ -167,27 +210,25 @@ $(document).ready(function () {
 
                     currentRoom = snapshot.val();
 
-                    
-                    
                     $("#roomNameHeader").html(currentRoomName);
 
-                        //load current user
+                    //load current user
+                    //
+                    currentUser = firebase.auth().currentUser;
+                    if (currentUser != null) {
+
+                        $("#navbarDropdown").text(currentUser.displayName);
+                        //is the logged in user the room admin?
                         //
-                        currentUser = firebase.auth().currentUser;
-                        if (currentUser != null) {
-
-                            //is the logged in user the room admin?
-                            //
-                            if(currentRoom.owner === currentUser.displayName)
-                            {
-                                isRoomAdmin = true;
-                                activateAdminFeatures();
-                            }
-
-                            initGame();
-                        }else{
-                            window.location.href = "login.html";
+                        if (currentRoom.owner === currentUser.displayName) {
+                            isRoomAdmin = true;
+                            activateAdminFeatures();
                         }
+
+                        initGame();
+                    } else {
+                        window.location.href = "login.html";
+                    }
 
                 } else {
                     window.location.href = "login.html";
@@ -208,7 +249,7 @@ $(document).ready(function () {
 
         //firebase.auth().signOut();
         window.location.href = "login.html";
-        
+
     });
 
     // $("#kick-user-button").click(function(e){
@@ -223,41 +264,65 @@ $(document).ready(function () {
     //     // }
 
     //     //firebase.auth().signOut();
-        
+
     // });
-    
+
 
 
     $("#info-alert").hide();
     $(".admingroup").hide();
 
-    function activateAdminFeatures(){
+    $(".cardimage").click(function (e) {
+        e.preventDefault();
+
+
+        console.log(this);
+    });
+
+
+
+
+    function activateAdminFeatures() {
 
         $(".admingroup").show();
+
         $("#userslist").sortable({
             revert: true,
             update: function (event, ui) {
                 updateUserListOrder();
             }
+        }).disableSelection();;
+
+  
+        $("#userslist").on('click','li',function(){
+
+            $(this).toggleClass('notincombat');
+            $(this).toggleClass('incombat');
+
+            var isInCombat = !$(this).hasClass('notincombat');
+            var user = $(this).attr('id');
+
+            firebase.database().ref().child('/rooms/' + currentRoom.name + '/users/' + user).update({ inCombat: isInCombat });
+
+            console.log(this);
         });
-        $("#userslist").disableSelection();
+
+
+
+        //$("#userslist").disableSelection();
         $("#kickActionDroppable").droppable({
             accept: "#userslist > li",
             classes: {
-              "ui-droppable-active": "ui-state-highlight",
-              "ui-droppable-hover": "bg-danger"
+                "ui-droppable-active": "ui-state-highlight",
+                "ui-droppable-hover": "bg-danger"
             },
-            drop: function( event, ui ) {
-    
-    
-                console.log(event);
-                console.log(ui);
-    
+            drop: function (event, ui) {
                 var userToKick = ui.draggable[0].id;
-    
                 database.ref('rooms/' + currentRoom.name + '/users/' + userToKick).remove();
             }
         });
+
+        
 
         $("#add-enemy-button").click(function (e) {
             e.preventDefault();
@@ -266,13 +331,16 @@ $(document).ready(function () {
 
             //add enemy to room
             //
-            database.ref('rooms/' + currentRoom.name + '/users/' + enemyName).set({ "name": enemyNamePrefix + enemyName, "sortOrder": 99 }).then(()=>{
+            database.ref('rooms/' + currentRoom.name + '/users/' + enemyName).set({ "name": enemyNamePrefix + enemyName, "sortOrder": 99, "inCombat":false }).then(() => {
                 $("#add-enemy-input").val('');
             });
         });
+
+
+
     }
 
-    
+
 });
 
 

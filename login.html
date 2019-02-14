@@ -111,7 +111,7 @@
                                     //room exists
 
                                     //add user to room
-                                    database.ref('rooms/' + roomname + '/users/' + username).set({ "name": username, "messages": {}, "sortOrder": 99 }).then(() => {
+                                    database.ref('rooms/' + roomname + '/users/' + username).set({ "name": username, "messages": {}, "inCombat":false, "sortOrder": 99 }).then(() => {
                                         window.location.href = "room.html?room=" + roomname;
                                     });
 
@@ -124,7 +124,7 @@
                                     //
                                     database.ref('rooms/' + roomname).set({ "owner": username, "name": roomname}).then(() => {
 
-                                        database.ref('rooms/' + roomname + '/users/' + username).set({ "name": username, "messages": {}, "sortOrder": 99 }).then(() => {
+                                        database.ref('rooms/' + roomname + '/users/' + username).set({ "name": username, "messages": {}, "inCombat":false, "sortOrder": 99 }).then(() => {
 
                                             window.location.href = "room.html?room=" + roomname;
                                         });
