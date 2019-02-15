@@ -9,4 +9,5 @@ var config = {
 firebase.initializeApp(config);
 
 var database = firebase.database();
-var enemyNamePrefix = '> ';
+var enemyNamePrefix = '';
+var enemyNameSuffix = ' ( enemy )';

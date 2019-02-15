@@ -74,4 +74,4 @@ var logger = function()
     return pub;
 }();
 
-logger.disableLogger();
+//logger.disableLogger();

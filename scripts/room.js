@@ -5,6 +5,20 @@ var latestMessage = '';
 var userMessages = {};
 var currentRoomName;
 var isKilled = false;
+var isInFight = false;
+
+var cards = {};
+
+cards['attackera'] = { 'name': 'Attack', 'src':'images/attackera.jpg' };
+cards['avvakta'] = { 'name': 'Avvakta', 'src':'images/avvakta.jpg' };
+cards['dubblera'] = { 'name': 'Dubblera', 'src':'images/dubblera.jpg' };
+cards['forbereda'] = { 'name': 'Förbereda', 'src':'images/forbereda.jpg' };
+cards['forsvara'] = { 'name': 'Försvara', 'src':'images/forsvara.jpg' };
+cards['hindra'] = { 'name': 'Hindra', 'src':'images/hindra.jpg' };
+cards['manovrera'] = { 'name': 'Manövrera', 'src':'images/manovrera.jpg' };
+cards['baksida'] = { 'name': 'Baksida', 'src':'images/baksida.jpg' };
+
+
 
 currentRoomName = getParameterByName('room');
 if (currentRoomName === null || currentRoomName === "") {
@@ -50,7 +64,7 @@ function addUserToList(key, user) {
             combatClass = 'incombat';
         }
 
-        $("#userslist").append('<li id="' + key + '" class="list-group-item list-group-item-action ' + combatClass + '">' + user.name +'</li>');
+        $("#userslist").append('<li id="' + key + '" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center ' + combatClass + '">' + user.name +'<a href="javascript:void(0)" class="badge badge-warning btn-user-fight">Fight</a></li>');
 
     }
 }
@@ -62,7 +76,6 @@ function removeUserFromList(username) {
     if(user !== 'undefined' && user !== null && user.length > 0)
     {
         $(user).remove();
-        //$('#userslist li').filter(function () { return $(this).attr('id') === username; }).remove();
     }
 }
 
@@ -183,19 +196,29 @@ function initGame() {
     cardsRef.on('value', function (cardsSnapshot) {
         console.log('cards');
 
-        $("#playground").empty();
+        //get users in combat so we can see whos nr 1 and whos nr 2
+        //
+        
+
 
         cardsSnapshot.forEach(function (cardSnapshot) {
             var cardId = cardSnapshot.key;
             var card = cardSnapshot.val();
+
             console.log(card);
 
-            var cardSrc = getCardSrcById('baksida');
+            
+            //go to the users playground and empty
+            //$("#playground ").empty();
+
+
+
+            var cardSrc = cards['baksida'].src;
             if (card.isVisible) {
-                cardSrc = getCardSrcById(cardId);
+                cardSrc = cards[cardId].src
             }
 
-            $("#playground").append('<img src="' + cardSrc + '" width="175" class="cardimage-playground">');
+            showCard(cardId,card);
         });
 
     });
@@ -203,10 +226,59 @@ function initGame() {
 
 }
 
+function detectPlayground(owner)
+{
+    for (let index = 1; index < 3; index++) {
 
+        if($("#playground-player-"+index).is(":visible")){
+
+            var title = $("#playground-player-" + index + " .playground-title").text();
+
+            if(title == owner){
+                return $("#playground-player-" + index);
+            }
+    
+        }else{
+            return $("#playground-player-" + index);
+        }        
+    }
+
+    return null;
+}
+
+function showCard(cardId,card){
+
+    var currentPlayground = detectPlayground(card.owner);
+
+    if(currentPlayground !== null)
+    {
+
+    }
+
+
+
+}
+
+function hidePlaygrounds(){
+
+    $("#playground-player-1").hide();
+    $("#playground-player-2").hide();
+    // $("#playground-player-1 .playground-title").text('');
+    // $("#playground-player-1 .title-nr-card-1").text('');
+    // $("#playground-player-1 .title-nr-card-2").text('');
+    // $("#playground-player-1 .card-played-1").hide();
+    // $("#playground-player-1 .card-played-2").hide();
+
+    //$("#playground-player-1 .card-played-1").attr('src','images/baksida.jpg');
+    //$("#playground-player-1 .card-played-2").attr('src','images/baksida.jpg');
+    
+    
+}
 
 $(document).ready(function () {
 
+
+   // hidePlaygrounds();
 
     firebase.auth().onAuthStateChanged(function (user) {
 
@@ -266,12 +338,7 @@ $(document).ready(function () {
     $("#info-alert").hide();
     $(".admingroup").hide();
 
-    $(".cardimage").click(function (e) {
-        e.preventDefault();
 
-
-        console.log(this);
-    });
 
 
 
@@ -329,19 +396,50 @@ $(document).ready(function () {
 
 
   
-        $("#userslist").on('click','li',function(){
-        //$("#userslist li").on('click',function(){
+        // $("#userslist").on('click','li',function(){
 
-            $(this).toggleClass('notincombat');
-            $(this).toggleClass('incombat');
+        //     $(this).toggleClass('notincombat');
+        //     $(this).toggleClass('incombat');
 
-            var isInCombat = !$(this).hasClass('notincombat');
-            var user = $(this).attr('id');
+        //     var isInCombat = !$(this).hasClass('notincombat');
+        //     var user = $(this).attr('id');
+
+        //     firebase.database().ref().child('/rooms/' + currentRoom.name + '/users/' + user).update({ inCombat: isInCombat });
+
+        //     console.log(this);
+        // });
+
+        
+        $("#btn-fight").click(function(e){
+                
+                console.log('brt-fight!');
+
+
+
+        });    
+        
+        //$(".btn-user-fight").on('click','li',function(){  
+        $("#userslist").on('click','a',function(){
+        //$(".list-group-item a").click(function(e){             
+            console.log('btn-user-fight');
+
+            var li = $(this).parent();
+
+            $(li).toggleClass('notincombat');
+            $(li).toggleClass('incombat');
+
+            var isInCombat = !$(li).hasClass('notincombat');
+            var user = $(li).attr('id');
 
             firebase.database().ref().child('/rooms/' + currentRoom.name + '/users/' + user).update({ inCombat: isInCombat });
 
-            console.log(this);
-        });
+            console.log(li);
+
+
+
+         });   
+
+        
 
         
         $(".list-group-item-action").droppable({
@@ -366,7 +464,7 @@ $(document).ready(function () {
 
             //add enemy to room
             //
-            database.ref('rooms/' + currentRoom.name + '/users/' + enemyName).set({ "name": enemyNamePrefix + enemyName, "sortOrder": 99, "inCombat":false }).then(() => {
+            database.ref('rooms/' + currentRoom.name + '/users/' + enemyName).set({ "name": enemyNamePrefix + enemyName + enemyNameSuffix, "sortOrder": 99, "inCombat":false }).then(() => {
                 $("#add-enemy-input").val('');
             });
         });
