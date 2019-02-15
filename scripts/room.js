@@ -4,23 +4,23 @@ var currentRoom;
 var latestMessage = '';
 var userMessages = {};
 var currentRoomName;
+var isKilled = false;
 
 currentRoomName = getParameterByName('room');
 if (currentRoomName === null || currentRoomName === "") {
-    window.location.href = "login.html";
+    redirectToLogin();
 }
 
 
 
-function updateUserListOrder() {
-    console.log('updateUserListOrder()');
-    //populate new users object
-    //
+function updateDbWithUserListOrder() {
+    console.log('updateDbWithUserListOrder()');
+    
     var users = {};
     if ($("#userslist li").each(function (index) {
         var text = $(this).attr('id');
-        //var text = $(this).text();
-        users[text] = { "name": text, "sortOrder": index }
+        var name = $(this).text();
+        users[text] = { "name": name, "sortOrder": index }
     }));
 
     database.ref('rooms/' + currentRoomName + '/users/').update(users);
@@ -28,6 +28,7 @@ function updateUserListOrder() {
 
 
 function addUserToList(key, user) {
+
     console.log('addUserToList(' + user.name + ')');
 
     var exists = false;
@@ -49,18 +50,29 @@ function addUserToList(key, user) {
             combatClass = 'incombat';
         }
 
-        $("#userslist").append('<li id="' + key + '" class="list-group-item list-group-item-action ' + combatClass + '">' + user.name + '</li>');
+        $("#userslist").append('<li id="' + key + '" class="list-group-item list-group-item-action ' + combatClass + '">' + user.name +'</li>');
 
     }
 }
 
 function removeUserFromList(username) {
     console.log('removeUserFromList(' + username + ')');
-    $('#userslist li').filter(function () { return $.attr('id')([this]) === username; }).remove();
+    
+    var user = $("#userslist").find('li#'+username);
+    if(user !== 'undefined' && user !== null && user.length > 0)
+    {
+        $(user).remove();
+        //$('#userslist li').filter(function () { return $(this).attr('id') === username; }).remove();
+    }
+}
+
+function redirectToLogin(){
+    window.location.href = "login.html";
 }
 
 function initGame() {
 
+    console.log('init game');
     //initUserListeners(currentUser);
     //
     var cardsRef = database.ref('rooms/' + currentRoomName + '/cards/');
@@ -72,6 +84,7 @@ function initGame() {
     //
     currentUserRef.once("value").then(function (snapshot) {
 
+        console.log('currentUserRef.once');
         if (snapshot.exists()) {
 
             var user = snapshot.val();
@@ -101,11 +114,9 @@ function initGame() {
         console.log('child_removed');
         var removedUser = snapshot.val();
 
-        removeUserFromList(removedUser.name);
-
-        if (removedUser.name !== currentUser.displayName) {
-            //showAlert.displayInfo(removedUser.name + " left the fight!");
-            //showAlert.setInfo(removedUser.name + " left the fight!");
+        if (snapshot.key === currentUser.displayName && isRoomAdmin === false) {
+            redirectToLogin();
+            
         }
     });
 
@@ -227,45 +238,28 @@ $(document).ready(function () {
 
                         initGame();
                     } else {
-                        window.location.href = "login.html";
+                        redirectToLogin();
                     }
 
                 } else {
-                    window.location.href = "login.html";
+                    redirectToLogin();
                 }
             });
         } else {
-            window.location.href = "login.html";
+            redirectToLogin();
         }
     });
 
     $("#leave-room-button").click(function (e) {
+        console.log('leave room');
         e.preventDefault();
 
-        // var user = firebase.auth().currentUser;
-        // if (user) {
         database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).remove();
-        // }
 
-        //firebase.auth().signOut();
-        window.location.href = "login.html";
+        redirectToLogin();
 
     });
 
-    // $("#kick-user-button").click(function(e){
-    // //$(".kick-user-button").click(function (e) {
-    //     e.preventDefault();
-
-    //     var userTokick = $(this).closest('li').attr('id');
-
-    //     // var user = firebase.auth().currentUser;
-    //     // if (user) {
-    //     database.ref('rooms/' + currentRoom.name + '/users/' + userTokick).remove();
-    //     // }
-
-    //     //firebase.auth().signOut();
-
-    // });
 
 
 
@@ -281,20 +275,62 @@ $(document).ready(function () {
 
 
 
-
     function activateAdminFeatures() {
+
+        
 
         $(".admingroup").show();
 
         $("#userslist").sortable({
-            revert: true,
+            delay: 150,
+            helper : 'clone',
+            axis: "y",
+            opacity: 0.8,
+            connectWith: "ul",
+            sort: function() {
+                if ($(this).hasClass("cancel")) {
+                    $(this).sortable("cancel");
+                }
+            },
             update: function (event, ui) {
-                updateUserListOrder();
+                console.log('userslist.sortable update event ');
+                if(isKilled === false)
+                {
+                    updateDbWithUserListOrder();
+                }
+            },
+            stop:function (event, ui) {
+                console.log('userslist.sortable stop event ');
+                if(isKilled)
+                {
+                    $(this).sortable("cancel");
+
+                    var userToKick = ui.item[0].id
+
+                    database.ref('rooms/' + currentRoom.name + '/users/' + userToKick).remove();
+                    isKilled = false;
+                }
+                
+            },
+            receive:function (event, ui) {
+                console.log('userslist.sortable stop event ');
+            },
+            remove:function (event, ui) {
+                console.log('userslist.sortable remove event ');
             }
-        }).disableSelection();;
+            
+        }).disableSelection();
+
+        $(".list-group-item").draggable({
+            helper: 'clone',
+            revert : 'invalid',
+            connectToSortable: "#userslist"
+        }).disableSelection();
+
 
   
         $("#userslist").on('click','li',function(){
+        //$("#userslist li").on('click',function(){
 
             $(this).toggleClass('notincombat');
             $(this).toggleClass('incombat');
@@ -307,24 +343,23 @@ $(document).ready(function () {
             console.log(this);
         });
 
-
-
-        //$("#userslist").disableSelection();
-        $("#kickActionDroppable").droppable({
-            accept: "#userslist > li",
+        
+        $(".list-group-item-action").droppable({
             classes: {
                 "ui-droppable-active": "ui-state-highlight",
                 "ui-droppable-hover": "bg-danger"
             },
             drop: function (event, ui) {
-                var userToKick = ui.draggable[0].id;
-                database.ref('rooms/' + currentRoom.name + '/users/' + userToKick).remove();
+                console.log('kickActionDroppable.droppable drop event ');
+                isKilled = true;                
             }
         });
 
         
 
         $("#add-enemy-button").click(function (e) {
+
+            console.log('add-enemy-button.click ');
             e.preventDefault();
 
             var enemyName = $("#add-enemy-input").val();
@@ -336,11 +371,6 @@ $(document).ready(function () {
             });
         });
 
-
-
     }
 
-
 });
-
-
