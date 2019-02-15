@@ -64,6 +64,10 @@
             color: #155724;
             background-color: #c3e6cb;
         }
+        .incombat:hover {
+            color: #155724;
+            background-color: #c3e6cb;
+        }
     </style>
 
 </head>
@@ -80,9 +84,7 @@
                 <ul class="list-group admingroup">
                     <li class="list-group-item list-group-item-action"></li>
                     <li id="kickActionDroppable" class="list-group-item list-group-item-action text-white bg-secondary">Kick fighter!</li>
-                    <li class="list-group-item list-group-item-action"></li>
-                    <li></li>
-                    <li class="list-group-item list-group-item-action"></li>
+                    <li class="list-group-item"></li>
                 </ul>
                 <div class="input-group admingroup">
                     <input type="text" id="add-enemy-input" class="form-control" placeholder="Enemy name">
@@ -90,7 +92,7 @@
                         <button id="add-enemy-button" type="button" class="btn btn-primary">Add</button>
                     </div>
                     <div class="input-group">
-                        <button id="btn-fight" type="button" class="btn btn-primary">Fight!</button>
+                        <button id="btn-start-fight" type="button" class="btn btn-primary btn-sm btn-block">Fight!</button>
                     </div>
                     
                 </div>
@@ -126,8 +128,8 @@
                                 Settings
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
+                                <!-- <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a> -->
                                 <div class="dropdown-divider"></div>
                                 <a id="leave-room-button" class="dropdown-item" href="javascript:void(0)">Leave room</a>
                             </div>
@@ -206,19 +208,19 @@
                             </tr>
                             <tr>
                                 <td><button id="attackera" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
-                                    <button id="attackera" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
-                                <td><button id="avvakta" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
-                                    <button id="avvakta" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
-                                <td><button id="dubblera" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
-                                    <button id="dubblera" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
-                                <td><button id="forbereda" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
-                                    <button id="forbereda" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
-                                <td><button id="forsvara" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
-                                    <button id="forsvara" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
-                                <td><button id="hindra" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
-                                    <button id="hindra" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
-                                <td><button id="manovrera" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
-                                    <button id="manovrera" type="button"                                        class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
+                                    <button id="attackera" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
+                                <td><button id="avvakta" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
+                                    <button id="avvakta" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
+                                <td><button id="dubblera" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
+                                    <button id="dubblera" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
+                                <td><button id="forbereda" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
+                                    <button id="forbereda" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
+                                <td><button id="forsvara" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
+                                    <button id="forsvara" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
+                                <td><button id="hindra" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
+                                    <button id="hindra" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
+                                <td><button id="manovrera" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">1</button>
+                                    <button id="manovrera" type="button" class="btn btn-outline-secondary btn-sm btn-select-card">2</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -268,7 +270,11 @@
             $("#wrapper").toggleClass("toggled");
         });
 
-
+        //microplugin for excluding children when needing .text()
+        //
+        $.fn.ignore = function(sel){
+            return this.clone().find(sel||">*").remove().end();
+        };
 
     </script>
 

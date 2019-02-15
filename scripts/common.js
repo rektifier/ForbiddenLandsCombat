@@ -1,4 +1,6 @@
 
+
+
 var showAlert = function () { }
 showAlert.displayInfo = function (message) {
     $("#alerttext").text(message);
@@ -28,30 +30,6 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function getCardSrcById(cardId){
-
-    switch(cardId){
-
-        case "attack":
-            return "images/attackera.jpg";
-        case "avvakta":
-            return "images/avvakta.jpg";
-        case "dubblera":
-            return "images/dubblera.jpg";
-        case "forbereda":
-            return "images/forbereda.jpg";
-        case "forsvara":
-            return "images/forsvara.jpg";
-        case "hindra":
-            return "images/hindra.jpg";
-        case "manovrera":
-            return "images/manovrera.jpg";    
-        case "baksida":
-            return "images/baksida.jpg";                                                        
-    }
-
-}
-
 var logger = function()
 {
     var oldConsoleLog = null;
@@ -73,5 +51,7 @@ var logger = function()
 
     return pub;
 }();
+
+
 
 //logger.disableLogger();
