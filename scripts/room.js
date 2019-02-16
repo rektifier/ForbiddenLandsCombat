@@ -4,7 +4,7 @@ var currentRoom;
 var latestMessage = '';
 var userMessages = {};
 var currentRoomName;
-var adminAction = false;
+var adminAction = '';
 var isInFight = false;
 
 
@@ -295,11 +295,12 @@ function hidePlaygrounds(){
 $(document).ready(function () {
 
 
-   // hidePlaygrounds();
+   hidePlaygrounds();
 
 
     
 
+   // user logged in
     firebase.auth().onAuthStateChanged(function (user) {
 
         if (user) {
@@ -342,6 +343,8 @@ $(document).ready(function () {
         }
     });
 
+    //leave the room
+    //
     $("#leave-room-button").click(function (e) {
         console.log('leave room');
         e.preventDefault();
@@ -361,6 +364,8 @@ $(document).ready(function () {
     $(".btn-select-card").prop('disabled', true);
 
 
+    //admin fearures
+    //
     function activateAdminFeatures() {
 
         
@@ -475,6 +480,30 @@ $(document).ready(function () {
             database.ref('rooms/' + currentRoom.name + '/users/' + enemyName).set({ "name": roomConfig.enemyNamePrefix + enemyName + roomConfig.enemyNameSuffix, "sortOrder": 99, "inCombat":false }).then(() => {
                 $("#add-enemy-input").val('');
             });
+        });
+
+        $("#btn-random-initiative").click(function (e) {
+
+            console.log('btn-random-initiative.click ');
+            e.preventDefault();
+
+            var userList = $("#userslist li");
+
+            if($(userList).length > 1)
+            {
+                shuffleArray(userList);
+
+                var users = {};
+                if ($(userList).each(function (index) {
+                    var text = $(this).attr('id');
+
+                    var name = $(this).ignore("a").text();
+                    var isInCombat = $(this).hasClass('incombat');
+                    users[text] = { "name": name, "sortOrder": index, "inCombat":isInCombat }
+                }));
+
+                database.ref('rooms/' + currentRoomName + '/users/').update(users);
+            }            
         });
 
     }
