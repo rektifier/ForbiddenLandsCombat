@@ -224,7 +224,7 @@ function initGame() {
 
             console.log(card);
 
-            
+            //ToDo:
             //go to the users playground and empty
             //$("#playground ").empty();
 
@@ -241,6 +241,25 @@ function initGame() {
     });
 
 
+}
+
+function showPlayground(owner){
+
+    var currentPlayground = detectPlayground(owner);
+
+    $(currentPlayground).show();
+
+    $(currentPlayground).find(".playground-title").text(owner);
+    $(currentPlayground).find(".title-nr-card-1").text('');
+    $(currentPlayground).find(".title-nr-card-2").text('');
+    $(currentPlayground).find(".card-played-1").hide();
+    $(currentPlayground).find(".card-played-2").hide();
+
+}
+
+function hidePlayground(owner){
+    var currentPlayground = detectPlayground(owner);
+    $(currentPlayground).hide();
 }
 
 function detectPlayground(owner)
@@ -271,9 +290,6 @@ function showCard(cardId,card){
     {
 
     }
-
-
-
 }
 
 function hidePlaygrounds(){
@@ -457,6 +473,12 @@ $(document).ready(function () {
                 var user = $(li).attr('id');
     
                 firebase.database().ref().child('/rooms/' + currentRoom.name + '/users/' + user).update({ inCombat: isInCombat });
+
+                if(isInCombat){
+                    showPlayground(user);
+                }else{
+                    hidePlayground(user);
+                }
             }
 
 
