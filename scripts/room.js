@@ -127,8 +127,13 @@ function initGame() {
         var removedUser = snapshot.val();
 
         if (snapshot.key === currentUser.displayName && isRoomAdmin === false) {
-            redirectToLogin();
-            
+            redirectToLogin();            
+        }
+
+        if(removedUser.inCombat){
+            showPlayground(snapshot.key);
+        }else{
+            hidePlayground(snapshot.key);
         }
     });
 
@@ -138,6 +143,12 @@ function initGame() {
         var newUser = snapshot.val();
 
         //addUserToList(newUser.name);
+
+        if(newUser.inCombat){
+            showPlayground(snapshot.key);
+        }else{
+            hidePlayground(snapshot.key);
+        }
 
         if (newUser.name !== currentUser.displayName) {
             //showAlert.displayInfo(newUser.name + " joined the fight!");
@@ -150,30 +161,31 @@ function initGame() {
         console.log('child_updated');
 
         var user = snapshot.val();
-        var key = snapshot.key;
+        var userKey = snapshot.key;
   
 
-        var menuitem = $("#userslist li").find('#'+key);
+        var menuitem = $("#userslist li").find('#'+userKey);
 
         $(menuitem).toggleClass('notincombat');
         $(menuitem).toggleClass('incombat');
         
+        if(user.inCombat === false)
+        {
+            hidePlayground(userKey);
+        }else{
+            showPlayground(userKey);
+        }
 
-        if (user.name === currentUser.displayName) {
-            
-            //is user in combat? activate the cards!
-
-            //else deactivate the cards!
-
-            if(user.inCombat)
-            {
-                console.log("activate the cards!");
-                
-            }
-            else{
-                console.log("deactivate the cards!");
+        if(userKey === currentUser.displayName)
+        {
+            if(user.inCombat){
+                $(".btn-select-card").prop('disabled', false);
+            }else{
+                $(".btn-select-card").prop('disabled', true);
             }
         }
+
+        
 
     });
 
@@ -189,11 +201,7 @@ function initGame() {
 
             addUserToList(userId, user);
 
-            if(user.inCombat){
-                $(".btn-select-card").prop('disabled', false);
-            }else{
-                $(".btn-select-card").prop('disabled', true);
-            }
+
         });
 
     });
@@ -247,19 +255,27 @@ function showPlayground(owner){
 
     var currentPlayground = detectPlayground(owner);
 
-    $(currentPlayground).show();
+    if(currentPlayground !== null)
+    {
+        $(currentPlayground).show();
 
-    $(currentPlayground).find(".playground-title").text(owner);
-    $(currentPlayground).find(".title-nr-card-1").text('');
-    $(currentPlayground).find(".title-nr-card-2").text('');
-    $(currentPlayground).find(".card-played-1").hide();
-    $(currentPlayground).find(".card-played-2").hide();
+        $(currentPlayground).find(".playground-title").text(owner);
+        // $(currentPlayground).find(".title-nr-card-1").show();
+        // $(currentPlayground).find(".title-nr-card-2").text('');
+        $(currentPlayground).find(".card-played-1").hide();
+        $(currentPlayground).find(".card-played-2").hide();
+    }
+
 
 }
 
 function hidePlayground(owner){
     var currentPlayground = detectPlayground(owner);
-    $(currentPlayground).hide();
+
+    if(currentPlayground !== null){
+        $(currentPlayground).hide();
+    }
+    
 }
 
 function detectPlayground(owner)
@@ -474,11 +490,7 @@ $(document).ready(function () {
     
                 firebase.database().ref().child('/rooms/' + currentRoom.name + '/users/' + user).update({ inCombat: isInCombat });
 
-                if(isInCombat){
-                    showPlayground(user);
-                }else{
-                    hidePlayground(user);
-                }
+
             }
 
 
