@@ -5,7 +5,6 @@ var latestMessage = '';
 var userMessages = {};
 var currentRoomName;
 var adminAction = '';
-var isInFight = false;
 
 
 
@@ -79,7 +78,7 @@ function removeUserFromList(username) {
 }
 
 function redirectToLogin(){
-    window.location.href = "login.html";
+    window.location.href = "index.html";
 }
 
 function initGame() {
@@ -87,10 +86,12 @@ function initGame() {
     console.log('init game');
     //initUserListeners(currentUser);
     //
-    var cardsRef = database.ref('rooms/' + currentRoomName + '/cards/');
+    
     var messageRef = database.ref('rooms/' + currentRoomName + '/message/');
     var usersRef = database.ref('rooms/' + currentRoomName + '/users/');
     var currentUserRef = database.ref('rooms/' + currentRoomName + '/users/' + currentUser.displayName);
+
+    var conflictRef = database.ref('rooms/' + currentRoomName + '/conflict/');
 
     //get user if we have one
     //
@@ -126,15 +127,17 @@ function initGame() {
         console.log('child_removed');
         var removedUser = snapshot.val();
 
+        database.ref('rooms/' + currentRoomName + '/conflict/' + snapshot.key).remove();
+
         if (snapshot.key === currentUser.displayName && isRoomAdmin === false) {
             redirectToLogin();            
         }
 
-        if(removedUser.inCombat){
-            showPlayground(snapshot.key);
-        }else{
+        // if(removedUser.inCombat){
+        //     showPlayground(snapshot.key);
+        // }else{
             hidePlayground(snapshot.key);
-        }
+        // }
     });
 
     //when a new user i connected
@@ -206,47 +209,127 @@ function initGame() {
 
     });
 
+    conflictRef.on('value', function (conflictSnapshot) {
 
-    cardsRef.on('value', function (cardsSnapshot) {
-        console.log('cards');
+        console.log('conflict');
 
-        //get users in combat so we can see whos nr 1 and whos nr 2
-        //
-        var list ={}; 
+        hidePlaygrounds();
+
+        conflictSnapshot.forEach(function (userSnap) {
+
+            var userId = userSnap.key;
+            var conflictData = userSnap.val();
+
+            var playground = detectPlayground();
+
+            showPlayground(userId);
+
+       
+
+
+            if (conflictData.cards !== undefined){
+
+                var cards = Object.keys(conflictData.cards).map(i => conflictData.cards[i]);
+                
+                cards.forEach(function(card){
+
+                    var cardImg = fightingCards['baksida'];
+
+                    if(userId === currentUser.displayName || card.isVisible === true)
+                    {
+                        cardImg = fightingCards[card.cardid];
+                    }
+
+                    $(playground).find(".card-played-" + card.sortOrder).show();
+                    $(playground).find(".card-played-" + card.sortOrder).attr('src',cardImg.src);
+                    
+
+                });
+
+
+            }	
+
         
-        var cards = cardsSnapshot.val();
-        var nrOfCards = Object.keys(cards).length;
+
+
+                // var test = userSnap.val();
+
+                
+
+
+                // var cardId = cardSnapshot.key;
+                // var card = cardSnapshot.val();
+
+                // console.log(card);
+
+                // //ToDo:
+                // //go to the users playground and empty
+                // //$("#playground ").empty();
+
+
+                // var cardSrc = fightingCards['baksida'].src;
+                // if (card.isVisible) {
+                //     cardSrc = fightingCards[cardId].src
+                // }
+
+                // // if(nrOfCards > 3){
+                // //     $("#btn-start-fight").prop('disabled', false);
         
-        if(nrOfCards > 3){
-            $("#btn-start-fight").prop('disabled', false);
+                // // }else{
+                // //     $("#btn-start-fight").prop('disabled', true);
+                // // }
 
-        }else{
-            $("#btn-start-fight").prop('disabled', true);
-        }
-
-        // nrOfCards.length
-
-        cardsSnapshot.forEach(function (cardSnapshot) {
-            var cardId = cardSnapshot.key;
-            var card = cardSnapshot.val();
-
-            console.log(card);
-
-            //ToDo:
-            //go to the users playground and empty
-            //$("#playground ").empty();
+                // showCard(cardId,card);
 
 
+          
 
-            var cardSrc = fightingCards['baksida'].src;
-            if (card.isVisible) {
-                cardSrc = fightingCards[cardId].src
-            }
 
-            showCard(cardId,card);
+            
         });
 
     });
+
+    // cardsRef.on('value', function (cardsSnapshot) {
+    //     console.log('cards');
+
+    //     //get users in combat so we can see whos nr 1 and whos nr 2
+    //     //
+    //     var list ={}; 
+        
+    //     var cards = cardsSnapshot.val();
+    //     var nrOfCards = Object.keys(cards).length;
+        
+    //     if(nrOfCards > 3){
+    //         $("#btn-start-fight").prop('disabled', false);
+
+    //     }else{
+    //         $("#btn-start-fight").prop('disabled', true);
+    //     }
+
+    //     // nrOfCards.length
+
+    //     cardsSnapshot.forEach(function (cardSnapshot) {
+    //         var cardId = cardSnapshot.key;
+    //         var card = cardSnapshot.val();
+
+    //         console.log(card);
+
+    //         //ToDo:
+    //         //go to the users playground and empty
+    //         //$("#playground ").empty();
+
+
+
+    //         var cardSrc = fightingCards['baksida'].src;
+    //         if (card.isVisible) {
+    //             cardSrc = fightingCards[cardId].src
+    //         }
+
+    //         showCard(cardId,card);
+    //     });
+
+    // });
 
 
 }
@@ -260,13 +343,21 @@ function showPlayground(owner){
         $(currentPlayground).show();
 
         $(currentPlayground).find(".playground-title").text(owner);
-        // $(currentPlayground).find(".title-nr-card-1").show();
-        // $(currentPlayground).find(".title-nr-card-2").text('');
         $(currentPlayground).find(".card-played-1").hide();
         $(currentPlayground).find(".card-played-2").hide();
     }
+}
 
+function showCard(owner,cardTitle,){
 
+            // $(currentPlayground).find(".title-nr-card-1").show();
+        // $(currentPlayground).find(".title-nr-card-2").text('');
+
+    // $("#playground-player-1 .card-played-1").hide();
+    // $("#playground-player-1 .card-played-2").hide();
+
+    //$("#playground-player-1 .card-played-1").attr('src','images/baksida.jpg');
+    //$("#playground-player-1 .card-played-2").attr('src','images/baksida.jpg');
 }
 
 function hidePlayground(owner){
@@ -312,11 +403,6 @@ function hidePlaygrounds(){
 
     $("#playground-player-1").hide();
     $("#playground-player-2").hide();
-    // $("#playground-player-1 .playground-title").text('');
-    // $("#playground-player-1 .title-nr-card-1").text('');
-    // $("#playground-player-1 .title-nr-card-2").text('');
-    // $("#playground-player-1 .card-played-1").hide();
-    // $("#playground-player-1 .card-played-2").hide();
 
     //$("#playground-player-1 .card-played-1").attr('src','images/baksida.jpg');
     //$("#playground-player-1 .card-played-2").attr('src','images/baksida.jpg');
@@ -382,6 +468,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).remove();
+        database.ref('rooms/' + currentRoom.name + '/conflict/' + currentUser.displayName).remove();
 
         redirectToLogin();
 
@@ -400,7 +487,7 @@ $(document).ready(function () {
     //
     function activateAdminFeatures() {
 
-        
+        $(".btn-select-card").prop('disabled', false);
 
         $(".admingroup").show();
 
@@ -469,9 +556,10 @@ $(document).ready(function () {
                 console.log('brt-fight!');
         });    
         
-        //fight button
+        //fight button in users list
         //
-        $("#userslist").on('click','a',function(){           
+        $("#userslist").on('click','a',function(){     
+
             console.log('btn-user-fight');
 
             var li = $(this).parent();
@@ -482,18 +570,25 @@ $(document).ready(function () {
             var nrOfPlayersInFight = $("#userslist .incombat").length;
             if(nrOfPlayersInFight > roomConfig.maxNrOfPlayersInFight)
             {
+                //toggle back the combat class
+                //
                 $(li).toggleClass('notincombat');
                 $(li).toggleClass('incombat');
+
             }else{
                 var isInCombat = !$(li).hasClass('notincombat');
                 var user = $(li).attr('id');
     
                 firebase.database().ref().child('/rooms/' + currentRoom.name + '/users/' + user).update({ inCombat: isInCombat });
 
-
+                if(isInCombat === true){
+                    //add user to combat
+                    firebase.database().ref().child('/rooms/' + currentRoom.name +'/conflict/' + user).set({"userid":user});
+                } else{ 
+                    //remove user from combat
+                    firebase.database().ref().child('/rooms/' + currentRoom.name +'/conflict/' + user).remove();
+                }
             }
-
-
 
             console.log(li);
          });  
@@ -539,6 +634,64 @@ $(document).ready(function () {
                 database.ref('rooms/' + currentRoomName + '/users/').update(users);
             }            
         });
+
+        $(".btn-select-card").click(function (e) {
+            console.log('btn-select-card.click ');
+            e.preventDefault();
+
+            var cardId = $(this).data('cardid');
+            var nrOfCard = $(this).data('cardnr');
+
+            var isAlreadyActive = $(this).hasClass('active');
+
+            //set up rules for dubblera and attackera
+
+            var currentFighter = currentUser.displayName;
+            if(isRoomAdmin){
+
+                //get the selected enemy89
+                var combatEnemy = $("#userslist .incombat").filter(":contains('"+roomConfig.enemyNameSuffix+"')").first();
+                if(combatEnemy){
+                    currentFighter = combatEnemy.attr('id');
+                }
+
+            }
+
+
+
+
+
+            if(isAlreadyActive) {
+
+                // remove card
+                $(this).toggleClass('active');
+                $(".btn-select-card-" + nrOfCard).prop('disabled', false);
+
+                database.ref('rooms/' + currentRoomName + '/conflict/' + currentFighter + '/cards/' + cardId).remove();
+
+            } else{
+
+                if(cardId === 'attackera')
+                {
+
+                }
+
+                // add card
+                $(".btn-select-card-" + nrOfCard).prop('disabled', true);
+                $(this).prop('disabled', false);
+                $(this).toggleClass('active');
+
+                var fightcard = fightingCards[cardId];
+
+                database.ref('rooms/' + currentRoomName + '/conflict/' + currentFighter + '/cards/' + cardId).set({"isVisible" : false,"cardid":cardId,"name" : fightcard.name,"sortOrder": nrOfCard});
+
+            }
+
+
+
+
+        });
+        
 
     }
 
