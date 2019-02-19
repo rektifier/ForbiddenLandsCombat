@@ -141,56 +141,7 @@ function initGame() {
         // }
     });
 
-    //when a new user i connected
-    // usersRef.on("child_added", function (snapshot, prevChildKey) {
-    //     console.log('on.child_added');
-    //     var newUser = snapshot.val();
 
-    //     //addUserToList(newUser.name);
-
-    //     if(newUser.inCombat){
-    //         showPlayground(snapshot.key);
-    //     }else{
-    //         hidePlayground(snapshot.key);
-    //     }
-
-    //     if (newUser.name !== currentUser.displayName) {
-    //         //showAlert.displayInfo(newUser.name + " joined the fight!");
-    //         //showAlert.setInfo(newUser.name + " joined the fight!");
-    //     }
-
-    // });
-
-    usersRef.on("child_changed", function (snapshot) {
-        console.log('child_updated');
-
-        // var user = snapshot.val();
-        // var userKey = snapshot.key;
-  
-
-        // var menuitem = $("#userslist li").find('#'+userKey);
-
-        // $(menuitem).toggleClass('incombat');
-        
-        // if(user.inCombat === false)
-        // {
-        //     hidePlayground(userKey);
-        // }else{
-        //     showPlayground(userKey);
-        // }
-
-        // if(userKey === currentUser.displayName)
-        // {
-        //     if(user.inCombat){
-        //         $(".btn-select-card").prop('disabled', false);
-        //     }else{
-        //         $(".btn-select-card").prop('disabled', true);
-        //     }
-        // }
-
-        
-
-    });
 
     usersRef.orderByChild("sortOrder").on("value", function (querySnapshot) {
         console.log('on.sortOrder');
@@ -410,6 +361,58 @@ $(document).ready(function () {
 
     });
 
+    $(".btn-select-card").click(function (e) {
+        console.log('btn-select-card.click ');
+        e.preventDefault();
+
+        var cardId = $(this).data('cardid');
+        var nrOfCard = $(this).data('cardnr');
+
+        var li = $(this).parent();
+        var isAlreadyActive = $(li).hasClass('active');
+
+        //set up rules for dubblera and attackera
+
+        var currentFighter = currentUser.displayName;
+        if(isRoomAdmin){
+
+            //get the selected enemy89
+            var combatEnemy = $("#userslist .incombat").filter(":contains('"+roomConfig.enemyNameSuffix+"')").first();
+            if(combatEnemy !== undefined){
+                currentFighter = combatEnemy.attr('id');
+            }
+
+        }
+
+
+
+        if(isAlreadyActive) {
+
+            // remove card
+            $(this).toggleClass('active');
+            $(".btn-select-card-" + nrOfCard).prop('disabled', false);
+
+            database.ref('rooms/' + currentRoomName + '/conflict/' + currentFighter + '/cards/' + cardId).remove();
+
+        } else{
+
+            if(cardId === 'attackera')
+            {
+
+            }
+
+            // add card
+            $(".btn-select-card-" + nrOfCard).prop('disabled', true);
+            $(this).prop('disabled', false);
+            $(this).toggleClass('active');
+
+            var fightcard = fightingCards[cardId];
+
+            database.ref('rooms/' + currentRoomName + '/conflict/' + currentFighter + '/cards/' + cardId).set({"isVisible" : false,"cardid":cardId,"name" : fightcard.name,"sortOrder": nrOfCard});
+
+        }
+    });
+
 
 
 
@@ -569,61 +572,7 @@ $(document).ready(function () {
             }            
         });
 
-        $(".btn-select-card").click(function (e) {
-            console.log('btn-select-card.click ');
-            e.preventDefault();
 
-            var cardId = $(this).data('cardid');
-            var nrOfCard = $(this).data('cardnr');
-
-            var li = $(this).parent();
-            var isAlreadyActive = $(li).hasClass('active');
-
-            //set up rules for dubblera and attackera
-
-            var currentFighter = currentUser.displayName;
-            if(isRoomAdmin){
-
-                //get the selected enemy89
-                var combatEnemy = $("#userslist .incombat").filter(":contains('"+roomConfig.enemyNameSuffix+"')").first();
-                if(combatEnemy !== undefined){
-                    currentFighter = combatEnemy.attr('id');
-                }
-
-            }
-
-
-
-            if(isAlreadyActive) {
-
-                // remove card
-                $(this).toggleClass('active');
-                $(".btn-select-card-" + nrOfCard).prop('disabled', false);
-
-                database.ref('rooms/' + currentRoomName + '/conflict/' + currentFighter + '/cards/' + cardId).remove();
-
-            } else{
-
-                if(cardId === 'attackera')
-                {
-
-                }
-
-                // add card
-                $(".btn-select-card-" + nrOfCard).prop('disabled', true);
-                $(this).prop('disabled', false);
-                $(this).toggleClass('active');
-
-                var fightcard = fightingCards[cardId];
-
-                database.ref('rooms/' + currentRoomName + '/conflict/' + currentFighter + '/cards/' + cardId).set({"isVisible" : false,"cardid":cardId,"name" : fightcard.name,"sortOrder": nrOfCard});
-
-            }
-
-
-
-
-        });
         
 
     }
