@@ -8,9 +8,6 @@ var adminAction = '';
 var isInCombat = false;
 
 
-
-
-
 currentRoomName = getParameterByName('room');
 if (currentRoomName === null || currentRoomName === "") {
     redirectToLogin();
@@ -169,14 +166,14 @@ function initGame() {
         $("#userslist li").removeClass('incombat');
 
         isInCombat = false;
-        var isEnemy = false;
+        
 
         conflictSnapshot.forEach(function (userSnap) {
             
 
             var userId = userSnap.key;
             var conflictData = userSnap.val();            
-
+            var isEnemy = false;
 
             var menuitem = $("#userslist").find('li#'+userId);
             $(menuitem).addClass('incombat');
@@ -194,7 +191,7 @@ function initGame() {
             }
     
     
-            if(isInCombat === true || isRoomAdmin === true) {
+            if(isInCombat === true || isRoomAdmin === true && isEnemy === true) {
                 $(".btn-select-card").prop('disabled', false);
             }else {
                 $(".btn-select-card").prop('disabled', true);
@@ -365,6 +362,7 @@ $(document).ready(function () {
         console.log('btn-select-card.click ');
         e.preventDefault();
 
+
         var cardId = $(this).data('cardid');
         var nrOfCard = $(this).data('cardnr');
 
@@ -380,12 +378,9 @@ $(document).ready(function () {
             var combatEnemy = $("#userslist .incombat").filter(":contains('"+roomConfig.enemyNameSuffix+"')").first();
             if(combatEnemy !== undefined){
                 currentFighter = combatEnemy.attr('id');
-            }
-
+            }        
         }
-
-
-
+        
         if(isAlreadyActive) {
 
             // remove card
@@ -489,10 +484,23 @@ $(document).ready(function () {
         
         // ############## click events ##############
         //
-
-
         $("#btn-start-fight").click(function(e){                
                 console.log('brt-fight!');
+
+                var nr1CardsPlayed = $(".card-played-1:visible").length;
+                var nr2CardsPlayed = $(".card-played-2:visible").length;
+
+                var is1CardsFlipped = $('.card-played-1:visible img[src*="baksida"]');
+                var is2CardsFlipped = $('.card-played-2:visible img[src*="baksida"]');
+
+
+
+                if(nr1CardsPlayed.length === 2 )
+                {
+                    //set cards 1 = visible
+                }else{
+                    //set cards 1 = visible
+                }
         });    
         
         //fight button in users list
@@ -529,10 +537,6 @@ $(document).ready(function () {
 
             console.log(li);
          });  
-        
-
-
-        
 
         $("#add-enemy-button").click(function (e) {
 

@@ -161,12 +161,15 @@
                 if (user) {
 
                     window.user = user;
+                    
                     $("#logout-button").show();
 
                     $("#login-username-input").val(user.displayName);
                     $("#login-username-input").prop('disabled', true);
 
                 } else {
+
+                    window.user = null;
 
                     $("#logout-button").hide();
                     $("#login-username-input").val('');
