@@ -15,12 +15,23 @@ var roomConfig = {
     maxNrOfPlayersInFight : 2
 };
 
+var typeOfCards = {
+    attackera:'attackera',
+    avvakta:'avvakta',
+    dubblera:'dubblera',
+    forbereda:'forbereda',
+    forsvara:'forsvara',
+    hindra:'hindra',
+    manovrera:'manovrera',
+    baksida:'baksida'
+}
+
 var fightingCards = {};
-fightingCards['attackera'] = { 'name': 'Attack', 'src':'images/attackera.jpg' };
-fightingCards['avvakta'] = { 'name': 'Avvakta', 'src':'images/avvakta.jpg' };
-fightingCards['dubblera'] = { 'name': 'Dubblera', 'src':'images/dubblera.jpg' };
-fightingCards['forbereda'] = { 'name': 'Förbereda', 'src':'images/forbereda.jpg' };
-fightingCards['forsvara'] = { 'name': 'Försvara', 'src':'images/forsvara.jpg' };
-fightingCards['hindra'] = { 'name': 'Hindra', 'src':'images/hindra.jpg' };
-fightingCards['manovrera'] = { 'name': 'Manövrera', 'src':'images/manovrera.jpg' };
-fightingCards['baksida'] = { 'name': 'Baksida', 'src':'images/baksida.jpg' };
+fightingCards[typeOfCards.attackera] = { 'name': 'Attack', 'src':'images/attackera.jpg' };
+fightingCards[typeOfCards.avvakta] = { 'name': 'Avvakta', 'src':'images/avvakta.jpg' };
+fightingCards[typeOfCards.dubblera] = { 'name': 'Dubblera', 'src':'images/dubblera.jpg' };
+fightingCards[typeOfCards.forbereda] = { 'name': 'Förbereda', 'src':'images/forbereda.jpg' };
+fightingCards[typeOfCards.forsvara] = { 'name': 'Försvara', 'src':'images/forsvara.jpg' };
+fightingCards[typeOfCards.hindra] = { 'name': 'Hindra', 'src':'images/hindra.jpg' };
+fightingCards[typeOfCards.manovrera] = { 'name': 'Manövrera', 'src':'images/manovrera.jpg' };
+fightingCards[typeOfCards.baksida] = { 'name': 'Baksida', 'src':'images/baksida.jpg' };
