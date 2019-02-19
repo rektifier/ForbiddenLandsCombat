@@ -5,6 +5,7 @@ var latestMessage = '';
 var userMessages = {};
 var currentRoomName;
 var adminAction = '';
+var isInCombat = false;
 
 
 
@@ -50,7 +51,7 @@ function addUserToList(key, user) {
 
     if (exists === false) {
 
-        var combatClass = 'notincombat';
+        var combatClass = '';
         var fightBtn = '';
 
         if(isRoomAdmin)
@@ -124,7 +125,7 @@ function initGame() {
     //remove user when disconnected
     //
     usersRef.on("child_removed", function (snapshot) {
-        console.log('child_removed');
+        console.log('on.child_removed');
         var removedUser = snapshot.val();
 
         database.ref('rooms/' + currentRoomName + '/conflict/' + snapshot.key).remove();
@@ -141,59 +142,58 @@ function initGame() {
     });
 
     //when a new user i connected
-    usersRef.on("child_added", function (snapshot, prevChildKey) {
-        console.log('child_added');
-        var newUser = snapshot.val();
+    // usersRef.on("child_added", function (snapshot, prevChildKey) {
+    //     console.log('on.child_added');
+    //     var newUser = snapshot.val();
 
-        //addUserToList(newUser.name);
+    //     //addUserToList(newUser.name);
 
-        if(newUser.inCombat){
-            showPlayground(snapshot.key);
-        }else{
-            hidePlayground(snapshot.key);
-        }
+    //     if(newUser.inCombat){
+    //         showPlayground(snapshot.key);
+    //     }else{
+    //         hidePlayground(snapshot.key);
+    //     }
 
-        if (newUser.name !== currentUser.displayName) {
-            //showAlert.displayInfo(newUser.name + " joined the fight!");
-            //showAlert.setInfo(newUser.name + " joined the fight!");
-        }
+    //     if (newUser.name !== currentUser.displayName) {
+    //         //showAlert.displayInfo(newUser.name + " joined the fight!");
+    //         //showAlert.setInfo(newUser.name + " joined the fight!");
+    //     }
 
-    });
+    // });
 
     usersRef.on("child_changed", function (snapshot) {
         console.log('child_updated');
 
-        var user = snapshot.val();
-        var userKey = snapshot.key;
+        // var user = snapshot.val();
+        // var userKey = snapshot.key;
   
 
-        var menuitem = $("#userslist li").find('#'+userKey);
+        // var menuitem = $("#userslist li").find('#'+userKey);
 
-        $(menuitem).toggleClass('notincombat');
-        $(menuitem).toggleClass('incombat');
+        // $(menuitem).toggleClass('incombat');
         
-        if(user.inCombat === false)
-        {
-            hidePlayground(userKey);
-        }else{
-            showPlayground(userKey);
-        }
+        // if(user.inCombat === false)
+        // {
+        //     hidePlayground(userKey);
+        // }else{
+        //     showPlayground(userKey);
+        // }
 
-        if(userKey === currentUser.displayName)
-        {
-            if(user.inCombat){
-                $(".btn-select-card").prop('disabled', false);
-            }else{
-                $(".btn-select-card").prop('disabled', true);
-            }
-        }
+        // if(userKey === currentUser.displayName)
+        // {
+        //     if(user.inCombat){
+        //         $(".btn-select-card").prop('disabled', false);
+        //     }else{
+        //         $(".btn-select-card").prop('disabled', true);
+        //     }
+        // }
 
         
 
     });
 
     usersRef.orderByChild("sortOrder").on("value", function (querySnapshot) {
-        console.log('sortOrder');
+        console.log('on.sortOrder');
 
         $("#userslist").empty();
 
@@ -215,17 +215,44 @@ function initGame() {
 
         hidePlaygrounds();
 
+        $("#userslist li").removeClass('incombat');
+
+        isInCombat = false;
+        var isEnemy = false;
+
         conflictSnapshot.forEach(function (userSnap) {
+            
 
             var userId = userSnap.key;
-            var conflictData = userSnap.val();
+            var conflictData = userSnap.val();            
+
+
+            var menuitem = $("#userslist").find('li#'+userId);
+            $(menuitem).addClass('incombat');
+
+            if(userId === currentUser.displayName){
+                isInCombat = true;
+            }
+
+            var combatEnemy = menuitem.filter(":contains('"+roomConfig.enemyNameSuffix+"')").first();
+
+            //get the selected enemy89
+            //var combatEnemy = $("#userslist .incombat").filter(":contains('"+roomConfig.enemyNameSuffix+"')").first();
+            if(combatEnemy !== undefined && combatEnemy.length > 0){
+                isEnemy = true;
+            }
+    
+    
+            if(isInCombat === true || isRoomAdmin === true) {
+                $(".btn-select-card").prop('disabled', false);
+            }else {
+                $(".btn-select-card").prop('disabled', true);
+            }
+
 
             var playground = detectPlayground();
 
             showPlayground(userId);
-
-       
-
 
             if (conflictData.cards !== undefined){
 
@@ -235,7 +262,7 @@ function initGame() {
 
                     var cardImg = fightingCards['baksida'];
 
-                    if(userId === currentUser.displayName || card.isVisible === true)
+                    if(userId === currentUser.displayName || card.isVisible === true || isEnemy === true && isRoomAdmin === true)
                     {
                         cardImg = fightingCards[card.cardid];
                     }
@@ -249,40 +276,7 @@ function initGame() {
 
             }	
 
-        
 
-
-                // var test = userSnap.val();
-
-                
-
-
-                // var cardId = cardSnapshot.key;
-                // var card = cardSnapshot.val();
-
-                // console.log(card);
-
-                // //ToDo:
-                // //go to the users playground and empty
-                // //$("#playground ").empty();
-
-
-                // var cardSrc = fightingCards['baksida'].src;
-                // if (card.isVisible) {
-                //     cardSrc = fightingCards[cardId].src
-                // }
-
-                // // if(nrOfCards > 3){
-                // //     $("#btn-start-fight").prop('disabled', false);
-        
-                // // }else{
-                // //     $("#btn-start-fight").prop('disabled', true);
-                // // }
-
-                // showCard(cardId,card);
-
-
-          
 
 
             
@@ -290,46 +284,6 @@ function initGame() {
 
     });
 
-    // cardsRef.on('value', function (cardsSnapshot) {
-    //     console.log('cards');
-
-    //     //get users in combat so we can see whos nr 1 and whos nr 2
-    //     //
-    //     var list ={}; 
-        
-    //     var cards = cardsSnapshot.val();
-    //     var nrOfCards = Object.keys(cards).length;
-        
-    //     if(nrOfCards > 3){
-    //         $("#btn-start-fight").prop('disabled', false);
-
-    //     }else{
-    //         $("#btn-start-fight").prop('disabled', true);
-    //     }
-
-    //     // nrOfCards.length
-
-    //     cardsSnapshot.forEach(function (cardSnapshot) {
-    //         var cardId = cardSnapshot.key;
-    //         var card = cardSnapshot.val();
-
-    //         console.log(card);
-
-    //         //ToDo:
-    //         //go to the users playground and empty
-    //         //$("#playground ").empty();
-
-
-
-    //         var cardSrc = fightingCards['baksida'].src;
-    //         if (card.isVisible) {
-    //             cardSrc = fightingCards[cardId].src
-    //         }
-
-    //         showCard(cardId,card);
-    //     });
-
-    // });
 
 
 }
@@ -348,17 +302,7 @@ function showPlayground(owner){
     }
 }
 
-function showCard(owner,cardTitle,){
 
-            // $(currentPlayground).find(".title-nr-card-1").show();
-        // $(currentPlayground).find(".title-nr-card-2").text('');
-
-    // $("#playground-player-1 .card-played-1").hide();
-    // $("#playground-player-1 .card-played-2").hide();
-
-    //$("#playground-player-1 .card-played-1").attr('src','images/baksida.jpg');
-    //$("#playground-player-1 .card-played-2").attr('src','images/baksida.jpg');
-}
 
 function hidePlayground(owner){
     var currentPlayground = detectPlayground(owner);
@@ -389,15 +333,7 @@ function detectPlayground(owner)
     return null;
 }
 
-function showCard(cardId,card){
 
-    var currentPlayground = detectPlayground(card.owner);
-
-    if(currentPlayground !== null)
-    {
-
-    }
-}
 
 function hidePlaygrounds(){
 
@@ -560,11 +496,10 @@ $(document).ready(function () {
         //
         $("#userslist").on('click','a',function(){     
 
-            console.log('btn-user-fight');
+            console.log('click.btn-user-fight');
 
             var li = $(this).parent();
 
-            $(li).toggleClass('notincombat');
             $(li).toggleClass('incombat');
 
             var nrOfPlayersInFight = $("#userslist .incombat").length;
@@ -572,11 +507,10 @@ $(document).ready(function () {
             {
                 //toggle back the combat class
                 //
-                $(li).toggleClass('notincombat');
                 $(li).toggleClass('incombat');
 
             }else{
-                var isInCombat = !$(li).hasClass('notincombat');
+                var isInCombat = $(li).hasClass('incombat');
                 var user = $(li).attr('id');
     
                 firebase.database().ref().child('/rooms/' + currentRoom.name + '/users/' + user).update({ inCombat: isInCombat });
@@ -642,7 +576,8 @@ $(document).ready(function () {
             var cardId = $(this).data('cardid');
             var nrOfCard = $(this).data('cardnr');
 
-            var isAlreadyActive = $(this).hasClass('active');
+            var li = $(this).parent();
+            var isAlreadyActive = $(li).hasClass('active');
 
             //set up rules for dubblera and attackera
 
@@ -651,13 +586,11 @@ $(document).ready(function () {
 
                 //get the selected enemy89
                 var combatEnemy = $("#userslist .incombat").filter(":contains('"+roomConfig.enemyNameSuffix+"')").first();
-                if(combatEnemy){
+                if(combatEnemy !== undefined){
                     currentFighter = combatEnemy.attr('id');
                 }
 
             }
-
-
 
 
 
