@@ -269,6 +269,19 @@ function validateSelectedCards(firstCard,secondCard){
 
 $(document).ready(function () {
 
+    $("#add-enemy-button").prop("disabled", true);
+    $('#add-enemy-input').keyup(validateAddEnemyButton);
+
+    function validateAddEnemyButton(){
+     
+        if ($('#add-enemy-input').val().length > 0) {
+            $("#add-enemy-button").prop("disabled", false);
+        }
+        else {
+            $("#add-enemy-button").prop("disabled", true);
+        }
+    }
+
     currentRoomName = getParameterByName('room');
     if (currentRoomName === null || currentRoomName === "") {// || currentUser === undefined || currentUser.displayName === '') {
         redirectToLogin();
