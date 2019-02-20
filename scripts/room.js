@@ -194,6 +194,8 @@ function initGame() {
 
                     $(playground).find(".card-played-" + card.sortOrder).show();
                     $(playground).find(".card-played-" + card.sortOrder).attr('src', cardImg.src);
+                    $(playground).find(".card-played-" + card.sortOrder).attr('data-cardid', card.cardid);
+                    $(playground).find(".card-played-" + card.sortOrder).attr('data-owner', userId);
 
                     //de/activate buttons 
                     if (isInCombat && userId === currentUser.displayName || isEnemy === true && isRoomAdmin === true) {
@@ -493,21 +495,41 @@ $(document).ready(function () {
 
         // ############## click events ##############
         //
-        $("#btn-start-fight").click(function (e) {
+        function showPlayedCards(cardOrder,roomName){
+
+            $(".card-played-" + cardOrder).each(function(index){
+
+                var cardOwner = $(this).data('owner');
+                var cardId = $(this).data('cardid');
+
+                if(cardOwner !== undefined && cardId !== undefined)
+                {
+                    firebase.database().ref().child('/rooms/' + roomName + '/conflict/' + cardOwner+"/cards/"+cardId).update({ isVisible: true });
+                }
+            });  
+        }
+
+        $("#btn-start-fight-1").click(function (e) {
             console.log('brt-fight!');
 
             var nr1CardsPlayed = $(".card-played-1:visible").length;
             var nr2CardsPlayed = $(".card-played-2:visible").length;
 
-            var is1CardsFlipped = $('.card-played-1:visible img[src*="baksida"]');
-            var is2CardsFlipped = $('.card-played-2:visible img[src*="baksida"]');
+            //is all the cards played?
+            if(nr1CardsPlayed === 2 && nr2CardsPlayed === 2){
+                showPlayedCards(1,currentRoom.name)
+            }
+        });
 
+        $("#btn-start-fight-2").click(function (e) {
+            console.log('brt-fight!');
 
+            var nr1CardsPlayed = $(".card-played-1:visible").length;
+            var nr2CardsPlayed = $(".card-played-2:visible").length;
 
-            if (nr1CardsPlayed.length === 2) {
-                //set cards 1 = visible
-            } else {
-                //set cards 1 = visible
+            //is all the cards played?
+            if(nr1CardsPlayed === 2 && nr2CardsPlayed === 2){
+                showPlayedCards(2,currentRoom.name)
             }
         });
 
