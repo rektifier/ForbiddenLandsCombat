@@ -59,4 +59,4 @@ var logger = function()
 
 
 
-//logger.disableLogger();
+logger.disableLogger();
