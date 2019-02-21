@@ -245,14 +245,8 @@ function detectPlayground(owner) {
 }
 
 function hidePlaygrounds() {
-
     $("#playground-player-1").hide();
     $("#playground-player-2").hide();
-
-    //$("#playground-player-1 .card-played-1").attr('src','images/baksida.jpg');
-    //$("#playground-player-1 .card-played-2").attr('src','images/baksida.jpg');
-
-
 }
 
 function validateSelectedCards(firstCard,secondCard){
