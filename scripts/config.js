@@ -8,12 +8,13 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
+
+
 var database = firebase.database();
 var roomConfig = {
     enemyNamePrefix : '',
     enemyNameSuffix : ' ( enemy )',
-    maxNrOfPlayersInFight : 2,
-    diceApiUrl:'https://rolz.org/api/?'
+    maxNrOfPlayersInFight : 2
 };
 
 var typeOfCards = {
@@ -27,7 +28,8 @@ var typeOfCards = {
     baksida:'baksida'
 }
 
-var roomDice = {
+var ForbiddenLandsDice = {
+    
 
 }
 
