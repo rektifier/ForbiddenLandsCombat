@@ -35,10 +35,6 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function isEmpty(str) {
-    return (!str || 0 === str.length);
-}
-
 var logger = function()
 {
     var oldConsoleLog = null;

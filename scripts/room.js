@@ -7,8 +7,7 @@ var currentRoomName;
 var adminAction = '';
 var isInCombat = false;
 
-//node.nodeValue = value == null ? '' : value
-//This causes 0 and false to be printed but null and undefined are printed as an empty string.
+
 
 
 
@@ -48,7 +47,6 @@ function addUserToList(key, user) {
 
         var combatClass = '';
         var fightBtn = '';
-        var avatarBtn = '';
 
         if (isRoomAdmin) {
             fightBtn = '<a href="javascript:void(0)" class="badge badge-warning btn-user-fight">Fight</a>';
@@ -85,8 +83,6 @@ function initGame() {
     var currentUserRef = database.ref('rooms/' + currentRoomName + '/users/' + currentUser.displayName);
 
     var conflictRef = database.ref('rooms/' + currentRoomName + '/conflict/');
-
-    
 
     //get user if we have one
     //
@@ -296,6 +292,8 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(function (user) {
 
         if (user) {
+            window.user = user;
+
             currentuser = user;
 
             //load current room
@@ -306,7 +304,7 @@ $(document).ready(function () {
 
                     currentRoom = snapshot.val();
 
-                    $("#roomNameHeader").html('<strong>' + currentRoomName + '</strong><br/><small>( owned by ' + currentRoom.owner + ' )</small>');
+                    $("#roomNameHeader").html('<strong>' + currentRoomName + ' <small>( owned by ' + currentRoom.owner + ' )</small></strong>');
 
                     //load current user
                     //
@@ -332,6 +330,7 @@ $(document).ready(function () {
             });
         } else {
             redirectToLogin();
+            window.user = null;
         }
     });
 
@@ -441,8 +440,6 @@ $(document).ready(function () {
     //admin fearures
     //
     function activateAdminFeatures() {
-
-        const storageRef = firebase.storage().ref();
 
         $(".btn-select-card").prop('disabled', false);
 
@@ -614,32 +611,9 @@ $(document).ready(function () {
             }
         });
 
-        $("#add-enemy-image-button").click(function (e) {
-
-            console.log('add-enemy-image-button.click ');
-            e.preventDefault();
-
-            var file = $("#add-enemy-image-input").prop("files")[0]; 
-            var re = /(?:\.([^.]+))?$/;
-            var filename = currentUser.displayName + '.' + re.exec(file.name)[1];
-            const metadata = { contentType: file.type };
-            
-            const task = storageRef.child('images/rooms/' + currentRoom.name + '/' + currentUser.displayName + '/' + filename ).put(file, metadata); 
-          
-            task
-            .then(snapshot => snapshot.ref.getDownloadURL())
-            .then(url => {
-                console.log(url);
-
-                document.querySelector('#enemy-image').src = url;
-
-            })
-            .catch((error) => {
-                console.log(error);
-            });
 
 
-        });
+
     }
 
 });
