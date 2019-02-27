@@ -8,8 +8,8 @@
     <meta name="description" content="Forbidden Lands Fighting Pit">
     <meta name="author" content="Mikael Ribeiro">
     <title>Forbidden Lands Fighting Pit - Login</title>
-
-
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
@@ -49,7 +49,7 @@
                             </div>
 
                             <div class="form-group">
-                                <button id="login-button" type="button" class="btn btn-primary">Ta mig till fighten!</button>
+                                <button id="login-button" type="button" class="btn btn-primary" name="login-button">Ta mig till fighten!</button>
                             </div>
                         
                     </div>
@@ -75,6 +75,14 @@
             $("#logout-button").click(function (e) {
                 firebase.auth().signOut();
             });
+
+            $('#room-input').keypress(function (e) {
+                var key = e.which;
+                if(key == 13){  // the enter key code                
+                    $('button[name = login-button]').click();
+                    return false;  
+                }
+            });   
 
 
             $("#login-button").click(function (e) {
