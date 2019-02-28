@@ -1,7 +1,6 @@
 var isRoomAdmin = false;
 var currentUser;
 var currentRoom;
-var userMessages = {};
 var currentRoomName;
 var adminAction = '';
 var isInCombat = false;
@@ -94,7 +93,13 @@ function createChatMessage(sender,message,createdOn){
 function scrollMessagesToBottom() {
     var list = document.getElementById('list-messages');
     list.scrollTop = list.scrollHeight;
-  }
+}
+
+  function appendChatMessage(message,sender,createdOn){
+    var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
+    var result = createChatMessage(sender,message, messDate);
+    $('#list-messages').append(result);  
+}
 
 function initGame() {
 
@@ -102,53 +107,49 @@ function initGame() {
 
     var messageRef = database.ref('messages/' + currentRoomName);
     var usersRef = database.ref('rooms/' + currentRoomName + '/users/');
-    var currentUserRef = database.ref('rooms/' + currentRoomName + '/users/' + currentUser.displayName);
-
     var conflictRef = database.ref('rooms/' + currentRoomName + '/conflict/');
 
-    //get user if we have one
-    //
-    currentUserRef.once("value").then(function (snapshot) {
-        console.log('currentUserRef.once');
+    if(isRoomAdmin === false)
+    {
+        var currentUserRef = database.ref('rooms/' + currentRoomName + '/users/' + currentUser.displayName);
+    
+        //get user if we have one
+        //
+        currentUserRef.once("value").then(function (snapshot) {
+            console.log('currentUserRef.once');
+    
+            if (snapshot.exists()) {
+                var user = snapshot.val();
+            } else {
+                database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).set({ "name": currentUser.displayName, "messages": {}, "sortOrder": 99, "inCombat": false });
+            }
+        });
+    
+        currentUserRef.onDisconnect().remove();
+    }
 
-        if (snapshot.exists()) {
-            var user = snapshot.val();
-            userMessages = user.messages;
-        } else {
-            database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).set({ "name": currentUser.displayName, "messages": {}, "sortOrder": 99, "inCombat": false });
-        }
-    });
 
-    currentUserRef.onDisconnect().remove();
 
     messageRef.endAt().limitToLast(15).once("value").then(function (snapshot) {
         console.log('messageRef.endAt().limitToLast(15).once');
 
         if (snapshot.exists()) {
-
             snapshot.forEach(function (messSnap) {
                 var mess = messSnap.val();
-
-
-                var messDate = moment(mess.createdOn).format('YYYY-MM-DD kk:mm');
-
-                var message = createChatMessage(mess.sender,mess.message, messDate);
-                $('#list-messages').append(message);  
+                appendChatMessage(mess.message,mess.sender,mess.createdOn);
             });
 
             scrollMessagesToBottom();            
         }
     });
     
-    messageRef.orderByChild('createdOn').startAt(Date.now()).on('child_added', function(snapshot) {        
+    messageRef.orderByChild('createdOn').startAt(Date.now()).on('child_added', function(snapshot) {
         console.log('new record', snapshot.val());
 
         var mess = snapshot.val();
-        var message = createChatMessage(mess.sender,mess.message,mess.createdOn);
-        $('#list-messages').append(message);
-
+        appendChatMessage(mess.message,mess.sender,mess.createdOn);
         scrollMessagesToBottom();
-      });
+    });
 
 
     //remove user when disconnected
@@ -174,9 +175,9 @@ function initGame() {
             var user = userSnapshot.val();
             console.log(user);
 
-            addUserToList(userId, user);
-
-
+            if(!(isRoomAdmin && userId === currentUser.displayName)){
+                addUserToList(userId, user);
+            }
         });
 
     });
@@ -348,8 +349,12 @@ $(document).ready(function () {
                 if (snapshot.exists()) {
 
                     currentRoom = snapshot.val();
+                    
 
-                    $("#roomNameHeader").html('<strong>' + currentRoomName + ' <small>( owned by ' + currentRoom.owner + ' )</small></strong>');
+
+                    //$("#roomNameHeader").html('<strong>' + currentRoomName + ' <small>( owned by ' + currentRoom.owner + ' )</small></strong>');
+
+                    $("#roomNameHeader").html('<strong>' + currentRoom.name + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+currentRoom.title+'</small></p><footer class="blockquote-footer"a><small>' + currentRoom.owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
 
                     //load current user
                     //
@@ -361,6 +366,11 @@ $(document).ready(function () {
                         //
                         if (currentRoom.owner === currentUser.displayName) {
                             isRoomAdmin = true;
+
+                            $("#settingsRoomOwner").val(currentRoom.owner);
+                            $("#settingsRoomName").val(currentRoom.name);
+                            $("#settingsRoomTitle").val(currentRoom.title);
+                            
                             activateAdminFeatures();
                         }
 
@@ -385,12 +395,29 @@ $(document).ready(function () {
         console.log('leave room');
         e.preventDefault();
 
-        database.ref('rooms/' + currentRoom.name + '/conflict/' + currentUser.displayName).remove();
-        database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).remove();
 
-        redirectToLogin();
+        
 
     });
+
+    //room settingsR
+    //
+    $("#btn-settings-save").click(function (e) {
+        console.log('btn-settings-save.click');
+        e.preventDefault();
+
+        var owner = $("#settingsRoomOwner").val();
+        var roomname = $("#settingsRoomName").val();
+        var title = $("#settingsRoomTitle").val();
+
+        database.ref('rooms/' + currentRoomName).update({ "owner": owner, "name": roomname, "title":title});
+
+        $("#roomNameHeader").html('<strong>' + roomname+ '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+title+'</small></p><footer class="blockquote-footer"a><small>' + owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
+
+    });
+
+
+    
 
     // select card button
     //
