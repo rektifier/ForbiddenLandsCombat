@@ -91,6 +91,11 @@ function createChatMessage(sender,message,createdOn){
     return messageTemplate;
 }
 
+function scrollMessagesToBottom() {
+    var list = document.getElementById('list-messages');
+    list.scrollTop = list.scrollHeight;
+  }
+
 function initGame() {
 
     console.log('init game');
@@ -130,6 +135,8 @@ function initGame() {
                 var message = createChatMessage(mess.sender,mess.message, messDate);
                 $('#list-messages').append(message);  
             });
+
+            scrollMessagesToBottom();            
         }
     });
     
@@ -139,6 +146,8 @@ function initGame() {
         var mess = snapshot.val();
         var message = createChatMessage(mess.sender,mess.message,mess.createdOn);
         $('#list-messages').append(message);
+
+        scrollMessagesToBottom();
       });
 
 
