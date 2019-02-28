@@ -87,7 +87,7 @@ function sendMessage(text){
 }
 
 function createChatMessage(sender,message,createdOn){
-    var messageTemplate = '<li class="list-group-item-light"><div class="chat-body1"><p><small>'+sender+':<br>'+message+'<i>('+createdOn+')</i></small></p></div></li>';
+    var messageTemplate = '<li class="list-group-item-light"><div class="chat-body1"><p><small>'+sender+':<br>'+message+'<i><br>('+createdOn+')</i></small></p></div></li>';
     return messageTemplate;
 }
 
