@@ -1,14 +1,13 @@
 var isRoomAdmin = false;
 var currentUser;
 var currentRoom;
-var latestMessage = '';
 var userMessages = {};
 var currentRoomName;
 var adminAction = '';
 var isInCombat = false;
 
 
-
+moment().format();
 
 
 
@@ -74,11 +73,29 @@ function redirectToLogin() {
     window.location.href = "index.html";
 }
 
+function sendMessage(text){
+
+    database.ref('messages/' + currentRoomName).push({
+
+        createdOn: firebase.database.ServerValue.TIMESTAMP,
+        message: text,
+        sender:currentUser.displayName
+
+    }).catch(function(error){
+        console.error('Error writing new message to Firebase Database', error);
+    });
+}
+
+function createChatMessage(sender,message,createdOn){
+    var messageTemplate = '<li class="list-group-item-light"><div class="chat-body1"><p><small>'+sender+':<br>'+message+'<i>('+createdOn+')</i></small></p></div></li>';
+    return messageTemplate;
+}
+
 function initGame() {
 
     console.log('init game');
 
-    var messageRef = database.ref('rooms/' + currentRoomName + '/message/');
+    var messageRef = database.ref('messages/' + currentRoomName);
     var usersRef = database.ref('rooms/' + currentRoomName + '/users/');
     var currentUserRef = database.ref('rooms/' + currentRoomName + '/users/' + currentUser.displayName);
 
@@ -99,15 +116,31 @@ function initGame() {
 
     currentUserRef.onDisconnect().remove();
 
-    messageRef.on('value', function (snapshot) {
-        console.log('message.on');
-        var message = snapshot.val();
+    messageRef.endAt().limitToLast(15).once("value").then(function (snapshot) {
+        console.log('messageRef.endAt().limitToLast(15).once');
 
-        if (message !== latestMessage) {
-            //showAlert.displayInfo(message);
-            showAlert.displayInfo(message);
+        if (snapshot.exists()) {
+
+            snapshot.forEach(function (messSnap) {
+                var mess = messSnap.val();
+
+
+                var messDate = moment(mess.createdOn).format('YYYY-MM-DD kk:mm');
+
+                var message = createChatMessage(mess.sender,mess.message, messDate);
+                $('#list-messages').append(message);  
+            });
         }
     });
+    
+    messageRef.orderByChild('createdOn').startAt(Date.now()).on('child_added', function(snapshot) {        
+        console.log('new record', snapshot.val());
+
+        var mess = snapshot.val();
+        var message = createChatMessage(mess.sender,mess.message,mess.createdOn);
+        $('#list-messages').append(message);
+      });
+
 
     //remove user when disconnected
     //
@@ -261,7 +294,10 @@ function validateSelectedCards(firstCard,secondCard){
     return response;
 }
 
+
 $(document).ready(function () {
+    
+    const roller = new DiceRoller();
 
     $("#add-enemy-button").prop("disabled", true);
     $('#add-enemy-input').keyup(validateAddEnemyButton);
@@ -435,6 +471,89 @@ $(document).ready(function () {
 
         }
     });
+
+
+    $("#btn-throw-dice").click(function (e) {
+        console.log('btn-throw-dice.click');
+        e.preventDefault();
+
+        //get nr of red
+        var nrOfDiceGE = $('input[name=dice-ge]:checked').val();
+        var nrOfDiceFV = $('input[name=dice-fv]:checked').val();
+        var nrOfDiceVA = $('input[name=dice-va]:checked').val();
+
+        var totalResult = '';
+
+        //get nr of white
+
+        //get nr of black
+
+        //roll the dice
+
+        if(nrOfDiceGE !== "0")
+        {
+            var miss = 0;
+            var hit = 0;
+            const diceRoll = new DiceRoll(nrOfDiceGE+'d6');
+            var output = [];
+
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);
+                if(result == 1){miss++;}
+                if(result == 6){hit++;}               
+            });
+
+            var geResult = 'GE:[' + output.join(",") + ']' + ' Hit: ' + hit + ', Miss: ' + miss;
+
+            totalResult += geResult + '<br>';
+        }
+
+        if(nrOfDiceFV !== "0")
+        {
+            var miss = 0;
+            var hit = 0;
+            const diceRoll = new DiceRoll(nrOfDiceGE+'d6');
+            var output = [];
+
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);
+                if(result == 6){hit++;}               
+            });
+            
+            var fvResult = 'FV:[' + output.join(",") + ']' + ' Hit: ' + hit;
+
+            totalResult += fvResult + '<br>';
+        }
+
+        if(nrOfDiceVA !== "0")
+        {
+            var miss = 0;
+            var hit = 0;
+            const diceRoll = new DiceRoll(nrOfDiceGE+'d6');
+            var output = [];
+
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);
+                if(result == 6){hit++;}               
+            });
+            
+            var vaResult = ' VV:[' + output.join(",") + ']' + ' Hit: ' + hit + ', Miss: ' + miss;
+
+            totalResult += vaResult;
+        }
+
+        if(totalResult.length > 0){
+            sendMessage(totalResult);
+        }
+
+       
+
+       
+
+
+
+    });
+    
 
 
     //admin fearures

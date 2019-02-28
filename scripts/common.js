@@ -6,6 +6,7 @@ function shuffleArray(a) {
     return a;
 }
 
+
 var showAlert = function () { }
 showAlert.displayInfo = function (message) {
     $("#alerttext").text(message);
