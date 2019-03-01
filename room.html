@@ -350,7 +350,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>Grundegenskap</td>
-                                                        <td>
+                                                        <td class="text-left">
                                                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                                                 <label class="btn btn-danger active"><input type="radio" name="dice-ge" value="0" autocomplete="off" checked> 0</label>
                                                                 <label class="btn btn-danger"><input type="radio" name="dice-ge" value="1" autocomplete="off"> 1</label>
@@ -364,7 +364,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>Färdighet</td>
-                                                        <td>
+                                                        <td class="text-left">
                                                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                                                 <label class="btn btn-light active"><input type="radio" name="dice-fv" value="0" autocomplete="off" checked> 0</label>
                                                                 <label class="btn btn-light"><input type="radio" name="dice-fv" value="1" autocomplete="off"> 1</label>
@@ -378,7 +378,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>Vapen</td>
-                                                        <td>
+                                                        <td class="text-left">
                                                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                                                 <label class="btn btn-dark active"><input type="radio" name="dice-va" value="0" autocomplete="off" checked> 0</label>
                                                                 <label class="btn btn-dark"><input type="radio" name="dice-va" value="1" autocomplete="off"> 1</label>
@@ -390,13 +390,26 @@
                                                             </div>                                                            
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td class="text-left">
+                                                            <button id="btn-throw-dice" type="button" class="btn btn-primary btn-sm">Kasta tärningarna</button>
+                                                        </td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col">
-                                            <button id="btn-throw-dice" type="button" class="btn btn-primary btn-sm">Kasta tärningarna</button>
+                                            <button id="btn-throw-dice-T8" type="button" class="btn btn-primary btn-sm btn-dice" data-typeofdice="1d8">T8</button>
+                                        </div>
+                                        <div class="col">
+                                            <button id="btn-throw-dice-T10" type="button" class="btn btn-primary btn-sm btn-dice" data-typeofdice="1d10">T10</button>
+                                        </div>
+                                        <div class="col">
+                                            <button id="btn-throw-dice-T12" type="button" class="btn btn-primary btn-sm btn-dice" data-typeofdice="1d12">T12</button>
+                                        </div>                                        
+                                        <div class="col">
+                                            <button id="btn-throw-dice-T20" type="button" class="btn btn-primary btn-sm btn-dice" data-typeofdice="1d20">T20</button>
                                         </div>
                                     </div>
                                 </div>

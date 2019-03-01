@@ -106,11 +106,15 @@ function createDiceRollsMessage(sender,message,createdOn){
 
 function scrollChatMessagesToBottom() {
     var list = document.getElementById('chat-messages');
-    list.scrollTop = list.scrollHeight;
+    if(list !== null){
+        list.scrollTop = list.scrollHeight;
+    }    
 }
 function scrollDiceRollsToBottom() {
     var list = document.getElementById('dicerolls-messages');
-    list.scrollTop = list.scrollHeight;
+    if(list !== null){
+        list.scrollTop = list.scrollHeight;
+    }    
 }
 function appendChatMessage(message,sender,createdOn){
     var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
@@ -559,14 +563,13 @@ $(document).ready(function () {
                 if(result == 6){hit++;}               
             });
 
-            var geResult = 'GE:[' + output.join(",") + ']' + ' Hit: ' + hit + ', Miss: ' + miss;
+            var geResult = 'GE:[' + output.join(",") + ']' + ' Lyckat: ' + hit + ', Fummel: ' + miss;
 
             totalResult += geResult + '<br>';
         }
 
         if(nrOfDiceFV !== "0")
-        {
-            var miss = 0;
+        {            
             var hit = 0;
             const diceRoll = new DiceRoll(nrOfDiceGE+'d6');
             var output = [];
@@ -576,7 +579,7 @@ $(document).ready(function () {
                 if(result == 6){hit++;}               
             });
             
-            var fvResult = 'FV:[' + output.join(",") + ']' + ' Hit: ' + hit;
+            var fvResult = 'FV:[' + output.join(",") + ']' + ' Lyckat: ' + hit;
 
             totalResult += fvResult + '<br>';
         }
@@ -590,10 +593,11 @@ $(document).ready(function () {
 
             diceRoll.rolls[0].forEach(function(result){
                 output.push(result);
-                if(result == 6){hit++;}               
+                if(result == 6){hit++;}
+                if(result == 1){miss++;}            
             });
             
-            var vaResult = ' VV:[' + output.join(",") + ']' + ' Hit: ' + hit + ', Miss: ' + miss;
+            var vaResult = ' VV:[' + output.join(",") + ']' + ' Lyckat: ' + hit + ', Fummel: ' + miss;
 
             totalResult += vaResult;
         }
@@ -602,6 +606,17 @@ $(document).ready(function () {
             sendDiceRoll(totalResult);
         }
     });    
+
+    $(".btn-dice").click(function (e) {
+        console.log('.btn-dice.click');
+        e.preventDefault();
+
+        var typeOfDice = $(this).data('typeofdice');
+        const diceRoll = new DiceRoll(typeOfDice);
+
+        sendDiceRoll(diceRoll.output);        
+    });    
+    
 
 
     //admin fearur41
