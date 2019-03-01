@@ -39,25 +39,13 @@
                 /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
             }
 
-            /*
-        .row {
-            background-color: white;
-        }
-*/
             .card-body {
                 height: 400px;
             }
 
-            /*
-        .alert-row {
-            height: 50px;
-        }
-*/
             ul#cardlist li {
                 display: inline;
             }
-
-
 
             .incombat {
                 color: #f8f8f8;
@@ -71,43 +59,50 @@
                 background-color: #fc7100;
             }
 
-            .chat_area {
+            .dicerolls_area {
                 float: left;
                 height: 400px;
                 overflow-x: hidden;
                 overflow-y: auto;
                 width: 100%;
+                margin-left: 0;
+            }
+
+            .chat_area {
+                float: left;
+                height: 200px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .dicerolls_area li {
+                padding: 14px 14px 0;
             }
 
             .chat_area li {
                 padding: 14px 14px 0;
             }
 
-            /* .chat_area li .chat-img1 img {
-                height: 40px;
-                width: 40px;
-            } */
-
-            /* .chat_area .chat-body1 {
-                margin-left: 50px;
-            } */
-
             .chat-body1 p {
                 background: #fbf9fa none repeat scroll 0 0;
                 padding: 10px;
-            }
-
-            .chat_area {
-                margin-left: 0;
-                /* margin-right: 50px; */
             }
 
             .chat_area li:last-child {
                 padding-bottom: 10px;
             }
 
-            .list-group-messages {
+            .list-dicerolls-messages {
                 max-height: 380px;
+                margin-bottom: 10px;
+                overflow-y: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .list-chat-messages {
+                max-height: 180px;
                 margin-bottom: 10px;
                 overflow-y: scroll;
                 -webkit-overflow-scrolling: touch;
@@ -192,9 +187,8 @@
                             <button id="add-enemy-button" type="button" class="btn btn-primary">Add</button>
                         </div>
                         <div class="input-group">
-                            <button id="btn-start-fight-1" type="button" class="btn btn-primary btn-sm btn-block">Fight with nr 1 cards!</button>
-                            <button id="btn-start-fight-2" type="button" class="btn btn-primary btn-sm btn-block">Fight with nr 2 cards!</button>
-                            <button id="btn-random-initiative" type="button" class="btn btn-primary btn-sm btn-block">Random initiative</button>
+                            <button id="btn-start-fight-1" type="button" class="btn btn-primary btn-sm btn-block">Show first card</button>
+                            <button id="btn-start-fight-2" type="button" class="btn btn-primary btn-sm btn-block">Show second card</button>                            
                         </div>
                     </div>
                 </div>
@@ -281,9 +275,9 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="chat_area">
+                                <div class="dicerolls_area">
 
-                                    <ul id="list-messages" class="list-group list-group-flush list-group-messages">
+                                    <ul id="dicerolls-messages" class="list-group list-group-flush list-dicerolls-messages">
                                     </ul>
                                 </div>
                             </div>
@@ -295,12 +289,14 @@
                             <nav>
                                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                     <a class="nav-item nav-link active" id="nav-fight-tab" data-toggle="tab" href="#nav-fight" role="tab" aria-controls="nav-fight" aria-selected="true">Fight</a>
+                                    <a class="nav-item nav-link admingroup" id="nav-initiative-tab" data-toggle="tab" href="#nav-initiative" role="tab" aria-controls="nav-initiative" aria-selected="false">Initiative</a>
                                     <a class="nav-item nav-link" id="nav-dice-tab" data-toggle="tab" href="#nav-dice" role="tab" aria-controls="nav-dice" aria-selected="false">Dice</a>
+                                    <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat</a>
                                     <!-- <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a> -->
                                 </div>
                             </nav>
                             <div class="tab-content" id="nav-tabContent">
-                                <div class="tab-pane fade show active" id="nav-fight" role="tabpanel" aria-labelledby="nav-fight-tab">
+                                <div class="tab-pane fade show active  p-3" id="nav-fight" role="tabpanel" aria-labelledby="nav-fight-tab">
                                     <table class="table table-sm table-borderless table-cards">
                                         <thead>
                                             <th>Attackera</th>
@@ -347,7 +343,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="tab-pane fade" id="nav-dice" role="tabpanel" aria-labelledby="nav-dice-tab">
+                                <div class="tab-pane fade p-3" id="nav-dice" role="tabpanel" aria-labelledby="nav-dice-tab">
 
 
                                     <div class="row">
@@ -402,15 +398,27 @@
                                         </div>
                                     </div>
 
-
                                     <div class="row">
                                         <div class="col">
-                                            <button id="btn-throw-dice" type="button" class="btn btn-primary btn-sm">Kasta!</button>
-
+                                            <button id="btn-throw-dice" type="button" class="btn btn-primary btn-sm">Kasta tärningarna</button>
                                         </div>
                                     </div>
 
 
+                                </div>
+                                <div class="tab-pane fade admingroup p-3" id="nav-initiative" role="tabpanel" aria-labelledby="nav-initiative-tab">
+                                    <div class="row">
+                                        <div class="col"><button id="btn-random-initiative" type="button" class="btn btn-primary btn-sm">Random initiative</button></div>
+                                        <div class="col"></div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="tab-pane fade p-3" id="nav-chat" role="tabpanel" aria-labelledby="nav-chat-tab">
+                                        <div class="chat_area">
+
+                                                <ul id="chat-messages" class="list-group list-group-flush list-chat-messages">
+                                                </ul>
+                                            </div>
                                 </div>
                                 <!-- <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div> -->
                             </div>

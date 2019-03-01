@@ -87,6 +87,8 @@
 
             $("#login-button").click(function (e) {
 
+                $("body").css("cursor", "progress");
+
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -119,7 +121,8 @@
                                                 window.location.href = "room.html?room=" + roomname;
                                             });
                                         }
-                                    } else {
+                                    } 
+                                    else{
 
                                         //create room with nice template
                                         //
@@ -144,7 +147,12 @@
 
                         }
 
+                        $("body").css("cursor", "default");
+
                     }).catch(function (error) {
+
+                        $("body").css("cursor", "default");
+
                         // Handle Errors here.
                         var errorCode = error.code;
                         var errorMessage = error.message;

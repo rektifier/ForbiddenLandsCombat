@@ -6,10 +6,6 @@ var adminAction = '';
 var isInCombat = false;
 
 
-moment().format();
-
-
-
 function updateDbWithUserListOrder() {
     console.log('updateDbWithUserListOrder()');
 
@@ -85,26 +81,53 @@ function sendMessage(text){
     });
 }
 
+function sendDiceRoll(text){
+
+    database.ref('dicerolls/' + currentRoomName).push({
+
+        createdOn: firebase.database.ServerValue.TIMESTAMP,
+        message: text,
+        sender:currentUser.displayName
+
+    }).catch(function(error){
+        console.error('Error writing new message to Firebase Database', error);
+    });
+}
+
 function createChatMessage(sender,message,createdOn){
     var messageTemplate = '<li class="list-group-item-light"><div class="chat-body1"><p><small>'+sender+':<br>'+message+'<i><br>('+createdOn+')</i></small></p></div></li>';
     return messageTemplate;
 }
 
-function scrollMessagesToBottom() {
-    var list = document.getElementById('list-messages');
-    list.scrollTop = list.scrollHeight;
+function createDiceRollsMessage(sender,message,createdOn){
+    var messageTemplate = '<li class="list-group-item-light"><div class="chat-body1"><p><small>'+sender+':<br>'+message+'<i><br>('+createdOn+')</i></small></p></div></li>';
+    return messageTemplate;
 }
 
-  function appendChatMessage(message,sender,createdOn){
+function scrollChatMessagesToBottom() {
+    var list = document.getElementById('chat-messages');
+    list.scrollTop = list.scrollHeight;
+}
+function scrollDiceRollsToBottom() {
+    var list = document.getElementById('dicerolls-messages');
+    list.scrollTop = list.scrollHeight;
+}
+function appendChatMessage(message,sender,createdOn){
     var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
     var result = createChatMessage(sender,message, messDate);
-    $('#list-messages').append(result);  
+    $('#chat-messages').append(result);  
+}
+function appendDiceRollsMessage(message,sender,createdOn){
+    var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
+    var result = createDiceRollsMessage(sender,message, messDate);
+    $('#dicerolls-messages').append(result);  
 }
 
 function initGame() {
 
     console.log('init game');
 
+    var diceRollsRef = database.ref('dicerolls/' + currentRoomName);
     var messageRef = database.ref('messages/' + currentRoomName);
     var usersRef = database.ref('rooms/' + currentRoomName + '/users/');
     var conflictRef = database.ref('rooms/' + currentRoomName + '/conflict/');
@@ -128,27 +151,47 @@ function initGame() {
         currentUserRef.onDisconnect().remove();
     }
 
-
-
-    messageRef.endAt().limitToLast(15).once("value").then(function (snapshot) {
-        console.log('messageRef.endAt().limitToLast(15).once');
-
+    
+    var startOfDay = moment().startOf('day').valueOf();//unix time format ( ms ) //.format("x");
+    var startNow = moment().valueOf();
+    //chat messages
+    //
+    messageRef.orderByChild('createdOn').startAt(startOfDay).once("value").then(function (snapshot) {
+        console.log('messageRef.orderByChild(createdOn).startAt(startOfDay).once');
         if (snapshot.exists()) {
             snapshot.forEach(function (messSnap) {
                 var mess = messSnap.val();
                 appendChatMessage(mess.message,mess.sender,mess.createdOn);
             });
-
-            scrollMessagesToBottom();            
+            scrollChatMessagesToBottom();            
         }
     });
     
-    messageRef.orderByChild('createdOn').startAt(Date.now()).on('child_added', function(snapshot) {
-        console.log('new record', snapshot.val());
-
+    messageRef.orderByChild('createdOn').startAt(startNow).on('child_added', function(snapshot) {
+        console.log('messageRef.orderByChild(createdOn).startAt(startNow).on(child_added');
         var mess = snapshot.val();
         appendChatMessage(mess.message,mess.sender,mess.createdOn);
-        scrollMessagesToBottom();
+        scrollChatMessagesToBottom();
+    });
+
+    //dice rolls
+    //
+    diceRollsRef.orderByChild('createdOn').startAt(startOfDay).once("value").then(function (snapshot) {
+        console.log('diceRollsRef.orderByChild(createdOn).startAt(startOfDay).once');
+        if (snapshot.exists()) {
+            snapshot.forEach(function (messSnap) {
+                var mess = messSnap.val();
+                appendDiceRollsMessage(mess.message,mess.sender,mess.createdOn);
+            });
+            scrollDiceRollsToBottom();            
+        }
+    });
+    
+    diceRollsRef.orderByChild('createdOn').startAt(startNow).on('child_added', function(snapshot) {
+        console.log('diceRollsRef.orderByChild(createdOn).startAt(startNow).on(child_added');
+        var mess = snapshot.val();
+        appendDiceRollsMessage(mess.message,mess.sender,mess.createdOn);
+        scrollDiceRollsToBottom();
     });
 
 
@@ -305,22 +348,10 @@ function validateSelectedCards(firstCard,secondCard){
 }
 
 
+
 $(document).ready(function () {
     
     const roller = new DiceRoller();
-
-    $("#add-enemy-button").prop("disabled", true);
-    $('#add-enemy-input').keyup(validateAddEnemyButton);
-
-    function validateAddEnemyButton(){
-     
-        if ($('#add-enemy-input').val().length > 0) {
-            $("#add-enemy-button").prop("disabled", false);
-        }
-        else {
-            $("#add-enemy-button").prop("disabled", true);
-        }
-    }
 
     currentRoomName = getParameterByName('room');
     if (currentRoomName === null || currentRoomName === "") {// || currentUser === undefined || currentUser.displayName === '') {
@@ -329,6 +360,7 @@ $(document).ready(function () {
 
     $("#info-alert").hide();
     $(".admingroup").hide();
+    $('#settings-button').hide();
     $(".btn-select-card").prop('disabled', true);
 
     hidePlaygrounds();
@@ -395,29 +427,17 @@ $(document).ready(function () {
         console.log('leave room');
         e.preventDefault();
 
+        $("body").css("cursor", "progress");
 
-        
-
+        //if its a regular user, remove user from the room
+        //and redirect to index
+        //
+        if(isRoomAdmin === false){
+            database.ref('rooms/' + currentRoom.name + '/conflict/' + currentUser.displayName).remove().then();
+            database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).remove().then();
+        }
+        redirectToLogin();
     });
-
-    //room settingsR
-    //
-    $("#btn-settings-save").click(function (e) {
-        console.log('btn-settings-save.click');
-        e.preventDefault();
-
-        var owner = $("#settingsRoomOwner").val();
-        var roomname = $("#settingsRoomName").val();
-        var title = $("#settingsRoomTitle").val();
-
-        database.ref('rooms/' + currentRoomName).update({ "owner": owner, "name": roomname, "title":title});
-
-        $("#roomNameHeader").html('<strong>' + roomname+ '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+title+'</small></p><footer class="blockquote-footer"a><small>' + owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
-
-    });
-
-
-    
 
     // select card button
     //
@@ -579,26 +599,31 @@ $(document).ready(function () {
         }
 
         if(totalResult.length > 0){
-            sendMessage(totalResult);
+            sendDiceRoll(totalResult);
         }
-
-       
-
-       
+    });    
 
 
-
-    });
-    
-
-
-    //admin fearures
+    //admin fearur41
     //
     function activateAdminFeatures() {
 
-        $(".btn-select-card").prop('disabled', false);
-
+        $('settings-button').show();
         $(".admingroup").show();
+        $(".btn-select-card").prop('disabled', false);
+        $("#add-enemy-button").prop("disabled", true);
+
+        $('#add-enemy-input').keyup(validateAddEnemyButton);
+    
+        function validateAddEnemyButton(){
+         
+            if ($('#add-enemy-input').val().length > 0) {
+                $("#add-enemy-button").prop("disabled", false);
+            }
+            else {
+                $("#add-enemy-button").prop("disabled", true);
+            }
+        }
 
         $("#userslist").sortable({
             delay: 150,
@@ -766,7 +791,21 @@ $(document).ready(function () {
             }
         });
 
+        //room settings
+        //
+        $("#btn-settings-save").click(function (e) {
+            console.log('btn-settings-save.click');
+            e.preventDefault();
 
+            var owner = $("#settingsRoomOwner").val();
+            var roomname = $("#settingsRoomName").val();
+            var title = $("#settingsRoomTitle").val();
+
+            database.ref('rooms/' + currentRoomName).update({ "owner": owner, "name": roomname, "title":title});
+
+            $("#roomNameHeader").html('<strong>' + roomname+ '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+title+'</small></p><footer class="blockquote-footer"a><small>' + owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
+
+        });
 
 
     }
