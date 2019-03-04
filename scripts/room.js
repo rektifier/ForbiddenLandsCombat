@@ -571,7 +571,7 @@ $(document).ready(function () {
         if(nrOfDiceFV !== "0")
         {            
             var hit = 0;
-            const diceRoll = new DiceRoll(nrOfDiceGE+'d6');
+            const diceRoll = new DiceRoll(nrOfDiceFV+'d6');
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
@@ -588,7 +588,7 @@ $(document).ready(function () {
         {
             var miss = 0;
             var hit = 0;
-            const diceRoll = new DiceRoll(nrOfDiceGE+'d6');
+            const diceRoll = new DiceRoll(nrOfDiceVA+'d6');
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
