@@ -532,6 +532,20 @@ $(document).ready(function () {
         }
     });
 
+    $("#btn-dice-pride").click(function (e) {
+        console.log('btn-throw-dice.click');
+        e.preventDefault();
+
+        const diceRoll = new DiceRoll('1d12');
+
+        var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
+        
+
+        var result = 'Stolthet:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
+
+
+        sendDiceRoll(result);
+    });
 
     $("#btn-throw-dice").click(function (e) {
         console.log('btn-throw-dice.click');
@@ -542,13 +556,44 @@ $(document).ready(function () {
         var nrOfDiceFV = $('input[name=dice-fv]:checked').val();
         var nrOfDiceVA = $('input[name=dice-va]:checked').val();
 
+        var nrOfT6 = $("#input-dice-T6").val();
+        var nrOfT8 = $("#input-dice-T8").val();
+        var nrOfT10 = $("#input-dice-T10").val();
+        var nrOfT12 = $("#input-dice-T12").val();
+
+        var T6Resource = $("#input-dice-resource-T6").val();
+        var T8Resource = $("#input-dice-resource-T8").val();
+        var T10Resource = $("#input-dice-resource-T10").val();
+        var T12Resource = $("#input-dice-resource-T12").val();
+
+        var nrOfArtefact = $("#input-dice-artefact").val();
+        var dicePride = $("#input-dice-artefact").val();
+
+        
+        
+       // $("#input-dice-artefact")
+
         var totalResult = '';
 
-        //get nr of white
+        /*
+2 rader, färgade artefakttärningar
 
-        //get nr of black
+        artefakttärningar
+        ----
+T8 grön mäktig(t)
+T10 ljusblå episk(t)
+T12 orange legendarisk(t)/stolthet(t)
 
-        //roll the dice
+Lars, [20.02.19 15:12]
+T8: ett lyckade på 6, ett lyckande på 7, två lyckande på 8
+
+Lars, [20.02.19 15:13]
+T10: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande på 9, tre lyckande på 10
+
+Lars, [20.02.19 15:13]
+T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande på 9, tre lyckande på 10, tre lyckande på 11, fyra lyckande på 12
+
+        */
 
         if(nrOfDiceGE !== "0")
         {
@@ -602,9 +647,38 @@ $(document).ready(function () {
             totalResult += vaResult;
         }
 
+        var diceRoll;
+        if(nrOfT6 != "0"){
+            diceRoll = new DiceRoll(nrOfT6);
+            totalResult += diceRoll.output + '<br>';
+        }
+        if(nrOfT8 != "0"){
+            diceRoll = new DiceRoll(nrOfT8);
+            totalResult += diceRoll.output + '<br>';
+        }
+        if(nrOfT10 != "0"){
+            diceRoll = new DiceRoll(nrOfT10);
+            totalResult += diceRoll.output + '<br>';
+        }
+        if(nrOfT12 != "0"){
+            diceRoll = new DiceRoll(nrOfT12);
+            totalResult += diceRoll.output + '<br>';
+        }
+
         if(totalResult.length > 0){
             sendDiceRoll(totalResult);
+
+            //clear selection
+            //
+            $(".btn-group").find(">:first-child").addClass('active').siblings().removeClass('active');
+            $(".input-dice select").val("0");
         }
+
+        
+        
+
+        
+        
     });    
 
     $(".btn-dice").click(function (e) {

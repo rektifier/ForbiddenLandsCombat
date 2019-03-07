@@ -28,6 +28,7 @@ var typeOfCards = {
 }
 
 var fighterInitiative = [1,2,3,4,5,6,7,8,9,10];
+var artefactDiceSuccess = [0,0,0,0,0,1,1,2,2,3,3,4];
 
 var fightingCards = {};
 fightingCards[typeOfCards.attackera] = { 'name': 'Attack', 'src':'images/attackera.jpg' };
