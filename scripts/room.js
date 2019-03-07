@@ -539,10 +539,7 @@ $(document).ready(function () {
         const diceRoll = new DiceRoll('1d12');
 
         var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
-        
-
         var result = 'Stolthet:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
-
 
         sendDiceRoll(result);
     });
@@ -556,6 +553,10 @@ $(document).ready(function () {
         var nrOfDiceFV = $('input[name=dice-fv]:checked').val();
         var nrOfDiceVA = $('input[name=dice-va]:checked').val();
 
+        var nrOfMight = $('input[name=dice-art-might]:checked').val();
+        var nrOfEpic = $('input[name=dice-art-epic]:checked').val();
+        var nrOfLegendary = $('input[name=dice-art-leg]:checked').val();
+
         var nrOfT6 = $("#input-dice-T6").val();
         var nrOfT8 = $("#input-dice-T8").val();
         var nrOfT10 = $("#input-dice-T10").val();
@@ -566,9 +567,9 @@ $(document).ready(function () {
         var T10Resource = $("#input-dice-resource-T10").val();
         var T12Resource = $("#input-dice-resource-T12").val();
 
-        var nrOfArtefact = $("#input-dice-artefact").val();
-        var dicePride = $("#input-dice-artefact").val();
 
+        
+        
         
         
        // $("#input-dice-artefact")
@@ -599,7 +600,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         {
             var miss = 0;
             var hit = 0;
-            const diceRoll = new DiceRoll(nrOfDiceGE+'d6');
+            const diceRoll = new DiceRoll(nrOfDiceGE);
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
@@ -616,7 +617,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         if(nrOfDiceFV !== "0")
         {            
             var hit = 0;
-            const diceRoll = new DiceRoll(nrOfDiceFV+'d6');
+            const diceRoll = new DiceRoll(nrOfDiceFV);
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
@@ -633,7 +634,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         {
             var miss = 0;
             var hit = 0;
-            const diceRoll = new DiceRoll(nrOfDiceVA+'d6');
+            const diceRoll = new DiceRoll(nrOfDiceVA);
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
@@ -647,23 +648,47 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
             totalResult += vaResult;
         }
 
-        var diceRoll;
-        if(nrOfT6 != "0"){
-            diceRoll = new DiceRoll(nrOfT6);
-            totalResult += diceRoll.output + '<br>';
+        if(nrOfMight !== "0"){
+            const diceRoll = new DiceRoll(nrOfMight);
+            var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
+            var result = 'Mäktig:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
+
+            totalResult += result;
         }
-        if(nrOfT8 != "0"){
-            diceRoll = new DiceRoll(nrOfT8);
-            totalResult += diceRoll.output + '<br>';
+
+        if(nrOfEpic !== "0"){
+            const diceRoll = new DiceRoll(nrOfEpic);
+            var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
+            var result = 'Episk:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
+
+            totalResult += result;
         }
-        if(nrOfT10 != "0"){
-            diceRoll = new DiceRoll(nrOfT10);
-            totalResult += diceRoll.output + '<br>';
+
+        if(nrOfLegendary !== "0"){
+            const diceRoll = new DiceRoll(nrOfLegendary);
+            var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
+            var result = 'Legendarisk:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
+
+            totalResult += result;
         }
-        if(nrOfT12 != "0"){
-            diceRoll = new DiceRoll(nrOfT12);
-            totalResult += diceRoll.output + '<br>';
-        }
+
+        // var diceRoll;
+        // if(nrOfT6 != "0"){
+        //     diceRoll = new DiceRoll(nrOfT6);
+        //     totalResult += diceRoll.output + '<br>';
+        // }
+        // if(nrOfT8 != "0"){
+        //     diceRoll = new DiceRoll(nrOfT8);
+        //     totalResult += diceRoll.output + '<br>';
+        // }
+        // if(nrOfT10 != "0"){
+        //     diceRoll = new DiceRoll(nrOfT10);
+        //     totalResult += diceRoll.output + '<br>';
+        // }
+        // if(nrOfT12 != "0"){
+        //     diceRoll = new DiceRoll(nrOfT12);
+        //     totalResult += diceRoll.output + '<br>';
+        // }
 
         if(totalResult.length > 0){
             sendDiceRoll(totalResult);
