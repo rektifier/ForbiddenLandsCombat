@@ -645,7 +645,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
             
             var vaResult = ' VV:[' + output.join(",") + ']' + ' Lyckat: ' + hit + ', Fummel: ' + miss;
 
-            totalResult += vaResult;
+            totalResult += vaResult + '<br>';
         }
 
         if(nrOfMight !== "0"){
@@ -653,7 +653,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
             var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
             var result = 'Mäktig:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
 
-            totalResult += result;
+            totalResult += result + '<br>';
         }
 
         if(nrOfEpic !== "0"){
@@ -661,7 +661,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
             var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
             var result = 'Episk:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
 
-            totalResult += result;
+            totalResult += result + '<br>';
         }
 
         if(nrOfLegendary !== "0"){
