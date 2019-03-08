@@ -548,6 +548,8 @@ $(document).ready(function () {
         console.log('btn-throw-dice.click');
         e.preventDefault();
 
+        var diceRoll;
+
         //get nr of red
         var nrOfDiceGE = $('input[name=dice-ge]:checked').val();
         var nrOfDiceFV = $('input[name=dice-fv]:checked').val();
@@ -595,12 +597,11 @@ Lars, [20.02.19 15:13]
 T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande på 9, tre lyckande på 10, tre lyckande på 11, fyra lyckande på 12
 
         */
-
-        if(nrOfDiceGE !== "0")
+       if(isEmpty(nrOfDiceGE) == false && nrOfDiceGE !== "0")
         {
             var miss = 0;
             var hit = 0;
-            const diceRoll = new DiceRoll(nrOfDiceGE);
+            diceRoll = new DiceRoll(nrOfDiceGE);
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
@@ -614,10 +615,10 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
             totalResult += geResult + '<br>';
         }
 
-        if(nrOfDiceFV !== "0")
+        if(isEmpty(nrOfDiceFV) == false && nrOfDiceFV !== "0")
         {            
             var hit = 0;
-            const diceRoll = new DiceRoll(nrOfDiceFV);
+            diceRoll = new DiceRoll(nrOfDiceFV);
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
@@ -630,11 +631,11 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
             totalResult += fvResult + '<br>';
         }
 
-        if(nrOfDiceVA !== "0")
+        if(isEmpty(nrOfDiceVA) == false && nrOfDiceVA !== "0")
         {
             var miss = 0;
             var hit = 0;
-            const diceRoll = new DiceRoll(nrOfDiceVA);
+            diceRoll = new DiceRoll(nrOfDiceVA);
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
@@ -648,11 +649,12 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
             totalResult += vaResult + '<br>';
         }
 
-        if(nrOfMight !== "0"){
+        if(isEmpty(nrOfMight) == false && nrOfMight !== "0")
+        {
             var output = [];
             var hit = 0;
 
-            const diceRoll = new DiceRoll(nrOfMight);
+            diceRoll = new DiceRoll(nrOfMight);
             diceRoll.rolls[0].forEach(function(result){
                 output.push(result);                
                 hit += artefactDiceSuccess[result-1];
@@ -662,11 +664,11 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
             totalResult += result + '<br>';
         }
 
-        if(nrOfEpic !== "0"){
+        if(isEmpty(nrOfEpic) == false && nrOfEpic !== "0"){
             var output = [];
             var hit = 0;
 
-            const diceRoll = new DiceRoll(nrOfEpic);
+            diceRoll = new DiceRoll(nrOfEpic);
             diceRoll.rolls[0].forEach(function(result){
                 output.push(result);                
                 hit += artefactDiceSuccess[result-1];
@@ -676,11 +678,11 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
             totalResult += result + '<br>';
         }
 
-        if(nrOfLegendary !== "0"){
+        if(isEmpty(nrOfLegendary) == false && nrOfLegendary !== "0"){
             var output = [];
             var hit = 0;
 
-            const diceRoll = new DiceRoll(nrOfLegendary);
+            diceRoll = new DiceRoll(nrOfLegendary);
             diceRoll.rolls[0].forEach(function(result){
                 output.push(result);                
                 hit += artefactDiceSuccess[result-1];
@@ -710,19 +712,13 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
 
         if(totalResult.length > 0){
             sendDiceRoll(totalResult);
-
-            //reset all active labels
-            //
-            $(".btn-group input").prop("checked", false);
-            $(".btn-group").find(">:first-child").addClass('active').siblings().removeClass('active');
-            $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
-        }
-
+        }        
         
-        
-
-        
-        
+        //reset all active labels
+        //
+        $(".btn-group input").prop("checked", false);
+        $(".btn-group").find(">:first-child").addClass('active').siblings().removeClass('active');
+        $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
     });    
 
     $(".btn-dice").click(function (e) {
@@ -730,7 +726,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         e.preventDefault();
 
         var typeOfDice = $(this).data('typeofdice');
-        const diceRoll = new DiceRoll(typeOfDice);
+        var diceRoll = new DiceRoll(typeOfDice);
 
         sendDiceRoll(diceRoll.output);        
     });    

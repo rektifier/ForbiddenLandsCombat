@@ -6,6 +6,10 @@ function shuffleArray(a) {
     return a;
 }
 
+function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
+
 
 var showAlert = function () { }
 showAlert.displayInfo = function (message) {
