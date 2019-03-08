@@ -711,23 +711,11 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         if(totalResult.length > 0){
             sendDiceRoll(totalResult);
 
-            //clear selection
+            //reset all active labels
             //
-            // $(".btn-group-toggle input:radio").on('change', function() {
-            //     let val = $(this).val();
-            //     if (val == 'on') {
-            //       var sibling = $(this)
-            //         .parents('.btn-group-toggle')
-            //         .siblings()
-            //         .find('input[value="off"]')
-            //         .prop('checked', true)
-            //     }
-            //   })
-
-            var btnGroups = $(".btn-group").find(">:first-child");
-
-            $(".btn-group").find(">:first-child").addClass('active').prop('checked',true).siblings().removeClass('active');
-            //$(".input-dice select").val("0");
+            $(".btn-group input").prop("checked", false);
+            $(".btn-group").find(">:first-child").addClass('active').siblings().removeClass('active');
+            $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
         }
 
         
