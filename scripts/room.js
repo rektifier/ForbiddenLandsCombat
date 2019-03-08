@@ -68,18 +68,18 @@ function redirectToLogin() {
     window.location.href = "index.html";
 }
 
-function sendMessage(text){
+// function sendMessage(text){
 
-    database.ref('messages/' + currentRoomName).push({
+//     database.ref('messages/' + currentRoomName).push({
 
-        createdOn: firebase.database.ServerValue.TIMESTAMP,
-        message: text,
-        sender:currentUser.displayName
+//         createdOn: firebase.database.ServerValue.TIMESTAMP,
+//         message: text,
+//         sender:currentUser.displayName
 
-    }).catch(function(error){
-        console.error('Error writing new message to Firebase Database', error);
-    });
-}
+//     }).catch(function(error){
+//         console.error('Error writing new message to Firebase Database', error);
+//     });
+// }
 
 function sendDiceRoll(text){
 
@@ -94,10 +94,10 @@ function sendDiceRoll(text){
     });
 }
 
-function createChatMessage(sender,message,createdOn){
-    var messageTemplate = '<li class="list-group-item-light"><div class="chat-body1"><p><small>'+sender+':<br>'+message+'<i><br>('+createdOn+')</i></small></p></div></li>';
-    return messageTemplate;
-}
+// function createChatMessage(sender,message,createdOn){
+//     var messageTemplate = '<li class="list-group-item-light"><div class="chat-body1"><p><small>'+sender+':<br>'+message+'<i><br>('+createdOn+')</i></small></p></div></li>';
+//     return messageTemplate;
+// }
 
 function createDiceRollsMessage(sender,message,createdOn){
     var messageTemplate = '<li class="list-group-item-light"><div class="chat-body1"><p><small>'+sender+':<br>'+message+'<i><br>('+createdOn+')</i></small></p></div></li>';
@@ -116,11 +116,11 @@ function scrollChatMessagesToBottom() {
 //         list.scrollTop = list.scrollHeight;
 //     }    
 // }
-function appendChatMessage(message,sender,createdOn){
-    var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
-    var result = createChatMessage(sender,message, messDate);
-    $('#chat-messages').prepend(result);  
-}
+// function appendChatMessage(message,sender,createdOn){
+//     var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
+//     var result = createChatMessage(sender,message, messDate);
+//     $('#chat-messages').prepend(result);  
+// }
 function appendDiceRollsMessage(message,sender,createdOn){
     var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
     var result = createDiceRollsMessage(sender,message, messDate);
