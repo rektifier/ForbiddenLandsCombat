@@ -110,21 +110,21 @@ function scrollChatMessagesToBottom() {
         list.scrollTop = list.scrollHeight;
     }    
 }
-function scrollDiceRollsToBottom() {
-    var list = document.getElementById('dicerolls-messages');
-    if(list !== null){
-        list.scrollTop = list.scrollHeight;
-    }    
-}
+// function scrollDiceRollsToBottom() {
+//     var list = document.getElementById('dicerolls-messages');
+//     if(list !== null){
+//         list.scrollTop = list.scrollHeight;
+//     }    
+// }
 function appendChatMessage(message,sender,createdOn){
     var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
     var result = createChatMessage(sender,message, messDate);
-    $('#chat-messages').append(result);  
+    $('#chat-messages').prepend(result);  
 }
 function appendDiceRollsMessage(message,sender,createdOn){
     var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
     var result = createDiceRollsMessage(sender,message, messDate);
-    $('#dicerolls-messages').append(result);  
+    $('#dicerolls-messages').prepend(result);  
 }
 
 function initGame() {
@@ -187,7 +187,7 @@ function initGame() {
                 var mess = messSnap.val();
                 appendDiceRollsMessage(mess.message,mess.sender,mess.createdOn);
             });
-            scrollDiceRollsToBottom();            
+            // scrollDiceRollsToBottom();            
         }
     });
     
@@ -195,7 +195,7 @@ function initGame() {
         console.log('diceRollsRef.orderByChild(createdOn).startAt(startNow).on(child_added');
         var mess = snapshot.val();
         appendDiceRollsMessage(mess.message,mess.sender,mess.createdOn);
-        scrollDiceRollsToBottom();
+        // scrollDiceRollsToBottom();
     });
 
 
@@ -649,26 +649,44 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         }
 
         if(nrOfMight !== "0"){
-            const diceRoll = new DiceRoll(nrOfMight);
-            var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
-            var result = 'Mäktig:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
+            var output = [];
+            var hit = 0;
 
+            const diceRoll = new DiceRoll(nrOfMight);
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);                
+                hit += artefactDiceSuccess[result-1];
+            });
+            
+            var result = 'Mäktig:[' + output.join(",") + ']' + ' Lyckat: ' + hit ;
             totalResult += result + '<br>';
         }
 
         if(nrOfEpic !== "0"){
-            const diceRoll = new DiceRoll(nrOfEpic);
-            var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
-            var result = 'Episk:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
+            var output = [];
+            var hit = 0;
 
+            const diceRoll = new DiceRoll(nrOfEpic);
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);                
+                hit += artefactDiceSuccess[result-1];
+            });
+            
+            var result = 'Episk:[' + output.join(",") + ']' + ' Lyckat: ' + hit ;
             totalResult += result + '<br>';
         }
 
         if(nrOfLegendary !== "0"){
-            const diceRoll = new DiceRoll(nrOfLegendary);
-            var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
-            var result = 'Legendarisk:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
+            var output = [];
+            var hit = 0;
 
+            const diceRoll = new DiceRoll(nrOfLegendary);
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);                
+                hit += artefactDiceSuccess[result-1];
+            });
+            
+            var result = 'Legendarisk:[' + output.join(",") + ']' + ' Lyckat: ' + hit ;
             totalResult += result;
         }
 
@@ -695,8 +713,21 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
 
             //clear selection
             //
-            $(".btn-group").find(">:first-child").addClass('active').siblings().removeClass('active');
-            $(".input-dice select").val("0");
+            // $(".btn-group-toggle input:radio").on('change', function() {
+            //     let val = $(this).val();
+            //     if (val == 'on') {
+            //       var sibling = $(this)
+            //         .parents('.btn-group-toggle')
+            //         .siblings()
+            //         .find('input[value="off"]')
+            //         .prop('checked', true)
+            //     }
+            //   })
+
+            var btnGroups = $(".btn-group").find(">:first-child");
+
+            $(".btn-group").find(">:first-child").addClass('active').prop('checked',true).siblings().removeClass('active');
+            //$(".input-dice select").val("0");
         }
 
         
