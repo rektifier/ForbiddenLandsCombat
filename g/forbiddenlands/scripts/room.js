@@ -754,14 +754,23 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
     });    
 
-    $(".btn-dice").click(function (e) {
+    $(".resource-dice").click(function (e) {
         console.log('.btn-dice.click');
         e.preventDefault();
 
         var typeOfDice = $(this).data('typeofdice');
         var diceRoll = new DiceRoll(typeOfDice);
 
-        sendDiceRoll(diceRoll.output);        
+        var result = '';
+        if(diceRoll.total === 1 || diceRoll.total === 2) {
+            result = 'Resurs: ' + diceRoll.output + ' - Sänk resurs';
+        }else{
+            result = 'Resurs: ' + diceRoll.output + ' - Ingen effekt';
+        }
+
+        //var result = 'Legendarisk: [' + output.join(",") + ']' + ' Lyckat: ' + hit ;
+
+        sendDiceRoll(result);        
     });    
     
 

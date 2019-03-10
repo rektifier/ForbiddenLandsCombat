@@ -284,6 +284,7 @@
                                 </div>
                             </nav>
                             <div class="tab-content" id="nav-tabContent">
+                                <!-- fighting cards -->
                                 <div class="tab-pane fade show active  p-3" id="nav-fight" role="tabpanel" aria-labelledby="nav-fight-tab">
                                     <table class="table table-sm table-borderless table-cards">
                                         <thead>
@@ -332,6 +333,7 @@
                                     </table>
                                 </div>
 
+                                <!-- dice rolls -->
                                 <div class="tab-pane fade p-3" id="nav-dice" role="tabpanel" aria-labelledby="nav-dice-tab">
                                     <div class="col-4">
                                         <table class="table table-sm table-borderless" style="height:250px">
@@ -350,19 +352,76 @@
                                                         </div>
                                                     </td>
                                                     <td rowspan="5" class="align-top">
+                                                        
                                                         <div class="text-left">
                                                             <button id="btn-throw-dice" type="button" class="btn btn-primary" style="white-space: nowrap;">Kasta tärningarna</button>
                                                         </div>
                                                         <div class="top-buffer text-left">
-                                                            <button type="button" class="btn btn-info" style="white-space: nowrap;" id="btn-dice-reroll">Pressa slaget</button>
+                                                            <button type="button" class="btn btn-info" style="white-space: nowrap;" id="btn-dice-reroll" disabled>Pressa slaget</button>
                                                         </div>
                                                         <div class="top-buffer text-left">
-                                                            <button type="button" class="btn btn-dark" style="white-space: nowrap;" id="btn-dice-pride">Stolthet</button>
-                                                        </div>
+                                                                <button type="button" class="btn btn-dark" style="white-space: nowrap;" id="btn-dice-pride">Stolthet</button>
+                                                            </div>                                                        
                                                     </td>
                                                     <td rowspan="5" class="align-top">
-                                                        <!-- <button type="button" class="btn btn-dark" style="white-space: nowrap;" id="btn-dice-pride">Stolthet</button> -->
-                                                    </td>
+
+                                                            <div class="card text-left">
+                                                                    <div class="card-header">Resources</div>
+                                                                    <div class="card-body">
+                                                                      <!-- <p class="card-text"> -->
+                                                                            <table class="table table-sm table-borderless">
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <div class="text-left">
+                                                                                                <button type="button" class="btn btn-dark resource-dice" style="white-space: nowrap;" data-typeofdice="1d3">T3</button>
+                                                                                            </div>         
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="text-left">
+                                                                                                <button type="button" class="btn btn-dark resource-dice" style="white-space: nowrap;" data-typeofdice="1d4">T4</button>
+                                                                                            </div>     
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="text-left">
+                                                                                                <button type="button" class="btn btn-dark resource-dice" style="white-space: nowrap;" data-typeofdice="1d6">T6</button>
+                                                                                            </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="text-left">
+                                                                                                <button type="button" class="btn btn-dark resource-dice" style="white-space: nowrap;" data-typeofdice="1d8">T8</button>
+                                                                                            </div>
+                                                                                    </td>                                                                                    
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <div class="text-left">
+                                                                                                <button type="button" class="btn btn-dark resource-dice" style="white-space: nowrap;" data-typeofdice="1d10">T10</button>
+                                                                                            </div>         
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="text-left">
+                                                                                                <button type="button" class="btn btn-dark resource-dice" style="white-space: nowrap;" data-typeofdice="1d12">T12</button>
+                                                                                            </div>     
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="text-left">
+                                                                                                <button type="button" class="btn btn-dark resource-dice" style="white-space: nowrap;" data-typeofdice="1d20">T20</button>
+                                                                                            </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <!-- <div class="text-left">
+                                                                                                <button type="button" class="btn btn-dark resource-dice" style="white-space: nowrap;" data-typeofdice="1d4">T6</button>
+                                                                                            </div> -->
+                                                                                    </td>                                                                                    
+                                                                                </tr>                                                                                
+                                                                                </table>
+
+
+
+                                                                        <!-- </p> -->
+                                                                    </div>
+                                                                  </div>
+                                                    </td>                                                                                                         
                                                 </tr>
                                                 <tr>
                                                     <td>Färdighet</td>
@@ -434,6 +493,7 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+                                             
                                             </tbody>
                                         </table>
                                     </div>
