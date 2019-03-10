@@ -5,6 +5,13 @@ var currentRoomName;
 var adminAction = '';
 var isInCombat = false;
 
+var latestDiceRoll = null;
+// var latestDiceRoll = {
+//     message:'',
+//     sender:'',
+//     createdOn:''
+// };
+
 
 function updateDbWithUserListOrder() {
     console.log('updateDbWithUserListOrder()');
@@ -64,9 +71,7 @@ function removeUserFromList(username) {
     }
 }
 
-function redirectToLogin() {
-    window.location.href = "index.html";
-}
+
 
 // function sendMessage(text){
 
@@ -99,17 +104,24 @@ function sendDiceRoll(text){
 //     return messageTemplate;
 // }
 
-function createDiceRollsMessage(sender,message,createdOn){
-    var messageTemplate = '<li class="list-group-item-light"><div class="chat-body1"><p><small>'+sender+':<br>'+message+'<i><br>('+createdOn+')</i></small></p></div></li>';
+function createDiceRollsMessage(sender,message,createdOn, isLatest){
+    var messageTemplate = '';
+
+    if(isLatest){
+        messageTemplate = '<li><div class="card bg-light mb-3"><div class="card-header">'+sender+' <small><i>('+createdOn+')</i></small></div><div class="card-body"><p class="card-text">'+message+'</p></div></div></li>';
+    }
+    else{
+        messageTemplate = '<li><div class="card"><div class="card-body small"><p class="card-text">'+sender+' <small><i>'+createdOn+'</i></small><br>'+message+'</p></div></div></li>';
+    }
     return messageTemplate;
 }
 
-function scrollChatMessagesToBottom() {
-    var list = document.getElementById('chat-messages');
-    if(list !== null){
-        list.scrollTop = list.scrollHeight;
-    }    
-}
+// function scrollChatMessagesToBottom() {
+//     var list = document.getElementById('chat-messages');
+//     if(list !== null){
+//         list.scrollTop = list.scrollHeight;
+//     }    
+// }
 // function scrollDiceRollsToBottom() {
 //     var list = document.getElementById('dicerolls-messages');
 //     if(list !== null){
@@ -121,9 +133,29 @@ function scrollChatMessagesToBottom() {
 //     var result = createChatMessage(sender,message, messDate);
 //     $('#chat-messages').prepend(result);  
 // }
-function appendDiceRollsMessage(message,sender,createdOn){
+
+function appendDiceRollsMessage(message,sender,createdOn,isLatest){
     var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
-    var result = createDiceRollsMessage(sender,message, messDate);
+    var result = createDiceRollsMessage(sender, message, messDate, isLatest);
+
+    if(latestDiceRoll !== null){
+        $('#dicerolls-messages li:first-child').remove();
+        var resultOfLatest = createDiceRollsMessage(latestDiceRoll.sender, latestDiceRoll.message, latestDiceRoll.createdOn, false);
+        $('#dicerolls-messages').prepend(resultOfLatest);  
+    }
+    
+    latestDiceRoll = {message:message,sender:sender,createdOn:messDate};
+
+    //message:'',
+    //     sender:'',
+    //     createdOn:''
+
+    
+    // $(".btn-group input").prop("checked", false);
+    // $(".btn-group").find(">:first-child").addClass('active').siblings().removeClass('active');
+    // $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
+
+
     $('#dicerolls-messages').prepend(result);  
 }
 
@@ -158,43 +190,44 @@ function initGame() {
     
     var startOfDay = moment().startOf('day').valueOf();//unix time format ( ms ) //.format("x");
     var startNow = moment().valueOf();
-    //chat messages
-    //
-    messageRef.orderByChild('createdOn').startAt(startOfDay).once("value").then(function (snapshot) {
-        console.log('messageRef.orderByChild(createdOn).startAt(startOfDay).once');
-        if (snapshot.exists()) {
-            snapshot.forEach(function (messSnap) {
-                var mess = messSnap.val();
-                appendChatMessage(mess.message,mess.sender,mess.createdOn);
-            });
-            scrollChatMessagesToBottom();            
-        }
-    });
+    // //chat messages
+    // //
+    // messageRef.orderByChild('createdOn').startAt(startOfDay).once("value").then(function (snapshot) {
+    //     console.log('messageRef.orderByChild(createdOn).startAt(startOfDay).once');
+    //     if (snapshot.exists()) {
+    //         snapshot.forEach(function (messSnap) {
+    //             var mess = messSnap.val();
+    //             appendChatMessage(mess.message,mess.sender,mess.createdOn);
+    //         });
+    //         scrollChatMessagesToBottom();            
+    //     }
+    // });
     
-    messageRef.orderByChild('createdOn').startAt(startNow).on('child_added', function(snapshot) {
-        console.log('messageRef.orderByChild(createdOn).startAt(startNow).on(child_added');
-        var mess = snapshot.val();
-        appendChatMessage(mess.message,mess.sender,mess.createdOn);
-        scrollChatMessagesToBottom();
-    });
+    // messageRef.orderByChild('createdOn').startAt(startNow).on('child_added', function(snapshot) {
+    //     console.log('messageRef.orderByChild(createdOn).startAt(startNow).on(child_added');
+    //     var mess = snapshot.val();
+    //     appendChatMessage(mess.message,mess.sender,mess.createdOn);
+    //     scrollChatMessagesToBottom();
+    // });
 
     //dice rolls
     //
-    diceRollsRef.orderByChild('createdOn').startAt(startOfDay).once("value").then(function (snapshot) {
-        console.log('diceRollsRef.orderByChild(createdOn).startAt(startOfDay).once');
-        if (snapshot.exists()) {
-            snapshot.forEach(function (messSnap) {
-                var mess = messSnap.val();
-                appendDiceRollsMessage(mess.message,mess.sender,mess.createdOn);
-            });
-            // scrollDiceRollsToBottom();            
-        }
-    });
+    // diceRollsRef.orderByChild('createdOn').limitToLast(100).startAt(startOfDay).once("value").then(function (snapshot) {
+    //     console.log('diceRollsRef.orderByChild(createdOn).startAt(startOfDay).once');
+    //     if (snapshot.exists()) {
+    //         snapshot.forEach(function (messSnap) {
+    //             var mess = messSnap.val();
+    //             appendDiceRollsMessage(mess.message,mess.sender,mess.createdOn);
+    //         });
+    //         // scrollDiceRollsToBottom();            
+    //     }
+    // });
     
-    diceRollsRef.orderByChild('createdOn').startAt(startNow).on('child_added', function(snapshot) {
+    diceRollsRef.orderByChild('createdOn').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function(snapshot) {
         console.log('diceRollsRef.orderByChild(createdOn).startAt(startNow).on(child_added');
         var mess = snapshot.val();
-        appendDiceRollsMessage(mess.message,mess.sender,mess.createdOn);
+
+        appendDiceRollsMessage(mess.message,mess.sender,mess.createdOn,true);
         // scrollDiceRollsToBottom();
     });
 
@@ -610,7 +643,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
                 if(result == 6){hit++;}               
             });
 
-            var geResult = 'GE:[' + output.join(",") + ']' + ' Lyckat: ' + hit + ', Fummel: ' + miss;
+            var geResult = 'GE: [' + output.join(",") + ']' + ' Lyckat: ' + hit + ', Fummel: ' + miss;
 
             totalResult += geResult + '<br>';
         }
@@ -626,7 +659,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
                 if(result == 6){hit++;}               
             });
             
-            var fvResult = 'FV:[' + output.join(",") + ']' + ' Lyckat: ' + hit;
+            var fvResult = 'FV: [' + output.join(",") + ']' + ' Lyckat: ' + hit;
 
             totalResult += fvResult + '<br>';
         }
@@ -644,7 +677,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
                 if(result == 1){miss++;}            
             });
             
-            var vaResult = ' VV:[' + output.join(",") + ']' + ' Lyckat: ' + hit + ', Fummel: ' + miss;
+            var vaResult = ' V: [' + output.join(",") + ']' + ' Lyckat: ' + hit + ', Fummel: ' + miss;
 
             totalResult += vaResult + '<br>';
         }
@@ -660,7 +693,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
                 hit += artefactDiceSuccess[result-1];
             });
             
-            var result = 'Mäktig:[' + output.join(",") + ']' + ' Lyckat: ' + hit ;
+            var result = 'Mäktig: [' + output.join(",") + ']' + ' Lyckat: ' + hit ;
             totalResult += result + '<br>';
         }
 
@@ -674,7 +707,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
                 hit += artefactDiceSuccess[result-1];
             });
             
-            var result = 'Episk:[' + output.join(",") + ']' + ' Lyckat: ' + hit ;
+            var result = 'Episk: [' + output.join(",") + ']' + ' Lyckat: ' + hit ;
             totalResult += result + '<br>';
         }
 
@@ -688,7 +721,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
                 hit += artefactDiceSuccess[result-1];
             });
             
-            var result = 'Legendarisk:[' + output.join(",") + ']' + ' Lyckat: ' + hit ;
+            var result = 'Legendarisk: [' + output.join(",") + ']' + ' Lyckat: ' + hit ;
             totalResult += result;
         }
 

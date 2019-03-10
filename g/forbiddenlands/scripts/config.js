@@ -1,19 +1,8 @@
-var firebaseConfig = {
-    apiKey: "AIzaSyAB0e1I8EbIuBqXQmXOzegJFJgOx76_PVE",
-    authDomain: "fbcombat-11ea1.firebaseapp.com",
-    databaseURL: "https://fbcombat-11ea1.firebaseio.com",
-    projectId: "fbcombat-11ea1",
-    storageBucket: "fbcombat-11ea1.appspot.com",
-    messagingSenderId: "984580986109"
-};
-firebase.initializeApp(firebaseConfig);
-
-var database = firebase.database();
 var roomConfig = {
     enemyNamePrefix : '',
     enemyNameSuffix : ' ( enemy )',
     maxNrOfPlayersInFight : 2,
-    diceApiUrl:'https://rolz.org/api/?'
+    maxNrOfDiceRollsInList : 35
 };
 
 var typeOfCards = {
@@ -26,6 +15,7 @@ var typeOfCards = {
     manovrera:'manovrera',
     baksida:'baksida'
 }
+
 
 var fighterInitiative = [1,2,3,4,5,6,7,8,9,10];
 var artefactDiceSuccess = [0,0,0,0,0,1,1,2,2,3,3,4];

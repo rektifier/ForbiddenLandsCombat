@@ -180,12 +180,7 @@
                     $("#login-username-input").prop('disabled', true);
 
                 } else {
-
-                    window.user = null;
-
-                    $("#logout-button").hide();
-                    $("#login-username-input").val('');
-                    $("#login-username-input").prop('disabled', false);
+                    redirectToLogin();
                 }
             });
 

@@ -10,6 +10,9 @@ function isEmpty(str) {
     return (!str || 0 === str.length);
 }
 
+function redirectToLogin() {
+    window.location.href = "/index.html";
+}
 
 var showAlert = function () { }
 showAlert.displayInfo = function (message) {
