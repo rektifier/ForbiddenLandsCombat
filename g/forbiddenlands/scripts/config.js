@@ -1,4 +1,6 @@
 var roomConfig = {
+    gameName:'Svärdets Sång',
+    gameRoot:'forbiddenlands',
     enemyNamePrefix : '',
     enemyNameSuffix : ' ( enemy )',
     maxNrOfPlayersInFight : 2,
@@ -29,3 +31,5 @@ fightingCards[typeOfCards.forsvara] = { 'name': 'Försvara', 'src':'images/forsv
 fightingCards[typeOfCards.hindra] = { 'name': 'Hindra', 'src':'images/hindra.jpg' };
 fightingCards[typeOfCards.manovrera] = { 'name': 'Manövrera', 'src':'images/manovrera.jpg' };
 fightingCards[typeOfCards.baksida] = { 'name': 'Baksida', 'src':'images/baksida.jpg' };
+
+

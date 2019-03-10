@@ -10,8 +10,8 @@ function isEmpty(str) {
     return (!str || 0 === str.length);
 }
 
-function redirectToLogin() {
-    window.location.href = "/index.html";
+function redirectToLogin(gameRootName) {
+    window.location.href = "/g/" + gameRootName + "/index.html";
 }
 
 var showAlert = function () { }
