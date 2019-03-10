@@ -241,7 +241,7 @@ function initGame() {
         database.ref('rooms/' + currentRoomName + '/conflict/' + snapshot.key).remove();
 
         if (snapshot.key === currentUser.displayName && isRoomAdmin === false) {
-            redirectToLogin(roomConfig.gameRoot);
+            redirectToLogin();
         }
     });
 
@@ -392,7 +392,7 @@ $(document).ready(function () {
 
     currentRoomName = getParameterByName('room');
     if (currentRoomName === null || currentRoomName === "") {// || currentUser === undefined || currentUser.displayName === '') {
-        redirectToLogin(roomConfig.gameRoot);
+        redirectToLogin();
     }
 
     $("#info-alert").hide();
@@ -445,15 +445,15 @@ $(document).ready(function () {
 
                         initGame();
                     } else {
-                        redirectToLogin(roomConfig.gameRoot);
+                        redirectToLogin();
                     }
 
                 } else {
-                    redirectToLogin(roomConfig.gameRoot);
+                    redirectToLogin();
                 }
             });
         } else {
-            redirectToLogin(roomConfig.gameRoot);
+            redirectToLogin();
             window.user = null;
         }
     });
@@ -473,7 +473,7 @@ $(document).ready(function () {
             database.ref('rooms/' + currentRoom.name + '/conflict/' + currentUser.displayName).remove().then();
             database.ref('rooms/' + currentRoom.name + '/users/' + currentUser.displayName).remove().then();
         }
-        redirectToLogin(roomConfig.gameRoot);
+        redirectToLogin();
     });
 
     // select card button
