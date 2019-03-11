@@ -606,39 +606,31 @@ $(document).ready(function () {
         var T10Resource = $("#input-dice-resource-T10").val();
         var T12Resource = $("#input-dice-resource-T12").val();
 
+        var modifier = $("#drp-modifier").val();
 
-        
-        
-        
-        
-       // $("#input-dice-artefact")
-
+        var modifierResult = '';
         var totalResult = '';
 
-        /*
-2 rader, färgade artefakttärningar
+        if(modifier > 0){
+            totalResult = 'Modifier: ['+modifier+']<br>';
+        }
 
-        artefakttärningar
-        ----
-T8 grön mäktig(t)
-T10 ljusblå episk(t)
-T12 orange legendarisk(t)/stolthet(t)
-
-Lars, [20.02.19 15:12]
-T8: ett lyckade på 6, ett lyckande på 7, två lyckande på 8
-
-Lars, [20.02.19 15:13]
-T10: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande på 9, tre lyckande på 10
-
-Lars, [20.02.19 15:13]
-T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande på 9, tre lyckande på 10, tre lyckande på 11, fyra lyckande på 12
-
-        */
+        //modifier++;
+        while (modifier--) {    
+            if(nrOfDiceFV > 0) {
+                nrOfDiceFV--;
+            }else{
+                if(nrOfDiceGE > 0){
+                    nrOfDiceGE--;
+                }
+            }
+        }
+            
        if(isEmpty(nrOfDiceGE) == false && nrOfDiceGE !== "0")
         {
             var miss = '';
             var hit = '';
-            diceRoll = new DiceRoll(nrOfDiceGE);
+            diceRoll = new DiceRoll(nrOfDiceGE+'d6');
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
@@ -659,7 +651,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         if(isEmpty(nrOfDiceFV) == false && nrOfDiceFV !== "0")
         {            
             var hit = '';
-            diceRoll = new DiceRoll(nrOfDiceFV);
+            diceRoll = new DiceRoll(nrOfDiceFV+'d6');
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
@@ -763,6 +755,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         $(".btn-group input").prop("checked", false);
         $(".btn-group").find(">:first-child").addClass('active').siblings().removeClass('active');
         $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
+        $("#drp-modifier").val(0);
     });    
 
     $(".resource-dice").click(function (e) {
@@ -788,7 +781,7 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
     //
     function activateAdminFeatures() {
 
-        $('settings-button').show();
+        $('#settings-button').show();
         $(".admingroup").show();
         $(".btn-select-card").prop('disabled', false);
         $("#add-enemy-button").prop("disabled", true);

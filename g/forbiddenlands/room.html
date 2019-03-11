@@ -331,7 +331,7 @@
 
                                 <!-- dice rolls -->
                                 <div class="tab-pane fade p-3" id="nav-dice" role="tabpanel" aria-labelledby="nav-dice-tab">
-                                    <div class="col-4">
+                                    <div class="col-9">
                                         <table class="table table-sm table-borderless" style="height:250px">
                                             <tbody>
                                                 <tr>
@@ -339,16 +339,15 @@
                                                     <td class="text-left">
                                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                                             <label class="btn btn-light btn-sm active"><input type="radio" name="dice-ge" value="0" autocomplete="off" checked=""> 0</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="1d6" autocomplete="off"> 1</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="2d6" autocomplete="off"> 2</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="3d6" autocomplete="off"> 3</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="4d6" autocomplete="off"> 4</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="5d6" autocomplete="off"> 5</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="6d6" autocomplete="off"> 6</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="1" autocomplete="off"> 1</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="2" autocomplete="off"> 2</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="3" autocomplete="off"> 3</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="4" autocomplete="off"> 4</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="5" autocomplete="off"> 5</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="6" autocomplete="off"> 6</label>
                                                         </div>
                                                     </td>
-                                                    <td rowspan="5" class="align-top">
-                                                        
+                                                    <td rowspan="5" class="align-top">                                                        
                                                         <div class="text-left">
                                                             <button id="btn-throw-dice" type="button" class="btn shadow-none btn-primary" style="white-space: nowrap;">Kasta tärningarna</button>
                                                         </div>
@@ -357,7 +356,18 @@
                                                         </div>
                                                         <div class="top-buffer text-left">
                                                                 <button type="button" class="btn shadow-none btn-dark" style="white-space: nowrap;" id="btn-dice-pride">Stolthet</button>
-                                                            </div>                                                        
+                                                            </div>      
+                                                        <div class="top-buffer text-left">                                                             
+                                                            <div class="dropdown ">
+                                                                <label for="drp-modifier">Svårighetsgrad</label>
+                                                                <select class="form-control w-100" id="drp-modifier">
+                                                                    <option value="0" selected>Normal</option>
+                                                                    <option value="1">Krävande (-1)</option>
+                                                                    <option value="2">Svår (-2)</option>
+                                                                    <option value="3">Vanvettig (-3)</option>
+                                                                </select>
+                                                                </div>
+                                                        </div>                                                                                                                
                                                     </td>
                                                     <td rowspan="5" class="align-top">
 
@@ -424,14 +434,14 @@
                                                     <td class="text-left">
                                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                                             <label class="btn btn-danger btn-sm active"><input type="radio" name="dice-fv" value="0" autocomplete="off" checked=""> 0</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="1d6" autocomplete="off"> 1</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="2d6" autocomplete="off"> 2</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="3d6" autocomplete="off"> 3</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="4d6" autocomplete="off"> 4</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="5d6" autocomplete="off"> 5</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="6d6" autocomplete="off"> 6</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="7d6" autocomplete="off"> 7</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="8d6" autocomplete="off"> 8</label>
+                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="1" autocomplete="off"> 1</label>
+                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="2" autocomplete="off"> 2</label>
+                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="3" autocomplete="off"> 3</label>
+                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="4" autocomplete="off"> 4</label>
+                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="5" autocomplete="off"> 5</label>
+                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="6" autocomplete="off"> 6</label>
+                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="7" autocomplete="off"> 7</label>
+                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="8" autocomplete="off"> 8</label>
                                                         </div>
                                                     </td>
                                                 </tr>
