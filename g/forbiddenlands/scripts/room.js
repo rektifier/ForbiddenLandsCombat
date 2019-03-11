@@ -570,9 +570,13 @@ $(document).ready(function () {
         e.preventDefault();
 
         const diceRoll = new DiceRoll('1d12');
-
         var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
-        var result = 'Stolthet:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
+        var hitResult = '';
+
+        for (let index = 0; index < nrOfHits; index++) {
+            hitResult += '<img src="images/dice_hit.png" height="25">';                
+        }
+        var result = 'Stolthet:[' + diceRoll.total+ '] ' + hitResult;
 
         sendDiceRoll(result);
     });
