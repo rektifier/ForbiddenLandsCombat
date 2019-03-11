@@ -17,15 +17,13 @@
 
 
         <style>
-
-            .tab-content>.tab-pane {
-                display: none;
-            }
-
-            .tab-content>.active {
-                display: block;
-            }
-
+            .btn-group-xs > .btn, .btn-xs {
+                padding  : .25rem .25rem;
+                font-size  : .875rem;
+                line-height  : .5;
+                border-radius : .2rem;
+                }
+            
             .top-buffer {
                 margin-top: 20px;
             }
@@ -49,8 +47,7 @@
 
             .dicerolls_area {
                 float: left;
-                height: 400px;
-                /* height:95%; */
+                /* height: 400px; */
                 overflow-x: hidden;
                 overflow-y: auto;
                 width: 100%;
@@ -69,8 +66,7 @@
 
             .list-dicerolls-messages {
 
-                max-height: 380px;
-                /* max-height: 10%; */
+                max-height: 580px;
                 margin-bottom: 10px;
                 overflow-y: scroll;
                 -webkit-overflow-scrolling: touch;
@@ -96,29 +92,181 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="settingsModalLabel">Room settings</h5>
+                        <h5 class="modal-title" id="settingsModalLabel">Character stats</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <form>
-                            <div class="form-group">
-                                <label for="settingsRoomOwner">Owner</label>
-                                <input type="text" class="form-control" id="settingsRoomOwner">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                    <input id="inputName" type="text" class="form-control" placeholder="Name">
+                                </div>
+
                             </div>
-                            <div class="form-group">
-                                <label for="settingsRoomName">Name</label>
-                                <input type="text" class="form-control" id="settingsRoomName">
-                            </div>
-                            <div class="form-group">
-                                <label for="settingsRoomTitle">Description</label>
-                                <input type="text" class="form-control" id="settingsRoomTitle">
-                            </div>
+                            <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Dexterity</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioDexterity" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioDexterity" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioDexterity" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioDexterity" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioDexterity" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Vitality</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioVitality" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioVitality" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioVitality" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioVitality" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioVitality" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Logic</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioLogic" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioLogic" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioLogic" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioLogic" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioLogic" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Willpower</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioWillpower" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioWillpower" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioWillpower" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioWillpower" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioWillpower" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Charisma</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioCharisma" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioCharisma" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioCharisma" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioCharisma" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioCharisma" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Empathy</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioEmpathy" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioEmpathy" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioEmpathy" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioEmpathy" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioEmpathy" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" id="btn-settings-save">Save changes</button>
                     </div>
                 </div>
@@ -175,7 +323,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <!-- <a class="dropdown-item" href="#">Action</a>-->
-                                    <a id="settings-button" class="dropdown-item" data-toggle="modal" data-target="#settingsModal" href="#">Settings</a>
+                                    <a id="settings-button" class="dropdown-item" data-toggle="modal" data-target="#settingsModal" href="#">Character stats</a>
                                     <div class="dropdown-divider"></div>
                                     <a id="leave-room-button" class="dropdown-item" href="javascript:void(0)">Leave room</a>
                                 </div>
@@ -195,163 +343,276 @@
                     </div>
                 </div>
            -->
-                    <div class="row" id="playground">
-                        <div class="col">
+                    <div class="row h-100" id="playground">
+                        <div class="col h-100">
+                            <div class="row">
+                                <div class="col">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <div class="card mb-3">
+                                                    <div class="card-header text-center list-group-item-warning"><strong>PHYSICAL</strong></div>
+                                                    <div class="card-body">
+
+                                                        <table>
+                                                            <thead>
+                                                            <th class="text-center"><img src="images/offencive_icon.png">DEXTERITY</th>
+                                                            <th></th>
+                                                            <th class="text-center"><img src="images/defensive_icon.png">VITALITY</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="text-center">
+                                                                        <h2>5</h2>
+                                                                    </td>
+                                                                    <td style="width:20px"></td>
+                                                                    <td class="text-center">
+                                                                        <h2>3</h2>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <ul class="list-group mb-3" id="physical-features-items">
+                                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>FEATURES</strong></li>
+                                                <li class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-typeofdice="-" name="physical-features-items"> Högt blodtryck <button type="button" class="btn btn-danger btn-xs shadow-none delete-feature" style="white-space: nowrap;">X</button></li>
+                                                <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="btn btn-danger btn-xs shadow-none delete-feature" style="white-space: nowrap;">X</button></li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <ul class="list-group mb-3" id="physical-features-items">
+                                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
+                                                <li class="list-group-item py-1 list-group-item-success">
+                                                    <div class="form-check form-check-inline">1</div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl1"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl1"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl1"></div>
+                                                </li>  
+                                                <li class="list-group-item py-1 list-group-item-success">
+                                                    <div class="form-check form-check-inline">2</div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl2"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl2"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl2"></div>
+                                                </li>                                                                                                         
+                                                <li class="list-group-item py-1 list-group-item-success">
+                                                    <div class="form-check form-check-inline">3</div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl3"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl3"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl3"></div>
+                                                </li>                                         
+                                            </ul>
+                                        </td>
+                                    </tr>                                    
+                                    </table>
+                            </div>
+                            <div class="col">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <div class="card mb-3">
+                                                <div class="card-header text-center list-group-item-warning"><strong>MENTAL</strong></div>
+                                                <div class="card-body">
+                                                    <table>
+                                                        <thead>
+                                                            <th class="text-center"><img src="images/offencive_icon.png">LOGIC</th>
+                                                            <th></th>
+                                                            <th class="text-center"><img src="images/defensive_icon.png">WILLPOWER</th>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="text-center"><h2>5</h2></td>
+                                                                <td style="width:20px"></td>
+                                                                <td class="text-center"><h2>3</h2></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <ul class="list-group mb-3" id="mental-features-items">
+                                            <li class="list-group-item py-1 list-group-item-warning text-center"><strong>FEATURES</strong></li>
+                                            <li class="list-group-item py-1">Cras justo odio</li>
+                                            <li class="list-group-item py-1">Dapibus ac facilisis in</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                            <ul class="list-group mb-3" id="physical-features-items">
+                                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
+                                                <li class="list-group-item py-1 list-group-item-success">
+                                                    <div class="form-check form-check-inline">1</div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl1"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl1"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl1"></div>
+                                                </li>  
+                                                <li class="list-group-item py-1 list-group-item-success">
+                                                    <div class="form-check form-check-inline">2</div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl2"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl2"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl2"></div>
+                                                </li>                                                                                                         
+                                                <li class="list-group-item py-1 list-group-item-success">
+                                                    <div class="form-check form-check-inline">3</div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl3"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl3"></div>
+                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl3"></div>
+                                                </li>                                                  
+                                            </ul>
+                                        </td>
+                                    </tr>                                 
+                                </table>
+
+                            </div>
+                            <div class="col">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <div class="card  mb-3">
+                                                    <div class="card-header text-center list-group-item-warning"><strong>SOCIAL</strong></div>
+                                                    <div class="card-body">
+
+                                                        <table>
+                                                            <thead>
+                                                            <th class="text-center"><img src="images/offencive_icon.png">CHARISMA</th>
+                                                            <th></th>
+                                                            <th class="text-center"><img src="images/defensive_icon.png">EMPATHY</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="text-center"><h2>5</h2></td>
+                                                                    <td style="width:20px"></td>
+                                                                    <td class="text-center"><h2>3</h2></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <ul class="list-group mb-3" id="social-features-items">
+                                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>FEATURES</strong></li>
+                                                <li class="list-group-item py-1 ">Dapibus ac facilisis in <span class="badge">X</span></li>
+                                                <li class="list-group-item py-1">Morbi leo risus <span class="badge">12</span></li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                            <td>
+                                                <ul class="list-group mb-3" id="physical-features-items">
+                                                    <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
+                                                    <li class="list-group-item py-1 list-group-item-success">
+                                                        <div class="form-check form-check-inline">1</div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl1"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl1"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl1"></div>
+                                                    </li>  
+                                                    <li class="list-group-item py-1 list-group-item-success">
+                                                        <div class="form-check form-check-inline">2</div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl2"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl2"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl2"></div>
+                                                    </li>                                                                                                         
+                                                    <li class="list-group-item py-1 list-group-item-success">
+                                                        <div class="form-check form-check-inline">3</div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl3"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl3"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl3"></div>
+                                                    </li>                                                      
+                                                </ul>
+                                            </td>
+                                        </tr>                                         
+                                    </table>
+                            </div>
                             
-                        </div>
-                        <div class="col">
-                            <label>Dice rolls</label>
-                            <div class="dicerolls_area">
-                                <ul id="dicerolls-messages" class="list-group list-group-flush list-dicerolls-messages"></ul>
-                            </div>
-                        </div>
-                    </div>
+            </div>
 
-                    <div class="row">
-                        <div class="col">
-                            <nav>
-                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                   <a class="nav-item nav-link" id="nav-dice-tab" data-toggle="tab" href="#nav-dice" role="tab" aria-controls="nav-dice" aria-selected="true">Dice</a>
-                                    <!-- <a class="nav-item nav-link" id="nav-chat-tab" data-toggle="tab" href="#nav-chat" role="tab" aria-controls="nav-chat" aria-selected="false">Chat</a> -->
-                                    <!-- <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a> -->
+
+
+
+        </div>
+        <div class="col h-100">
+            <div>
+                <table class="table table-sm table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>Positiva</td>
+                            <td class="text-left">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-light btn-sm active"><input type="radio" name="dice-positive" value="1d6" autocomplete="off" checked=""> 1</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="2d6" autocomplete="off"> 2</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="3d6" autocomplete="off"> 3</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="4d6" autocomplete="off"> 4</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="5d6" autocomplete="off"> 5</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="6d6" autocomplete="off"> 6</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="7d6" autocomplete="off"> 7</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="8d6" autocomplete="off"> 8</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="9d6" autocomplete="off"> 9</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="10d6" autocomplete="off"> 10</label>
                                 </div>
-                            </nav>
-                            <div class="tab-content" id="nav-tabContent">
-                     
-                                <div class="tab-pane fade p-3" id="nav-dice" role="tabpanel" aria-labelledby="nav-dice-tab">
-                                    <div class="col-4">
-                                        <table class="table table-sm table-borderless" style="height:250px">
-                                            <tbody>
-                                                <tr>
-                                                    <td>Grundegenskap</td>
-                                                    <td class="text-left">
-                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                            <label class="btn btn-light btn-sm active"><input type="radio" name="dice-ge" value="0" autocomplete="off" checked=""> 0</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="1d6" autocomplete="off"> 1</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="2d6" autocomplete="off"> 2</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="3d6" autocomplete="off"> 3</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="4d6" autocomplete="off"> 4</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="5d6" autocomplete="off"> 5</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="6d6" autocomplete="off"> 6</label>
-                                                        </div>
-                                                    </td>
-                                                    <td rowspan="5" class="align-top">
-                                                        <div class="text-left">
-                                                            <button id="btn-throw-dice" type="button" class="btn btn-primary" style="white-space: nowrap;">Kasta tärningarna</button>
-                                                        </div>
-                                                        <div class="top-buffer text-left">
-                                                            <button type="button" class="btn btn-info" style="white-space: nowrap;" id="btn-dice-reroll">Pressa slaget</button>
-                                                        </div>
-                                                        <div class="top-buffer text-left">
-                                                            <button type="button" class="btn btn-dark" style="white-space: nowrap;" id="btn-dice-pride">Stolthet</button>
-                                                        </div>
-                                                    </td>
-                                                    <td rowspan="5" class="align-top">
-                                                        <!-- <button type="button" class="btn btn-dark" style="white-space: nowrap;" id="btn-dice-pride">Stolthet</button> -->
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Färdighet</td>
-                                                    <td class="text-left">
-                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                            <label class="btn btn-danger btn-sm active"><input type="radio" name="dice-fv" value="0" autocomplete="off" checked=""> 0</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="1d6" autocomplete="off"> 1</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="2d6" autocomplete="off"> 2</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="3d6" autocomplete="off"> 3</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="4d6" autocomplete="off"> 4</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="5d6" autocomplete="off"> 5</label>
-                                                            <label class="btn btn-danger btn-sm"><input type="radio" name="dice-fv" value="6d6" autocomplete="off"> 6</label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Vapen</td>
-                                                    <td class="text-left">
-                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                            <label class="btn btn-dark btn-sm active"><input type="radio" name="dice-va" value="0" autocomplete="off" checked=""> 0</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-va" value="1d6" autocomplete="off"> 1</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-va" value="2d6" autocomplete="off"> 2</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-va" value="3d6" autocomplete="off"> 3</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-va" value="4d6" autocomplete="off"> 4</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-va" value="5d6" autocomplete="off"> 5</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-va" value="6d6" autocomplete="off"> 6</label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Mäktig</td>
-                                                    <td class="text-left">
-                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                            <label class="btn btn-success btn-sm active"><input type="radio" name="dice-art-might" value="0" autocomplete="off" checked=""> 0</label>
-                                                            <label class="btn btn-success btn-sm"><input type="radio" name="dice-art-might" value="1d8" autocomplete="off"> 1</label>
-                                                            <label class="btn btn-success btn-sm"><input type="radio" name="dice-art-might" value="2d8" autocomplete="off"> 2</label>
-                                                            <label class="btn btn-success btn-sm"><input type="radio" name="dice-art-might" value="3d8" autocomplete="off"> 3</label>
-                                                            <label class="btn btn-success btn-sm"><input type="radio" name="dice-art-might" value="4d8" autocomplete="off"> 4</label>
-                                                            <label class="btn btn-success btn-sm"><input type="radio" name="dice-art-might" value="5d8" autocomplete="off"> 5</label>
-                                                            <label class="btn btn-success btn-sm"><input type="radio" name="dice-art-might" value="6d8" autocomplete="off"> 6</label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Episk</td>
-                                                    <td class="text-left">
-                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                            <label class="btn btn-info btn-sm active"><input type="radio" name="dice-art-epic" value="0" autocomplete="off" checked=""> 0</label>
-                                                            <label class="btn btn-info btn-sm"><input type="radio" name="dice-art-epic" value="1d10" autocomplete="off"> 1</label>
-                                                            <label class="btn btn-info btn-sm"><input type="radio" name="dice-art-epic" value="2d10" autocomplete="off"> 2</label>
-                                                            <label class="btn btn-info btn-sm"><input type="radio" name="dice-art-epic" value="3d10" autocomplete="off"> 3</label>
-                                                            <label class="btn btn-info btn-sm"><input type="radio" name="dice-art-epic" value="4d10" autocomplete="off"> 4</label>
-                                                            <label class="btn btn-info btn-sm"><input type="radio" name="dice-art-epic" value="5d10" autocomplete="off"> 5</label>
-                                                            <label class="btn btn-info btn-sm"><input type="radio" name="dice-art-epic" value="6d10" autocomplete="off"> 6</label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Legendarisk</td>
-                                                    <td class="text-left">
-                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                            <label class="btn btn-warning btn-sm active"><input type="radio" name="dice-art-leg" value="0" autocomplete="off" checked=""> 0</label>
-                                                            <label class="btn btn-warning btn-sm"><input type="radio" name="dice-art-leg" value="1d12" autocomplete="off"> 1</label>
-                                                            <label class="btn btn-warning btn-sm"><input type="radio" name="dice-art-leg" value="2d12" autocomplete="off"> 2</label>
-                                                            <label class="btn btn-warning btn-sm"><input type="radio" name="dice-art-leg" value="3d12" autocomplete="off"> 3</label>
-                                                            <label class="btn btn-warning btn-sm"><input type="radio" name="dice-art-leg" value="4d12" autocomplete="off"> 4</label>
-                                                            <label class="btn btn-warning btn-sm"><input type="radio" name="dice-art-leg" value="5d12" autocomplete="off"> 5</label>
-                                                            <label class="btn btn-warning btn-sm"><input type="radio" name="dice-art-leg" value="6d12" autocomplete="off"> 6</label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <!-- </div> -->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Negativa</td>
+                            <td class="text-left">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-dark btn-sm active"><input type="radio" name="dice-negative" value="0" autocomplete="off" checked=""> 0</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="1d6" autocomplete="off"> 1</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="2d6" autocomplete="off"> 2</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="3d6" autocomplete="off"> 3</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="4d6" autocomplete="off"> 4</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="5d6" autocomplete="off"> 5</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="6d6" autocomplete="off"> 6</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="7d6" autocomplete="off"> 7</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="8d6" autocomplete="off"> 8</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="9d6" autocomplete="off"> 9</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="10d6" autocomplete="off"> 10</label>
                                 </div>
-                                <!-- <div class="tab-pane fade p-3" id="nav-chat" role="tabpanel" aria-labelledby="nav-chat-tab">
-                                        <ul id="chat-messages" class="list-group list-group-flush list-chat-messages"></ul>
-                                </div> -->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-left"><button id="btn-throw-dice" type="button" class="btn btn-primary btn-sm" style="white-space: nowrap;">Kasta tärningarna</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="dicerolls_area">
+                <ul id="dicerolls-messages" class="list-group list-group-flush list-dicerolls-messages"></ul>
+            </div>
+        </div>
+        </div>
 
 
-                                <!-- <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div> -->
-                            </div>
 
 
-
-                        </div>
-                    </div>
-
-
-
-
-                    <!-- <div class="alert alert-success" id="info-alert">
+        <!-- <div class="alert alert-success" id="info-alert">
                     <button type="button" class="close" data-dismiss="alert">x</button>
                     <strong>! </strong><span id="alerttext"></span>
                 </div> -->
 
 
 
-                </div>
+        </div>
 
-                <!-- /#page-content-wrapper -->
-            </div>
+        <!-- /#page-content-wrapper -->
+        </div>
 
         </div>
         <!-- /#wrapper -->

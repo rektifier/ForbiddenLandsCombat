@@ -304,7 +304,6 @@ $(document).ready(function () {
 
     $("#info-alert").hide();
     $(".admingroup").hide();
-    $('#settings-button').hide();
 
 
     // user logged in
@@ -328,7 +327,7 @@ $(document).ready(function () {
 
                     //$("#roomNameHeader").html('<strong>' + currentRoomName + ' <small>( owned by ' + currentRoom.owner + ' )</small></strong>');
                      
-                    $("#roomNameHeader").html('<strong>' + currentRoom.name + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+currentRoom.title+'</small></p><footer class="blockquote-footer"a><small>' + currentRoom.owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
+                    $("#roomNameHeader").html('<strong>' + currentRoom.name + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+currentRoom.title+'</small></p><footer class="blockquote-footer"a><small>' + currentRoom.owner + ' in <cite title="Source Title">'+roomConfig.gameName+'</cite></small></footer></blockquote>');
 
                     //load current user
                     //
@@ -381,272 +380,62 @@ $(document).ready(function () {
         redirectToLogin();
     });
 
-    // select card button
-    //
-    $(".btn-select-card").click(function (e) {
-        console.log('btn-select-card.click ');
-        e.preventDefault();
 
-        var cardId = $(this).data('cardid');
-        var nrOfCard = $(this).data('cardnr');
-
-        var isAlreadyActive = $(this).hasClass('active');
-
-        // //set up rules for dubblera and attackera
-        // //
-        // if (isAlreadyActive == false) {
-
-        //     //only check rules when we activate a card
-        //     //
-
-        //     //get the already active card
-        //     //
-        //     var activeBtn = $(".btn-select-card.active").first();
-
-        //     if (activeBtn){
-        //         var activeBtnCardId = $(activeBtn).data('cardid');
-        //         var activeBtnNr = $(activeBtn).data('cardnr');
-
-
-
-        //         if(activeBtnCardId == typeOfCards.attackera && cardi == typeOfCards.dubblera){
-        //             //Error
-        //             console.log('Du kan inte välja Dubblera om du redan har valt Attackera');
-        //         }
-
-        //     }
-
-        // }
-
-        var currentFighter = currentUser.displayName;
-        if (isRoomAdmin) {
-
-            //get the selected enemy89
-            var combatEnemy = $("#userslist .incombat").filter(":contains('" + roomConfig.enemyNameSuffix + "')").first();
-            if (combatEnemy !== undefined) {
-                currentFighter = combatEnemy.attr('id');
-            }
-        }
-
-        if (isAlreadyActive) {
-
-            // remove card            
-            $(".btn-select-card-" + nrOfCard).prop('disabled', false);
-            $(this).toggleClass('active');
-
-            database.ref(roomConfig.gameRoot+'/rooms/' + currentRoomName + '/conflict/' + currentFighter + '/cards/' + cardId).remove();
-
-        } else {
-
-            //only check rules when we activate a card
-            //
-
-            //get the already active card
-            //
-            var activeBtn = $(".btn-select-card.active").first();
-
-            if (activeBtn.length > 0){
-                var activeBtnCardId = $(activeBtn).data('cardid');
-                var activeBtnNr = $(activeBtn).data('cardnr');
-
-                // if(activeBtnCardId == typeOfCards.attackera && cardId == typeOfCards.dubblera){
-                //     //Error
-                //     console.log('Du kan inte välja Dubblera om du redan har valt Attackera');
-
-                //     //show message
-                //     return;
-                // }
-            }
-
-            // add card
-            $(".btn-select-card-" + nrOfCard).prop('disabled', true);
-            $(this).prop('disabled', false);
-            $(this).toggleClass('active');
-
-            var fightcard = fightingCards[cardId];
-
-            database.ref(roomConfig.gameRoot+'/rooms/' + currentRoomName + '/conflict/' + currentFighter + '/cards/' + cardId).set({ "isVisible": false, "cardid": cardId, "name": fightcard.name, "sortOrder": nrOfCard });
-
-        }
-    });
-
-    $("#btn-dice-pride").click(function (e) {
-        console.log('btn-throw-dice.click');
-        e.preventDefault();
-
-        const diceRoll = new DiceRoll('1d12');
-
-        var nrOfHits = artefactDiceSuccess[diceRoll.total-1];
-        var result = 'Stolthet:[' + diceRoll.total+ ']' + ' Lyckat: ' + nrOfHits ;
-
-        sendDiceRoll(result);
-    });
 
     $("#btn-throw-dice").click(function (e) {
         console.log('btn-throw-dice.click');
         e.preventDefault();
 
-        var diceRoll;
+        var positiveDice = [];
+        var negativeDice = [];
 
         //get nr of red
-        var nrOfDiceGE = $('input[name=dice-ge]:checked').val();
-        var nrOfDiceFV = $('input[name=dice-fv]:checked').val();
-        var nrOfDiceVA = $('input[name=dice-va]:checked').val();
+        var nrOfPositive = $('input[name=dice-positive]:checked').val();
+        var nrOfNegative = $('input[name=dice-negative]:checked').val();
 
-        var nrOfMight = $('input[name=dice-art-might]:checked').val();
-        var nrOfEpic = $('input[name=dice-art-epic]:checked').val();
-        var nrOfLegendary = $('input[name=dice-art-leg]:checked').val();
-
-        var nrOfT6 = $("#input-dice-T6").val();
-        var nrOfT8 = $("#input-dice-T8").val();
-        var nrOfT10 = $("#input-dice-T10").val();
-        var nrOfT12 = $("#input-dice-T12").val();
-
-        var T6Resource = $("#input-dice-resource-T6").val();
-        var T8Resource = $("#input-dice-resource-T8").val();
-        var T10Resource = $("#input-dice-resource-T10").val();
-        var T12Resource = $("#input-dice-resource-T12").val();
-
-
-        
-        
-        
-        
-       // $("#input-dice-artefact")
-
+        var positiveResult = '';
+        var negativeResult = '';
         var totalResult = '';
 
-        /*
-2 rader, färgade artefakttärningar
 
-        artefakttärningar
-        ----
-T8 grön mäktig(t)
-T10 ljusblå episk(t)
-T12 orange legendarisk(t)/stolthet(t)
-
-Lars, [20.02.19 15:12]
-T8: ett lyckade på 6, ett lyckande på 7, två lyckande på 8
-
-Lars, [20.02.19 15:13]
-T10: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande på 9, tre lyckande på 10
-
-Lars, [20.02.19 15:13]
-T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande på 9, tre lyckande på 10, tre lyckande på 11, fyra lyckande på 12
-
-        */
-       if(isEmpty(nrOfDiceGE) == false && nrOfDiceGE !== "0")
-        {
-            var miss = 0;
-            var hit = 0;
-            diceRoll = new DiceRoll(nrOfDiceGE);
-            var output = [];
-
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);
-                if(result == 1){miss++;}
-                if(result == 6){hit++;}               
+       
+       if(isEmpty(nrOfPositive) == false && nrOfPositive !== "0") {
+            diceRollPositive = new DiceRoll(nrOfPositive);
+            diceRollPositive.rolls[0].forEach(function(result){
+                positiveDice.push(result);             
             });
 
-            var geResult = 'GE: [' + output.join(",") + ']' + ' Lyckat: ' + hit + ', Fummel: ' + miss;
-
-            totalResult += geResult + '<br>';
+            totalResult = 'Positive: [' + positiveDice.join(",") + ']';
         }
 
-        if(isEmpty(nrOfDiceFV) == false && nrOfDiceFV !== "0")
-        {            
-            var hit = 0;
-            diceRoll = new DiceRoll(nrOfDiceFV);
-            var output = [];
-
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);
-                if(result == 6){hit++;}               
+        if(isEmpty(nrOfNegative) == false && nrOfNegative !== "0") {            
+            diceRollNegative = new DiceRoll(nrOfNegative);
+            diceRollNegative.rolls[0].forEach(function(result){
+                negativeDice.push(result);            
             });
-            
-            var fvResult = 'FV: [' + output.join(",") + ']' + ' Lyckat: ' + hit;
-
-            totalResult += fvResult + '<br>';
+            totalResult += ', Negative: [' + negativeDice.join(",") + ']';
         }
 
-        if(isEmpty(nrOfDiceVA) == false && nrOfDiceVA !== "0")
-        {
-            var miss = 0;
-            var hit = 0;
-            diceRoll = new DiceRoll(nrOfDiceVA);
-            var output = [];
+        if(positiveDice.length > 1 && negativeDice.length > 1){
 
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);
-                if(result == 6){hit++;}
-                if(result == 1){miss++;}            
-            });
-            
-            var vaResult = ' V: [' + output.join(",") + ']' + ' Lyckat: ' + hit + ', Fummel: ' + miss;
+            var p = positiveDice.length
+            while (p--) {
+                
+                var n = negativeDice.length;
+                while(n--){
 
-            totalResult += vaResult + '<br>';
+                    if (positiveDice[p] == negativeDice[n]) {
+                        positiveDice.splice(p,1);
+                        negativeDice.splice(n,1);
+                    }                    
+                } 
+            }
+
+            totalResult += '<br><br>Result: Positive ['+positiveDice.join(",")+']<br>Stress: '+negativeDice.length +' point';
         }
 
-        if(isEmpty(nrOfMight) == false && nrOfMight !== "0")
-        {
-            var output = [];
-            var hit = 0;
 
-            diceRoll = new DiceRoll(nrOfMight);
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);                
-                hit += artefactDiceSuccess[result-1];
-            });
-            
-            var result = 'Mäktig: [' + output.join(",") + ']' + ' Lyckat: ' + hit ;
-            totalResult += result + '<br>';
-        }
 
-        if(isEmpty(nrOfEpic) == false && nrOfEpic !== "0"){
-            var output = [];
-            var hit = 0;
-
-            diceRoll = new DiceRoll(nrOfEpic);
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);                
-                hit += artefactDiceSuccess[result-1];
-            });
-            
-            var result = 'Episk: [' + output.join(",") + ']' + ' Lyckat: ' + hit ;
-            totalResult += result + '<br>';
-        }
-
-        if(isEmpty(nrOfLegendary) == false && nrOfLegendary !== "0"){
-            var output = [];
-            var hit = 0;
-
-            diceRoll = new DiceRoll(nrOfLegendary);
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);                
-                hit += artefactDiceSuccess[result-1];
-            });
-            
-            var result = 'Legendarisk: [' + output.join(",") + ']' + ' Lyckat: ' + hit ;
-            totalResult += result;
-        }
-
-        // var diceRoll;
-        // if(nrOfT6 != "0"){
-        //     diceRoll = new DiceRoll(nrOfT6);
-        //     totalResult += diceRoll.output + '<br>';
-        // }
-        // if(nrOfT8 != "0"){
-        //     diceRoll = new DiceRoll(nrOfT8);
-        //     totalResult += diceRoll.output + '<br>';
-        // }
-        // if(nrOfT10 != "0"){
-        //     diceRoll = new DiceRoll(nrOfT10);
-        //     totalResult += diceRoll.output + '<br>';
-        // }
-        // if(nrOfT12 != "0"){
-        //     diceRoll = new DiceRoll(nrOfT12);
-        //     totalResult += diceRoll.output + '<br>';
-        // }
 
         if(totalResult.length > 0){
             sendDiceRoll(totalResult);
@@ -659,25 +448,34 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
     });    
 
-    $(".btn-dice").click(function (e) {
-        console.log('.btn-dice.click');
+    //room settings
+    //
+    $("#btn-settings-save").click(function (e) {
+        console.log('btn-settings-save.click');
         e.preventDefault();
 
-        var typeOfDice = $(this).data('typeofdice');
-        var diceRoll = new DiceRoll(typeOfDice);
+        var owner = $("#settingsRoomOwner").val();
+        var roomname = $("#settingsRoomName").val();
+        var title = $("#settingsRoomTitle").val();
 
-        sendDiceRoll(diceRoll.output);        
-    });    
-    
+        database.ref(roomConfig.gameRoot+'/rooms/' + currentRoomName).update({ "owner": owner, "name": roomname, "title":title});
 
+        $("#roomNameHeader").html('<strong>' + roomname+ '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+title+'</small></p><footer class="blockquote-footer"a><small>' + owner + ' in <cite title="Source Title">'+roomConfig.gameName+'</cite></small></footer></blockquote>');
+
+    });
+
+    $(".delete-feature").click(function (e) {
+        console.log('delete-feature.click');
+        e.preventDefault();
+
+        alert('detele');
+    });
 
     //admin fearur41
     //
     function activateAdminFeatures() {
 
-        $('settings-button').show();
         $(".admingroup").show();
-        $(".btn-select-card").prop('disabled', false);
         $("#add-enemy-button").prop("disabled", true);
 
         $('#add-enemy-input').keyup(validateAddEnemyButton);
@@ -801,21 +599,9 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         });
 
 
-        //room settings
-        //
-        $("#btn-settings-save").click(function (e) {
-            console.log('btn-settings-save.click');
-            e.preventDefault();
 
-            var owner = $("#settingsRoomOwner").val();
-            var roomname = $("#settingsRoomName").val();
-            var title = $("#settingsRoomTitle").val();
 
-            database.ref(roomConfig.gameRoot+'/rooms/' + currentRoomName).update({ "owner": owner, "name": roomname, "title":title});
-
-            $("#roomNameHeader").html('<strong>' + roomname+ '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+title+'</small></p><footer class="blockquote-footer"a><small>' + owner + ' in <cite title="Source Title">'+roomConfig.gameName+'</cite></small></footer></blockquote>');
-
-        });
+        
 
 
     }
