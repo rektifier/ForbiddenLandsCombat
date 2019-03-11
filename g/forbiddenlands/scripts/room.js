@@ -632,52 +632,62 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         */
        if(isEmpty(nrOfDiceGE) == false && nrOfDiceGE !== "0")
         {
-            var miss = 0;
-            var hit = 0;
+            var miss = '';
+            var hit = '';
             diceRoll = new DiceRoll(nrOfDiceGE);
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
                 output.push(result);
-                if(result == 1){miss++;}
-                if(result == 6){hit++;}               
+                if(result == 1){
+                    miss += '<img src="images/dice_miss.png" height="25">';
+                }
+                if(result == 6){
+                    hit += '<img src="images/dice_hit.png" height="25">';
+                }               
             });
 
-            var geResult = 'GE: [' + output.join(",") + ']' + ' Lyckat: ' + hit + ', Fummel: ' + miss;
+            var geResult = 'GE: [' + output.join(",") + '] ' + hit + ' ' + miss;
 
             totalResult += geResult + '<br>';
         }
 
         if(isEmpty(nrOfDiceFV) == false && nrOfDiceFV !== "0")
         {            
-            var hit = 0;
+            var hit = '';
             diceRoll = new DiceRoll(nrOfDiceFV);
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
                 output.push(result);
-                if(result == 6){hit++;}               
+                if(result == 6){
+                    hit += '<img src="images/dice_hit.png" height="25">';
+                }              
             });
             
-            var fvResult = 'FV: [' + output.join(",") + ']' + ' Lyckat: ' + hit;
+            var fvResult = 'FV: [' + output.join(",") + '] ' + hit;
 
             totalResult += fvResult + '<br>';
         }
 
         if(isEmpty(nrOfDiceVA) == false && nrOfDiceVA !== "0")
         {
-            var miss = 0;
-            var hit = 0;
+            var miss = '';
+            var hit = '';
             diceRoll = new DiceRoll(nrOfDiceVA);
             var output = [];
 
             diceRoll.rolls[0].forEach(function(result){
                 output.push(result);
-                if(result == 6){hit++;}
-                if(result == 1){miss++;}            
+                if(result == 1){
+                    miss += '<img src="images/dice_miss.png" height="25">';
+                }
+                if(result == 6){
+                    hit += '<img src="images/dice_hit.png" height="25">';
+                }          
             });
             
-            var vaResult = ' V: [' + output.join(",") + ']' + ' Lyckat: ' + hit + ', Fummel: ' + miss;
+            var vaResult = ' V: [' + output.join(",") + '] ' + hit + ' ' + miss;
 
             totalResult += vaResult + '<br>';
         }
@@ -686,62 +696,59 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         {
             var output = [];
             var hit = 0;
+            var hitResult = '';
 
             diceRoll = new DiceRoll(nrOfMight);
             diceRoll.rolls[0].forEach(function(result){
                 output.push(result);                
                 hit += artefactDiceSuccess[result-1];
             });
+
+            for (let index = 0; index < hit; index++) {
+                hitResult += '<img src="images/dice_hit.png" height="25">';                
+            }
             
-            var result = 'Mäktig: [' + output.join(",") + ']' + ' Lyckat: ' + hit ;
+            var result = 'Mäktig: [' + output.join(",") + '] ' + hitResult ;
             totalResult += result + '<br>';
         }
 
         if(isEmpty(nrOfEpic) == false && nrOfEpic !== "0"){
             var output = [];
             var hit = 0;
+            var hitResult = '';
 
             diceRoll = new DiceRoll(nrOfEpic);
             diceRoll.rolls[0].forEach(function(result){
                 output.push(result);                
                 hit += artefactDiceSuccess[result-1];
             });
+
+            for (let index = 0; index < hit; index++) {
+                hitResult += '<img src="images/dice_hit.png" height="25">';                
+            }
             
-            var result = 'Episk: [' + output.join(",") + ']' + ' Lyckat: ' + hit ;
+            var result = 'Episk: [' + output.join(",") + '] ' + hit ;
             totalResult += result + '<br>';
         }
 
         if(isEmpty(nrOfLegendary) == false && nrOfLegendary !== "0"){
             var output = [];
             var hit = 0;
+            var hitResult = '';
 
             diceRoll = new DiceRoll(nrOfLegendary);
             diceRoll.rolls[0].forEach(function(result){
                 output.push(result);                
                 hit += artefactDiceSuccess[result-1];
             });
+
+            for (let index = 0; index < hit; index++) {
+                hitResult += '<img src="images/dice_hit.png" height="25">';                
+            }
             
-            var result = 'Legendarisk: [' + output.join(",") + ']' + ' Lyckat: ' + hit ;
+            var result = 'Legendarisk: [' + output.join(",") + '] ' + hit ;
             totalResult += result;
         }
-
-        // var diceRoll;
-        // if(nrOfT6 != "0"){
-        //     diceRoll = new DiceRoll(nrOfT6);
-        //     totalResult += diceRoll.output + '<br>';
-        // }
-        // if(nrOfT8 != "0"){
-        //     diceRoll = new DiceRoll(nrOfT8);
-        //     totalResult += diceRoll.output + '<br>';
-        // }
-        // if(nrOfT10 != "0"){
-        //     diceRoll = new DiceRoll(nrOfT10);
-        //     totalResult += diceRoll.output + '<br>';
-        // }
-        // if(nrOfT12 != "0"){
-        //     diceRoll = new DiceRoll(nrOfT12);
-        //     totalResult += diceRoll.output + '<br>';
-        // }
 
         if(totalResult.length > 0){
             sendDiceRoll(totalResult);
@@ -767,8 +774,6 @@ T12: ett lyckade på 6, ett lyckande på 7, två lyckande på 8, två lyckande p
         }else{
             result = 'Resurs: ' + diceRoll.output + ' - Ingen effekt';
         }
-
-        //var result = 'Legendarisk: [' + output.join(",") + ']' + ' Lyckat: ' + hit ;
 
         sendDiceRoll(result);        
     });    
