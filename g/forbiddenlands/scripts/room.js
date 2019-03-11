@@ -6,11 +6,21 @@ var adminAction = '';
 var isInCombat = false;
 
 var latestDiceRoll = null;
-// var latestDiceRoll = {
-//     message:'',
-//     sender:'',
-//     createdOn:''
-// };
+//var diceToReroll = null;
+
+var diceToReroll = {
+    nrOfHits:0,
+    nrOfMiss:1,
+    ge:0,
+    fv:0,
+    va:0,
+    might:0,
+    epic:0,
+    legendary:0,
+    modifier:0
+}
+
+
 
 
 function updateDbWithUserListOrder() {
@@ -581,11 +591,220 @@ $(document).ready(function () {
         sendDiceRoll(result);
     });
 
-    $("#btn-throw-dice").click(function (e) {
+    $("#btn-dice-reroll").click(function (e) {
         console.log('btn-throw-dice.click');
         e.preventDefault();
 
+
+        var results = getTheRollResult(diceToReroll.ge,diceToReroll.fv,diceToReroll.va,diceToReroll.might,diceToReroll.epic,diceToReroll.legendary,diceToReroll.modifier);
+        if(results.length > 0){
+            sendDiceRoll(results);
+        } 
+    });
+
+    
+
+    function getTheRollResult(nrOfDiceGE,nrOfDiceFV,nrOfDiceVA,nrOfMight,nrOfEpic,nrOfLegendary,modifier){
+
         var diceRoll;
+
+        var totalResult = '';
+
+
+        diceToReroll.ge = nrOfDiceGE;
+        diceToReroll.fv = nrOfDiceFV;
+        diceToReroll.va = nrOfDiceVA;
+        diceToReroll.might = nrOfMight;
+        diceToReroll.epic = nrOfEpic;
+        diceToReroll.legendary = nrOfLegendary;
+        diceToReroll.modifier = modifier;
+
+
+        if(isEmpty(modifier) == false && modifier > 0){
+
+            diceToReroll.modifier = modifier;
+            totalResult = 'Modifikation: [-'+modifier+']<br>';
+
+            for (let index = 0; index < diceToReroll.modifier; index++) {
+                if(nrOfDiceFV > 0) {
+                    nrOfDiceFV--;
+                    modifier--;
+                }else{
+                    break;
+                }          
+            }
+            
+            // while (modifier--) {    
+            //     if(nrOfDiceFV > 0) {
+            //         nrOfDiceFV--;
+            //     }else{
+            //         break;
+            //     }
+            // }
+        } 
+            
+       if(isEmpty(diceToReroll.ge) == false && diceToReroll.ge !== "0")
+        {
+            var miss = '';
+            var hit = '';
+            diceRoll = new DiceRoll(diceToReroll.ge+'d6');
+            var output = [];
+
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);
+                if(result == 1){
+                    diceToReroll.nrOfMiss++;
+                    diceToReroll.ge--;
+                    miss += '<img src="images/dice_miss.png" height="25">';
+                }
+                if(result == 6){
+                    if(modifier > 0){
+                        modifier--;
+                        //hit += 'X';
+                    }else{
+                        diceToReroll.nrOfHits++;
+                        diceToReroll.ge--;
+                        hit += '<img src="images/dice_hit.png" height="25">';
+                    }                    
+                }               
+            });
+
+            var geResult = 'GE: [' + output.join(",") + '] ' + hit + ' ' + miss;
+
+            totalResult += geResult + '<br>';
+        }
+
+        if(isEmpty(diceToReroll.fv) == false && diceToReroll.fv !== "0")
+        {            
+            var hit = '';
+            diceRoll = new DiceRoll(diceToReroll.fv+'d6');
+            var output = [];
+
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);
+                if(result == 6){
+                    diceToReroll.fv--;
+                    diceToReroll.nrOfHits++;
+                    hit += '<img src="images/dice_hit.png" height="25">';
+                }              
+            });
+            
+            var fvResult = 'FV: [' + output.join(",") + '] ' + hit;
+
+            totalResult += fvResult + '<br>';
+        }
+
+        if(isEmpty(diceToReroll.va) == false && diceToReroll.va !== "0")
+        {
+            var miss = '';
+            var hit = '';
+            diceRoll = new DiceRoll(diceToReroll.va +'d6');
+            var output = [];
+
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);
+                if(result == 1){
+                    diceToReroll.nrOfMiss++;
+                    diceToReroll.va--;
+                    miss += '<img src="images/dice_miss.png" height="25">';
+                }
+                if(result == 6){
+                    diceToReroll.nrOfHits++;
+                    diceToReroll.va--;
+                    hit += '<img src="images/dice_hit.png" height="25">';
+                }          
+            });
+            
+            var vaResult = ' V: [' + output.join(",") + '] ' + hit + ' ' + miss;
+
+            totalResult += vaResult + '<br>';
+        }
+
+        if(isEmpty(diceToReroll.might) == false && diceToReroll.might !== "0")
+        {
+            var output = [];
+            var hit = 0;
+            var hitResult = '';
+
+            diceRoll = new DiceRoll(diceToReroll.might +'d8');
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);                
+                hit += artefactDiceSuccess[result-1];
+            });
+
+            for (let index = 0; index < hit; index++) {
+                diceToReroll.nrOfHits++;
+                hitResult += '<img src="images/dice_hit.png" height="25">';                
+            }
+
+            diceToReroll.might = 0;
+            
+            var result = 'Mäktig: [' + output.join(",") + '] ' + hitResult ;
+            totalResult += result + '<br>';
+        }
+
+        if(isEmpty(diceToReroll.epic) == false && diceToReroll.epic !== "0"){
+            var output = [];
+            var hit = 0;
+            var hitResult = '';
+
+            diceRoll = new DiceRoll(diceToReroll.epic +'d10');
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);                
+                hit += artefactDiceSuccess[result-1];
+            });
+
+            for (let index = 0; index < hit; index++) {
+                diceToReroll.nrOfHits++;
+                hitResult += '<img src="images/dice_hit.png" height="25">';                
+            }
+
+            diceToReroll.epic = 0;
+            
+            var result = 'Episk: [' + output.join(",") + '] ' + hit ;
+            totalResult += result + '<br>';
+        }
+
+        if(isEmpty(diceToReroll.legendary) == false && diceToReroll.legendary !== "0"){
+            var output = [];
+            var hit = 0;
+            var hitResult = '';
+
+            diceRoll = new DiceRoll(diceToReroll.legendary +'d12');
+            diceRoll.rolls[0].forEach(function(result){
+                output.push(result);                
+                hit += artefactDiceSuccess[result-1];
+            });
+
+            for (let index = 0; index < hit; index++) {
+                diceToReroll.nrOfHits++;
+                hitResult += '<img src="images/dice_hit.png" height="25">';                
+            }
+
+            diceToReroll.legendary = 0;
+            
+            var result = 'Legendarisk: [' + output.join(",") + '] ' + hit ;
+            totalResult += result;
+        }
+
+        var hitandmissresult = 'Result: ';
+        for (let index = 0; index < diceToReroll.nrOfHits; index++) {
+            hitandmissresult += '<img src="images/dice_hit.png" height="25">';                
+        }
+
+        for (let index = 0; index < diceToReroll.nrOfMiss; index++) {
+            hitandmissresult += '<img src="images/dice_miss.png" height="25">';                
+        }
+
+        totalResult += '<br>' +  hitandmissresult;
+
+
+        return totalResult;
+    }
+
+    $("#btn-throw-dice").click(function (e) {
+        console.log('btn-throw-dice.click');
+        e.preventDefault();
 
         //get nr of red
         var nrOfDiceGE = $('input[name=dice-ge]:checked').val();
@@ -596,171 +815,25 @@ $(document).ready(function () {
         var nrOfEpic = $('input[name=dice-art-epic]:checked').val();
         var nrOfLegendary = $('input[name=dice-art-leg]:checked').val();
 
-        var nrOfT6 = $("#input-dice-T6").val();
-        var nrOfT8 = $("#input-dice-T8").val();
-        var nrOfT10 = $("#input-dice-T10").val();
-        var nrOfT12 = $("#input-dice-T12").val();
-
-        var T6Resource = $("#input-dice-resource-T6").val();
-        var T8Resource = $("#input-dice-resource-T8").val();
-        var T10Resource = $("#input-dice-resource-T10").val();
-        var T12Resource = $("#input-dice-resource-T12").val();
-
         var modifier = $("#drp-modifier").val();
 
-        var modifierResult = '';
-        var totalResult = '';
-
-        if(isEmpty(modifier) == false && modifier > 0){
-            totalResult = 'Modifikation: ['+modifier+']<br>';
-            
-            while (modifier--) {    
-                if(nrOfDiceFV > 0) {
-                    nrOfDiceFV--;
-                }else{
-                    break;
-                }
-            }
-        }
-
- 
-            
-       if(isEmpty(nrOfDiceGE) == false && nrOfDiceGE !== "0")
-        {
-            var miss = '';
-            var hit = '';
-            diceRoll = new DiceRoll(nrOfDiceGE+'d6');
-            var output = [];
-
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);
-                if(result == 1){
-                    miss += '<img src="images/dice_miss.png" height="25">';
-                }
-                if(result == 6){
-                    if(modifier > 0){
-                        modifier--;
-                        //hit += 'X';
-                    }else{
-                        hit += '<img src="images/dice_hit.png" height="25">';
-                    }
-                    
-                }               
-            });
-
-            var geResult = 'GE: [' + output.join(",") + '] ' + hit + ' ' + miss;
-
-            totalResult += geResult + '<br>';
-        }
-
-        if(isEmpty(nrOfDiceFV) == false && nrOfDiceFV !== "0")
-        {            
-            var hit = '';
-            diceRoll = new DiceRoll(nrOfDiceFV+'d6');
-            var output = [];
-
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);
-                if(result == 6){
-                    hit += '<img src="images/dice_hit.png" height="25">';
-                }              
-            });
-            
-            var fvResult = 'FV: [' + output.join(",") + '] ' + hit;
-
-            totalResult += fvResult + '<br>';
-        }
-
-        if(isEmpty(nrOfDiceVA) == false && nrOfDiceVA !== "0")
-        {
-            var miss = '';
-            var hit = '';
-            diceRoll = new DiceRoll(nrOfDiceVA);
-            var output = [];
-
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);
-                if(result == 1){
-                    miss += '<img src="images/dice_miss.png" height="25">';
-                }
-                if(result == 6){
-                    hit += '<img src="images/dice_hit.png" height="25">';
-                }          
-            });
-            
-            var vaResult = ' V: [' + output.join(",") + '] ' + hit + ' ' + miss;
-
-            totalResult += vaResult + '<br>';
-        }
-
-        if(isEmpty(nrOfMight) == false && nrOfMight !== "0")
-        {
-            var output = [];
-            var hit = 0;
-            var hitResult = '';
-
-            diceRoll = new DiceRoll(nrOfMight);
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);                
-                hit += artefactDiceSuccess[result-1];
-            });
-
-            for (let index = 0; index < hit; index++) {
-                hitResult += '<img src="images/dice_hit.png" height="25">';                
-            }
-            
-            var result = 'Mäktig: [' + output.join(",") + '] ' + hitResult ;
-            totalResult += result + '<br>';
-        }
-
-        if(isEmpty(nrOfEpic) == false && nrOfEpic !== "0"){
-            var output = [];
-            var hit = 0;
-            var hitResult = '';
-
-            diceRoll = new DiceRoll(nrOfEpic);
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);                
-                hit += artefactDiceSuccess[result-1];
-            });
-
-            for (let index = 0; index < hit; index++) {
-                hitResult += '<img src="images/dice_hit.png" height="25">';                
-            }
-            
-            var result = 'Episk: [' + output.join(",") + '] ' + hit ;
-            totalResult += result + '<br>';
-        }
-
-        if(isEmpty(nrOfLegendary) == false && nrOfLegendary !== "0"){
-            var output = [];
-            var hit = 0;
-            var hitResult = '';
-
-            diceRoll = new DiceRoll(nrOfLegendary);
-            diceRoll.rolls[0].forEach(function(result){
-                output.push(result);                
-                hit += artefactDiceSuccess[result-1];
-            });
-
-            for (let index = 0; index < hit; index++) {
-                hitResult += '<img src="images/dice_hit.png" height="25">';                
-            }
-            
-            var result = 'Legendarisk: [' + output.join(",") + '] ' + hit ;
-            totalResult += result;
-        }
-
-        if(totalResult.length > 0){
-            sendDiceRoll(totalResult);
-        }        
-        
         //reset all active labels
         //
         $(".btn-group input").prop("checked", false);
         $(".btn-group").find(">:first-child").addClass('active').siblings().removeClass('active');
         $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
         $("#drp-modifier").find(">:first-child").prop("selected",true);
+
+        //nollställ inför press
+        //
+        diceToReroll.nrOfHits = 0;
+        diceToReroll.nrOfMiss= 0;
+
+        var results = getTheRollResult(nrOfDiceGE,nrOfDiceFV,nrOfDiceVA,nrOfMight,nrOfEpic,nrOfLegendary,modifier);
+        if(results.length > 0){
+            sendDiceRoll(results);
+        } 
+       
     });    
 
     $(".resource-dice").click(function (e) {
