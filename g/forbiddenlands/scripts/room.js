@@ -611,20 +611,21 @@ $(document).ready(function () {
         var modifierResult = '';
         var totalResult = '';
 
-        if(modifier > 0){
-            totalResult = 'Modifier: ['+modifier+']<br>';
-        }
-
-        //modifier++;
-        while (modifier--) {    
-            if(nrOfDiceFV > 0) {
-                nrOfDiceFV--;
-            }else{
-                if(nrOfDiceGE > 0){
-                    nrOfDiceGE--;
+        if(isEmpty(modifier) == false && modifier > 0){
+            totalResult = 'Modifikation: ['+modifier+']<br>';
+            
+            while (modifier--) {    
+                if(nrOfDiceFV > 0) {
+                    nrOfDiceFV--;
+                }else{
+                    if(nrOfDiceGE > 0){
+                        nrOfDiceGE--;
+                    }
                 }
             }
         }
+
+ 
             
        if(isEmpty(nrOfDiceGE) == false && nrOfDiceGE !== "0")
         {
@@ -755,7 +756,7 @@ $(document).ready(function () {
         $(".btn-group input").prop("checked", false);
         $(".btn-group").find(">:first-child").addClass('active').siblings().removeClass('active');
         $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
-        $("#drp-modifier").val(0);
+        $("#drp-modifier").find(">:first-child").prop("selected",true);
     });    
 
     $(".resource-dice").click(function (e) {
