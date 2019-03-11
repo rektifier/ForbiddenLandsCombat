@@ -618,9 +618,7 @@ $(document).ready(function () {
                 if(nrOfDiceFV > 0) {
                     nrOfDiceFV--;
                 }else{
-                    if(nrOfDiceGE > 0){
-                        nrOfDiceGE--;
-                    }
+                    break;
                 }
             }
         }
@@ -640,7 +638,13 @@ $(document).ready(function () {
                     miss += '<img src="images/dice_miss.png" height="25">';
                 }
                 if(result == 6){
-                    hit += '<img src="images/dice_hit.png" height="25">';
+                    if(modifier > 0){
+                        modifier--;
+                        //hit += 'X';
+                    }else{
+                        hit += '<img src="images/dice_hit.png" height="25">';
+                    }
+                    
                 }               
             });
 
