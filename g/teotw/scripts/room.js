@@ -25,7 +25,7 @@ function updateDbWithUserListOrder() {
         users[text] = { "name": name, "sortOrder": index, "inCombat": isInCombat }
     }));
 
-    database.ref(roomConfig.gameRoot+'/rooms/' + currentRoomName + '/users/').update(users);
+    database.ref(roomConfig.gameRoot + '/rooms/' + currentRoomName + '/users/').update(users);
 }
 
 
@@ -57,13 +57,12 @@ function addUserToList(key, user) {
             combatClass = 'incombat';
         }
 
-        if(isRoomAdmin)
-        {
+        if (isRoomAdmin) {
             $("#userslistwithmenu").append('<div class="btn-group dropright"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.name + '</button><div class="dropdown-menu"><button class="dropdown-item" type="button">Add to fight</button><button class="dropdown-item" type="button">Send message</button><div class="dropdown-divider"></div><button class="dropdown-item" type="button">Kick from room</button></div></div>');
-        }else{
+        } else {
             $("#userslist").append('<li id="' + key + '" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center ' + combatClass + '">' + user.name + fightBtn + '</li>');
         }
- 
+
     }
 }
 
@@ -91,15 +90,15 @@ function removeUserFromList(username) {
 //     });
 // }
 
-function sendDiceRoll(text){
+function sendDiceRoll(text) {
 
-    database.ref(roomConfig.gameRoot+'/dicerolls/' + currentRoomName).push({
+    database.ref(roomConfig.gameRoot + '/dicerolls/' + currentRoomName).push({
 
         createdOn: firebase.database.ServerValue.TIMESTAMP,
         message: text,
-        sender:currentUser.displayName
+        sender: currentUser.displayName
 
-    }).catch(function(error){
+    }).catch(function (error) {
         console.error('Error writing new message to Firebase Database', error);
     });
 }
@@ -109,14 +108,14 @@ function sendDiceRoll(text){
 //     return messageTemplate;
 // }
 
-function createDiceRollsMessage(sender,message,createdOn, isLatest){
+function createDiceRollsMessage(sender, message, createdOn, isLatest) {
     var messageTemplate = '';
 
-    if(isLatest){
-        messageTemplate = '<li><div class="card bg-light mb-3"><div class="card-header">'+sender+' <small><i>('+createdOn+')</i></small></div><div class="card-body"><p class="card-text">'+message+'</p></div></div></li>';
+    if (isLatest) {
+        messageTemplate = '<li><div class="card bg-light mb-3"><div class="card-header">' + sender + ' <small><i>(' + createdOn + ')</i></small></div><div class="card-body"><p class="card-text">' + message + '</p></div></div></li>';
     }
-    else{
-        messageTemplate = '<li><div class="card"><div class="card-body small"><p class="card-text">'+sender+' <small><i>'+createdOn+'</i></small><br>'+message+'</p></div></div></li>';
+    else {
+        messageTemplate = '<li><div class="card"><div class="card-body small"><p class="card-text">' + sender + ' <small><i>' + createdOn + '</i></small><br>' + message + '</p></div></div></li>';
     }
     return messageTemplate;
 }
@@ -139,49 +138,48 @@ function createDiceRollsMessage(sender,message,createdOn, isLatest){
 //     $('#chat-messages').prepend(result);  
 // }
 
-function appendDiceRollsMessage(message,sender,createdOn,isLatest){
+function appendDiceRollsMessage(message, sender, createdOn, isLatest) {
     var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
     var result = createDiceRollsMessage(sender, message, messDate, isLatest);
 
-    if(latestDiceRoll !== null){
+    if (latestDiceRoll !== null) {
         $('#dicerolls-messages li:first-child').remove();
         var resultOfLatest = createDiceRollsMessage(latestDiceRoll.sender, latestDiceRoll.message, latestDiceRoll.createdOn, false);
-        $('#dicerolls-messages').prepend(resultOfLatest);  
+        $('#dicerolls-messages').prepend(resultOfLatest);
     }
-    
-    latestDiceRoll = {message:message,sender:sender,createdOn:messDate};
 
-    $('#dicerolls-messages').prepend(result);  
+    latestDiceRoll = { message: message, sender: sender, createdOn: messDate };
+
+    $('#dicerolls-messages').prepend(result);
 }
 
 function initGame() {
 
     console.log('init game');
 
-    var diceRollsRef = database.ref(roomConfig.gameRoot+'/dicerolls/' + currentRoomName);
-    var usersRef = database.ref(roomConfig.gameRoot+'/rooms/' + currentRoomName + '/users/');
-    var conflictRef = database.ref(roomConfig.gameRoot+'/rooms/' + currentRoomName + '/conflict/');
+    var diceRollsRef = database.ref(roomConfig.gameRoot + '/dicerolls/' + currentRoomName);
+    var usersRef = database.ref(roomConfig.gameRoot + '/rooms/' + currentRoomName + '/users/');
+    var conflictRef = database.ref(roomConfig.gameRoot + '/rooms/' + currentRoomName + '/conflict/');
 
-    if(isRoomAdmin === false)
-    {
-        var currentUserRef = database.ref(roomConfig.gameRoot+'/rooms/' + currentRoomName + '/users/' + currentUser.displayName);
-    
+    if (isRoomAdmin === false) {
+        var currentUserRef = database.ref(roomConfig.gameRoot + '/rooms/' + currentRoomName + '/users/' + currentUser.displayName);
+
         //get user if we have one
         //
         currentUserRef.once("value").then(function (snapshot) {
             console.log('currentUserRef.once');
-    
+
             if (snapshot.exists()) {
                 var user = snapshot.val();
             } else {
-                database.ref(roomConfig.gameRoot+'/rooms/' + currentRoom.name + '/users/' + currentUser.displayName).set({ "name": currentUser.displayName, "messages": {}, "sortOrder": 99, "inCombat": false });
+                database.ref(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/users/' + currentUser.displayName).set({ "name": currentUser.displayName, "messages": {}, "sortOrder": 99, "inCombat": false });
             }
         });
-    
+
         currentUserRef.onDisconnect().remove();
     }
 
-    
+
     var startOfDay = moment().startOf('day').valueOf();//unix time format ( ms ) //.format("x");
     var startNow = moment().valueOf();
     // //chat messages
@@ -196,7 +194,7 @@ function initGame() {
     //         scrollChatMessagesToBottom();            
     //     }
     // });
-    
+
     // messageRef.orderByChild('createdOn').startAt(startNow).on('child_added', function(snapshot) {
     //     console.log('messageRef.orderByChild(createdOn).startAt(startNow).on(child_added');
     //     var mess = snapshot.val();
@@ -216,12 +214,12 @@ function initGame() {
     //         // scrollDiceRollsToBottom();            
     //     }
     // });
-    
-    diceRollsRef.orderByChild('createdOn').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function(snapshot) {
+
+    diceRollsRef.orderByChild('createdOn').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function (snapshot) {
         console.log('diceRollsRef.orderByChild(createdOn).startAt(startNow).on(child_added');
         var mess = snapshot.val();
 
-        appendDiceRollsMessage(mess.message,mess.sender,mess.createdOn,true);
+        appendDiceRollsMessage(mess.message, mess.sender, mess.createdOn, true);
         // scrollDiceRollsToBottom();
     });
 
@@ -232,7 +230,7 @@ function initGame() {
         console.log('on.child_removed');
         var removedUser = snapshot.val();
 
-        database.ref(roomConfig.gameRoot+'/rooms/' + currentRoomName + '/conflict/' + snapshot.key).remove();
+        database.ref(roomConfig.gameRoot + '/rooms/' + currentRoomName + '/conflict/' + snapshot.key).remove();
 
         if (snapshot.key === currentUser.displayName && isRoomAdmin === false) {
             redirectToLogin();
@@ -249,7 +247,7 @@ function initGame() {
             var user = userSnapshot.val();
             console.log(user);
 
-            if(!(isRoomAdmin && userId === currentUser.displayName)){
+            if (!(isRoomAdmin && userId === currentUser.displayName)) {
                 addUserToList(userId, user);
             }
         });
@@ -296,27 +294,84 @@ function initGame() {
 }
 
 
-function cleanDBData(){
-
+function cleanDBData() {
     console.log('Clean old db data.')
 
-    //clear old room data
+    //clear old room data 24 hours ago
     //
-    //12 hours ago
-    //
-    var cutOff = moment().subtract(12,'hours').valueOf();
-
-    database.ref(roomConfig.gameRoot+'/dicerolls/' + currentRoomName).orderByChild('createdOn').endAt(cutOff).once("value").then(function (snapshot) {
-
+    var cutOff = moment().subtract(24, 'hours').valueOf();
+    database.ref(roomConfig.gameRoot + '/dicerolls/' + currentRoomName).orderByChild('createdOn').endAt(cutOff).once("value").then(function (snapshot) {
         if (snapshot.exists()) {
             snapshot.ref.remove();
         }
     });
-    
+}
+
+// Initiate firebase auth.
+function initFirebaseAuth() {
+    // Listen to auth state changes.
+    firebase.auth().onAuthStateChanged(authStateObserver);
+}
+
+function authStateObserver(user) {
+
+    if (user) {
+        window.user = user;
+
+        currentuser = user;
+
+        //load current room
+        //
+        database.ref(roomConfig.gameRoot + '/rooms/' + currentRoomName).once("value").then(function (snapshot) {
+
+            if (snapshot.exists()) {
+
+                currentRoom = snapshot.val();
+
+
+
+                //$("#roomNameHeader").html('<strong>' + currentRoomName + ' <small>( owned by ' + currentRoom.owner + ' )</small></strong>');
+
+                $("#roomNameHeader").html('<strong>' + currentRoom.name + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>' + currentRoom.title + '</small></p><footer class="blockquote-footer"a><small>' + currentRoom.owner + ' in <cite title="Source Title">' + roomConfig.gameName + '</cite></small></footer></blockquote>');
+
+                //load current user
+                //
+                currentUser = firebase.auth().currentUser;
+                if (currentUser != null) {
+
+                    cleanDBData();
+
+                    //$("#navbarDropdown").text(currentUser.displayName);
+                    //is the logged in user the room admin?
+                    //
+                    if (currentRoom.owner === currentUser.displayName) {
+                        isRoomAdmin = true;
+
+                        $("#settingsRoomOwner").val(currentRoom.owner);
+                        $("#settingsRoomName").val(currentRoom.name);
+                        $("#settingsRoomTitle").val(currentRoom.title);
+
+                        activateAdminFeatures();
+                    }
+
+                    initGame();
+                } else {
+                    redirectToLogin();
+                }
+
+            } else {
+                redirectToLogin();
+            }
+        });
+    } else {
+        redirectToLogin();
+        window.user = null;
+    }
+
 }
 
 $(document).ready(function () {
-    
+
     const roller = new DiceRoller();
 
     currentRoomName = getParameterByName('room');
@@ -327,64 +382,8 @@ $(document).ready(function () {
     $("#info-alert").hide();
     $(".admingroup").hide();
 
-
-    // user logged in
-    //
-    firebase.auth().onAuthStateChanged(function (user) {
-
-        if (user) {
-            window.user = user;
-
-            currentuser = user;
-
-            //load current room
-            //
-            database.ref(roomConfig.gameRoot+'/rooms/' + currentRoomName).once("value").then(function (snapshot) {
-
-                if (snapshot.exists()) {
-
-                    currentRoom = snapshot.val();
-                    
-
-
-                    //$("#roomNameHeader").html('<strong>' + currentRoomName + ' <small>( owned by ' + currentRoom.owner + ' )</small></strong>');
-                     
-                    $("#roomNameHeader").html('<strong>' + currentRoom.name + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+currentRoom.title+'</small></p><footer class="blockquote-footer"a><small>' + currentRoom.owner + ' in <cite title="Source Title">'+roomConfig.gameName+'</cite></small></footer></blockquote>');
-
-                    //load current user
-                    //
-                    currentUser = firebase.auth().currentUser;
-                    if (currentUser != null) {
-
-                        cleanDBData();
-
-                        //$("#navbarDropdown").text(currentUser.displayName);
-                        //is the logged in user the room admin?
-                        //
-                        if (currentRoom.owner === currentUser.displayName) {
-                            isRoomAdmin = true;
-
-                            $("#settingsRoomOwner").val(currentRoom.owner);
-                            $("#settingsRoomName").val(currentRoom.name);
-                            $("#settingsRoomTitle").val(currentRoom.title);
-                            
-                            activateAdminFeatures();
-                        }
-
-                        initGame();
-                    } else {
-                        redirectToLogin();
-                    }
-
-                } else {
-                    redirectToLogin();
-                }
-            });
-        } else {
-            redirectToLogin();
-            window.user = null;
-        }
-    });
+    // initialize Firebase
+    initFirebaseAuth();
 
     //leave the room
     //
@@ -397,13 +396,12 @@ $(document).ready(function () {
         //if its a regular user, remove user from the room
         //and redirect to index
         //
-        if(isRoomAdmin === false){
-            database.ref(roomConfig.gameRoot+'/rooms/' + currentRoom.name + '/conflict/' + currentUser.displayName).remove().then();
-            database.ref(roomConfig.gameRoot+'/rooms/' + currentRoom.name + '/users/' + currentUser.displayName).remove().then();
+        if (isRoomAdmin === false) {
+            database.ref(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/conflict/' + currentUser.displayName).remove().then();
+            database.ref(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/users/' + currentUser.displayName).remove().then();
         }
         redirectToLogin();
     });
-
 
 
     $("#btn-throw-dice").click(function (e) {
@@ -416,61 +414,49 @@ $(document).ready(function () {
         //get nr of red
         var nrOfPositive = $('input[name=dice-positive]:checked').val();
         var nrOfNegative = $('input[name=dice-negative]:checked').val();
-
-        var positiveResult = '';
-        var negativeResult = '';
         var totalResult = '';
 
-
-       
-       if(isEmpty(nrOfPositive) == false && nrOfPositive !== "0") {
+        if (isEmpty(nrOfPositive) == false && nrOfPositive !== "0") {
             diceRollPositive = new DiceRoll(nrOfPositive);
-            diceRollPositive.rolls[0].forEach(function(result){
-                positiveDice.push(result);             
+            diceRollPositive.rolls[0].forEach(function (result) {
+                positiveDice.push(result);
             });
 
             totalResult = 'Positive: [' + positiveDice.join(",") + ']';
         }
 
-        if(isEmpty(nrOfNegative) == false && nrOfNegative !== "0") {            
+        if (isEmpty(nrOfNegative) == false && nrOfNegative !== "0") {
             diceRollNegative = new DiceRoll(nrOfNegative);
-            diceRollNegative.rolls[0].forEach(function(result){
-                negativeDice.push(result);            
+            diceRollNegative.rolls[0].forEach(function (result) {
+                negativeDice.push(result);
             });
-            totalResult += ', Negative: [' + negativeDice.join(",") + ']';
+            totalResult += '<br>Negative: [' + negativeDice.join(",") + ']';
         }
 
-        if(positiveDice.length > 1 && negativeDice.length > 1){
-
+        if (positiveDice.length > 1 && negativeDice.length > 1) {
             var p = positiveDice.length
             while (p--) {
-                
                 var n = negativeDice.length;
-                while(n--){
-
+                while (n--) {
                     if (positiveDice[p] == negativeDice[n]) {
-                        positiveDice.splice(p,1);
-                        negativeDice.splice(n,1);
-                    }                    
-                } 
+                        positiveDice.splice(p, 1);
+                        negativeDice.splice(n, 1);
+                    }
+                }
             }
-
-            totalResult += '<br><br>Result: Positive ['+positiveDice.join(",")+']<br>Stress: '+negativeDice.length +' point';
+            totalResult += '<br><br>Result: Positive [' + positiveDice.join(",") + ']<br>Stress: ' + negativeDice.length + ' point';
         }
 
-
-
-
-        if(totalResult.length > 0){
+        if (totalResult.length > 0) {
             sendDiceRoll(totalResult);
-        }        
-        
+        }
+
         //reset all active labels
         //
         $(".btn-group input").prop("checked", false);
         $(".btn-group").find(">:first-child").addClass('active').siblings().removeClass('active');
         $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
-    });    
+    });
 
     //room settings
     //
@@ -482,9 +468,9 @@ $(document).ready(function () {
         var roomname = $("#settingsRoomName").val();
         var title = $("#settingsRoomTitle").val();
 
-        database.ref(roomConfig.gameRoot+'/rooms/' + currentRoomName).update({ "owner": owner, "name": roomname, "title":title});
+        database.ref(roomConfig.gameRoot + '/rooms/' + currentRoomName).update({ "owner": owner, "name": roomname, "title": title });
 
-        $("#roomNameHeader").html('<strong>' + roomname+ '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+title+'</small></p><footer class="blockquote-footer"a><small>' + owner + ' in <cite title="Source Title">'+roomConfig.gameName+'</cite></small></footer></blockquote>');
+        $("#roomNameHeader").html('<strong>' + roomname + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>' + title + '</small></p><footer class="blockquote-footer"a><small>' + owner + ' in <cite title="Source Title">' + roomConfig.gameName + '</cite></small></footer></blockquote>');
 
     });
 
@@ -495,36 +481,47 @@ $(document).ready(function () {
         alert('detele');
     });
 
-    $('.selectable').click(function(event) {
-        
+    $('.selectable').click(function (e) {
         var statvalue = $(this).data('statvalue');
         console.log('clicked ' + statvalue)
-      });
+    });
 
     $('label').click(function () {
-        $('span', this).text(function(i, text){
+        $('span', this).text(function (i, text) {
             return text === "-" ? "+" : "-";
         });
     });
 
-    $('.btn-add-feature').click(function(event) {
-        
-        var statvalue = $(this).data('statvalue');
-        console.log('clicked ' + statvalue)
-      });
-    
+    $('.btn-add-feature').click(function (e) {
+        console.log('.btn-add-feature.clicked ');
+
+        var featureName = $(this).parent('div').siblings('div').find('.input-add-feature').val();
+        console.log(featureName);
+
+        if(isEmpty(featureName) == false){
+            var statype = $(this).data('statype');
+            var positiveOrNegative = $(this).parent('div').siblings('div').find('.span-add-feature').text();
+
+            console.log(statype);
+            console.log(positiveOrNegative);
+        }
+        else{
+            e.stopPropagation();
+        }
+    });
+
 
     //admin fearur41
     //
-     function activateAdminFeatures() {
+    function activateAdminFeatures() {
 
         $(".admingroup").show();
         $("#add-enemy-button").prop("disabled", true);
 
         $('#add-enemy-input').keyup(validateAddEnemyButton);
-    
-        function validateAddEnemyButton(){
-         
+
+        function validateAddEnemyButton() {
+
             if ($('#add-enemy-input').val().length > 0) {
                 $("#add-enemy-button").prop("disabled", false);
             }
@@ -556,7 +553,7 @@ $(document).ready(function () {
 
                     var userToKick = ui.item[0].id
 
-                    database.ref(roomConfig.gameRoot+'/rooms/' + currentRoom.name + '/users/' + userToKick).remove();
+                    database.ref(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/users/' + userToKick).remove();
                     adminAction = '';
                 }
 
@@ -576,15 +573,15 @@ $(document).ready(function () {
             connectToSortable: "#userslist"
         }).disableSelection();
 
-          
 
-   
+
+
 
 
         // ############## click events ##############
         //
-  
-   
+
+
 
         //fight button in users list
         //
@@ -606,14 +603,14 @@ $(document).ready(function () {
                 var isInCombat = $(li).hasClass('incombat');
                 var user = $(li).attr('id');
 
-                firebase.database().ref().child(roomConfig.gameRoot+'/rooms/' + currentRoom.name + '/users/' + user).update({ inCombat: isInCombat });
+                firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/users/' + user).update({ inCombat: isInCombat });
 
                 if (isInCombat === true) {
                     //add user to combat
-                    firebase.database().ref().child(roomConfig.gameRoot+'/rooms/' + currentRoom.name + '/conflict/' + user).set({ "userid": user });
+                    firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/conflict/' + user).set({ "userid": user });
                 } else {
                     //remove user from combat
-                    firebase.database().ref().child(roomConfig.gameRoot+'/rooms/' + currentRoom.name + '/conflict/' + user).remove();
+                    firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/conflict/' + user).remove();
                 }
             }
 
@@ -629,7 +626,7 @@ $(document).ready(function () {
 
             //add enemy to room
             //
-            database.ref(roomConfig.gameRoot+'/rooms/' + currentRoom.name + '/users/' + enemyName).set({ "name": roomConfig.enemyNamePrefix + enemyName + roomConfig.enemyNameSuffix, "sortOrder": 99, "inCombat": false }).then(() => {
+            database.ref(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/users/' + enemyName).set({ "name": roomConfig.enemyNamePrefix + enemyName + roomConfig.enemyNameSuffix, "sortOrder": 99, "inCombat": false }).then(() => {
                 $("#add-enemy-input").val('');
             });
         });
@@ -637,7 +634,7 @@ $(document).ready(function () {
 
 
 
-        
+
 
 
     }
