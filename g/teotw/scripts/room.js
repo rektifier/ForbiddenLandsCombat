@@ -58,7 +58,7 @@ function addUserToList(key, user) {
         }
 
         if (isRoomAdmin) {
-            $("#userslistwithmenu").append('<div class="btn-group dropright"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.name + '</button><div class="dropdown-menu"><button class="dropdown-item" type="button">Add to fight</button><button class="dropdown-item" type="button">Send message</button><div class="dropdown-divider"></div><button class="dropdown-item" type="button">Kick from room</button></div></div>');
+            $("#userslist").append('<div class="btn-group dropright"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.name + '</button><div class="dropdown-menu"><button class="dropdown-item" type="button">Add to fight</button><button class="dropdown-item" type="button">Send message</button><div class="dropdown-divider"></div><button class="dropdown-item" type="button">Kick from room</button></div></div>');
         } else {
             $("#userslist").append('<li id="' + key + '" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center ' + combatClass + '">' + user.name + fightBtn + '</li>');
         }
@@ -328,10 +328,6 @@ function authStateObserver(user) {
 
                 currentRoom = snapshot.val();
 
-
-
-                //$("#roomNameHeader").html('<strong>' + currentRoomName + ' <small>( owned by ' + currentRoom.owner + ' )</small></strong>');
-
                 $("#roomNameHeader").html('<strong>' + currentRoom.name + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>' + currentRoom.title + '</small></p><footer class="blockquote-footer"a><small>' + currentRoom.owner + ' in <cite title="Source Title">' + roomConfig.gameName + '</cite></small></footer></blockquote>');
 
                 //load current user
@@ -341,7 +337,8 @@ function authStateObserver(user) {
 
                     cleanDBData();
 
-                    //$("#navbarDropdown").text(currentUser.displayName);
+                    $("#lblDisplayName").text(currentUser.displayName);
+
                     //is the logged in user the room admin?
                     //
                     if (currentRoom.owner === currentUser.displayName) {
