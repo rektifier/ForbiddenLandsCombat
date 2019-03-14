@@ -10,7 +10,7 @@ var latestDiceRoll = null;
 
 var diceToReroll = {
     nrOfHits:0,
-    nrOfMiss:1,
+    nrOfMiss:0,
     ge:0,
     fv:0,
     va:0,
@@ -155,15 +155,6 @@ function appendDiceRollsMessage(message,sender,createdOn,isLatest){
     }
     
     latestDiceRoll = {message:message,sender:sender,createdOn:messDate};
-
-    //message:'',
-    //     sender:'',
-    //     createdOn:''
-
-    
-    // $(".btn-group input").prop("checked", false);
-    // $(".btn-group").find(">:first-child").addClass('active').siblings().removeClass('active');
-    // $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
 
 
     $('#dicerolls-messages').prepend(result);  

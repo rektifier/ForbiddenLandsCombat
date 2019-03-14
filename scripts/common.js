@@ -19,6 +19,7 @@ showAlert.displayInfo = function (message) {
     $("#alerttext").text(message);
     $("#info-alert").slideDown('slow').delay(2000).slideUp('slow')
 }
+
 showAlert.setInfo = function (message) {
 
     if (message !== latestMessage) {

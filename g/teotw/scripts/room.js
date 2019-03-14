@@ -59,6 +59,7 @@ function addUserToList(key, user) {
 
         $("#userslist").append('<li id="' + key + '" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center ' + combatClass + '">' + user.name + fightBtn + '</li>');
 
+        $("#userslistwithmenu").append('<div class="btn-group dropright"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.name + '</button><div class="dropdown-menu"><button class="dropdown-item" type="button">Add to fight</button><button class="dropdown-item" type="button">Send message</button><div class="dropdown-divider"></div><button class="dropdown-item" type="button">Kick from room</button></div></div>');
     }
 }
 
@@ -291,7 +292,24 @@ function initGame() {
 }
 
 
+function cleanDBData(){
 
+    console.log('Clean old db data.')
+
+    //clear old room data
+    //
+    //12 hours ago
+    //
+    var cutOff = moment().subtract(12,'hours').valueOf();
+
+    database.ref(roomConfig.gameRoot+'/dicerolls/' + currentRoomName).orderByChild('createdOn').endAt(cutOff).once("value").then(function (snapshot) {
+
+        if (snapshot.exists()) {
+            snapshot.ref.remove();
+        }
+    });
+    
+}
 
 $(document).ready(function () {
     
@@ -333,6 +351,8 @@ $(document).ready(function () {
                     //
                     currentUser = firebase.auth().currentUser;
                     if (currentUser != null) {
+
+                        cleanDBData();
 
                         $("#navbarDropdown").text(currentUser.displayName);
                         //is the logged in user the room admin?
@@ -471,9 +491,22 @@ $(document).ready(function () {
         alert('detele');
     });
 
+    $('.selectable').click(function(event) {
+        
+        var statvalue = $(this).data('statvalue');
+        console.log('clicked ' + statvalue)
+      });
+
+      $('label').click(function () {
+        $('span', this).text(function(i, text){
+            return text === "-" ? "+" : "-";
+        });
+        //$('span', this).text(checked ? '+' : '-');
+    });
+
     //admin fearur41
     //
-    function activateAdminFeatures() {
+     function activateAdminFeatures() {
 
         $(".admingroup").show();
         $("#add-enemy-button").prop("disabled", true);
@@ -533,16 +566,9 @@ $(document).ready(function () {
             connectToSortable: "#userslist"
         }).disableSelection();
 
-        $(".list-group-item-action").droppable({
-            classes: {
-                "ui-droppable-active": "ui-state-highlight",
-                "ui-droppable-hover": "bg-danger"
-            },
-            drop: function (event, ui) {
-                console.log('kickActionDroppable.droppable drop event ');
-                adminAction = 'killFighter';
-            }
-        });
+          
+
+   
 
 
         // ############## click events ##############

@@ -277,88 +277,68 @@
 
             <!-- Sidebar -->
             <div class="bg-light border-right" id="sidebar-wrapper">
-                <div id="roomNameHeader" class="sidebar-heading">
+                <div id="roomNameHeader" class="sidebar-heading"></div>
+
+
+                <div class="list-group list-group-flush ">    
+                <div id="userslistwithmenu" class="list-group list-group-flush ">
 
                 </div>
-                <div class="list-group list-group-flush">
-                    <ul class="list-group" id="userslist"></ul>
-                    <ul class="list-group admingroup">
-                        <li class="list-group-item list-group-item-action"></li>
-                        <li id="kickActionDroppable" class="list-group-item list-group-item-action text-white bg-secondary">Drag to kick fighter</li>
-                        <li class="list-group-item"></li>
+                  
+                       
+
+                        
+                    <ul class="list-group">
+                            <li id="Chrome" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">rektifier</li>
                     </ul>
+
+                    <!-- <ul class="list-group" id="userslist">                        
+                    </ul> -->
+                  
+                   
                     <div class="input-group admingroup">
                         <input type="text" id="add-enemy-input" class="form-control" placeholder="Enemy name">
                         <div class="input-group-append">
                             <button id="add-enemy-button" type="button" class="btn btn-primary">Add</button>
                         </div>
+                    </div> 
+
+                    <hr />
+                    <a id="settings-button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="modal" data-target="#settingsModal" href="#">Character stats</a>
+                    <a id="leave-room-button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="modal" data-target="#settingsModal" href="javascript:void(0)">Leave room</a>
                     </div>
-                </div>
             </div>
             <!-- /#sidebar-wrapper -->
 
             <!-- Page Content -->
             <div id="page-content-wrapper">
-
-                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-                    <!-- <button class="btn btn-primary" id="menu-toggle" data-toggle="tooltip" data-placement="top" title="Dölj meny"> Menu</button>
-
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button> -->
-
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-                            <!-- <li class="nav-item active">
-                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li> -->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <!-- Settings -->
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <!-- <a class="dropdown-item" href="#">Action</a>-->
-                                    <a id="settings-button" class="dropdown-item" data-toggle="modal" data-target="#settingsModal" href="#">Character stats</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a id="leave-room-button" class="dropdown-item" href="javascript:void(0)">Leave room</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+                
 
                 <div class="container-fluid">
 
-                    <!--
+                    
                 <div class="row">
-                    <div class="col-md-12">
-                        <h1 class="mt-4">Fight!</h1>
-                        <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-                        <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>. The top navbar is optional, and just for demonstration. Just create an element with the <code>#menu-toggle</code> ID which will toggle the menu when clicked.</p>
-                    </div>
+                    <div class="col-md-12 mb-4">
+                     </div>
                 </div>
-           -->
+          
                     <div class="row h-100" id="playground">
                         <div class="col h-100">
                             <div class="row">
+                                <!-- PHYSICAL -->
                                 <div class="col">
                                     <table>
                                         <tr>
                                             <td>
-                                                <div class="card mb-3">
+                                                <div class="card mb-3 shadow-sm bg-white rounded">
                                                     <div class="card-header text-center list-group-item-warning"><strong>PHYSICAL</strong></div>
                                                     <div class="card-body">
 
                                                         <table>
                                                             <thead>
-                                                            <th class="text-center"><img src="images/offencive_icon.png">DEXTERITY</th>
+                                                            <th class="text-center"><img src="images/offencive_icon.png" class="selectable" statvalue="5">DEXTERITY</th>
                                                             <th></th>
-                                                            <th class="text-center"><img src="images/defensive_icon.png">VITALITY</th>
+                                                            <th class="text-center"><img src="images/defensive_icon.png" class="selectable" statvalue="3">VITALITY</th>
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
@@ -379,16 +359,16 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <ul class="list-group mb-3" id="physical-features-items">
+                                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
                                                 <li class="list-group-item py-1 list-group-item-warning text-center"><strong>FEATURES</strong></li>
-                                                <li class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-typeofdice="-" name="physical-features-items"> Högt blodtryck <button type="button" class="btn btn-danger btn-xs shadow-none delete-feature" style="white-space: nowrap;">X</button></li>
-                                                <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="btn btn-danger btn-xs shadow-none delete-feature" style="white-space: nowrap;">X</button></li>
+                                                <li class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-typeofdice="-" name="physical-features-items"> Högt blodtryck <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+                                                <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
                                             </ul>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <ul class="list-group mb-3" id="physical-features-items">
+                                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
                                                 <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
                                                 <li class="list-group-item py-1 list-group-item-success">
                                                     <div class="form-check form-check-inline">1</div>
@@ -410,21 +390,33 @@
                                                 </li>                                         
                                             </ul>
                                         </td>
-                                    </tr>                                    
+                                    </tr>    
+                                    <tr>
+                                            <td>
+                                                <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
+                                                    <li class="list-group-item py-1 list-group-item-warning text-center"><strong>TRAUMA</strong></li>
+                                                    <li class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-typeofdice="-" name="physical-features-items"> Högt blodtryck <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+                                                    <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+                                                    <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+                                                </ul>
+                                            </td>
+                                        </tr>                                
                                     </table>
                             </div>
+                            <!-- mental -->
                             <div class="col">
                                 <table>
                                     <tr>
                                         <td>
-                                            <div class="card mb-3">
+                                            <div class="card mb-3 shadow-sm bg-white rounded">
                                                 <div class="card-header text-center list-group-item-warning"><strong>MENTAL</strong></div>
                                                 <div class="card-body">
-                                                    <table>
+
+                                                     <table>
                                                         <thead>
-                                                            <th class="text-center"><img src="images/offencive_icon.png">LOGIC</th>
+                                                            <th class="text-center"><img src="images/offencive_icon.png" class="selectable" data-statvalue="5">LOGIC</th>
                                                             <th></th>
-                                                            <th class="text-center"><img src="images/defensive_icon.png">WILLPOWER</th>
+                                                            <th class="text-center"><img src="images/defensive_icon.png" class="selectable" data-statvalue="3">WILLPOWER</th>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
@@ -433,7 +425,7 @@
                                                                 <td class="text-center"><h2>3</h2></td>
                                                             </tr>
                                                         </tbody>
-                                                    </table>
+                                                    </table> 
 
                                                 </div>
                                             </div>
@@ -442,7 +434,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <ul class="list-group mb-3" id="mental-features-items">
+                                        <ul class="list-group mb-3 shadow-sm bg-white rounded" id="mental-features-items">
                                             <li class="list-group-item py-1 list-group-item-warning text-center"><strong>FEATURES</strong></li>
                                             <li class="list-group-item py-1">Cras justo odio</li>
                                             <li class="list-group-item py-1">Dapibus ac facilisis in</li>
@@ -451,7 +443,7 @@
                                 </tr>
                                 <tr>
                                         <td>
-                                            <ul class="list-group mb-3" id="physical-features-items">
+                                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
                                                 <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
                                                 <li class="list-group-item py-1 list-group-item-success">
                                                     <div class="form-check form-check-inline">1</div>
@@ -477,11 +469,12 @@
                                 </table>
 
                             </div>
+                            <!-- SOCIAL -->
                             <div class="col">
                                     <table>
                                         <tr>
                                             <td>
-                                                <div class="card  mb-3">
+                                                <div class="card mb-3 shadow-sm bg-white rounded">
                                                     <div class="card-header text-center list-group-item-warning"><strong>SOCIAL</strong></div>
                                                     <div class="card-body">
 
@@ -506,16 +499,16 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <ul class="list-group mb-3" id="social-features-items">
+                                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="social-features-items">
                                                 <li class="list-group-item py-1 list-group-item-warning text-center"><strong>FEATURES</strong></li>
-                                                <li class="list-group-item py-1 ">Dapibus ac facilisis in <span class="badge">X</span></li>
+                                                <li class="list-group-item py-1 ">Dapibus ac facilisis in <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
                                                 <li class="list-group-item py-1">Morbi leo risus <span class="badge">12</span></li>
                                             </ul>
                                         </td>
                                     </tr>
                                     <tr>
                                             <td>
-                                                <ul class="list-group mb-3" id="physical-features-items">
+                                                <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
                                                     <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
                                                     <li class="list-group-item py-1 list-group-item-success">
                                                         <div class="form-check form-check-inline">1</div>
@@ -540,14 +533,70 @@
                                         </tr>                                         
                                     </table>
                             </div>
+
+                            <div class="col h-100">
+                                    <div>
+                                        <table class="table table-sm table-borderless">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Positiva</td>
+                                                    <td class="text-left">
+                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                            <label class="btn btn-light btn-sm active"><input type="radio" name="dice-positive" value="1d6" autocomplete="off" checked=""> 1</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="2d6" autocomplete="off"> 2</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="3d6" autocomplete="off"> 3</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="4d6" autocomplete="off"> 4</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="5d6" autocomplete="off"> 5</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="6d6" autocomplete="off"> 6</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="7d6" autocomplete="off"> 7</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="8d6" autocomplete="off"> 8</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="9d6" autocomplete="off"> 9</label>
+                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="10d6" autocomplete="off"> 10</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Negativa</td>
+                                                    <td class="text-left">
+                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                            <label class="btn btn-dark btn-sm active"><input type="radio" name="dice-negative" value="0" autocomplete="off" checked=""> 0</label>
+                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="1d6" autocomplete="off"> 1</label>
+                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="2d6" autocomplete="off"> 2</label>
+                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="3d6" autocomplete="off"> 3</label>
+                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="4d6" autocomplete="off"> 4</label>
+                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="5d6" autocomplete="off"> 5</label>
+                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="6d6" autocomplete="off"> 6</label>
+                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="7d6" autocomplete="off"> 7</label>
+                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="8d6" autocomplete="off"> 8</label>
+                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="9d6" autocomplete="off"> 9</label>
+                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="10d6" autocomplete="off"> 10</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td class="text-left"><button id="btn-throw-dice" type="button" class="btn btn-primary btn-sm" style="white-space: nowrap;">Kasta tärningarna</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="dicerolls_area">
+                                        <ul id="dicerolls-messages" class="list-group list-group-flush list-dicerolls-messages"></ul>
+                                    </div>
+                                    <div>
+                                            <label id="lblfilter-green" class="btn btn-success"><span>-</span></label>
+
+
+                                    </div>
+                                </div>
                             
-            </div>
+                        </div>
 
 
 
 
         </div>
-        <div class="col h-100">
+        <!-- <div class="col h-100">
             <div>
                 <table class="table table-sm table-borderless">
                     <tbody>
@@ -596,7 +645,7 @@
             <div class="dicerolls_area">
                 <ul id="dicerolls-messages" class="list-group list-group-flush list-dicerolls-messages"></ul>
             </div>
-        </div>
+        </div> -->
         </div>
 
 
