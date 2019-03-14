@@ -367,6 +367,135 @@ function authStateObserver(user) {
 
 }
 
+    //admin fearur41
+    //
+    function activateAdminFeatures() {
+
+        $(".admingroup").show();
+        $("#add-enemy-button").prop("disabled", true);
+
+        $('#add-enemy-input').keyup(validateAddEnemyButton);
+
+        function validateAddEnemyButton() {
+
+            if ($('#add-enemy-input').val().length > 0) {
+                $("#add-enemy-button").prop("disabled", false);
+            }
+            else {
+                $("#add-enemy-button").prop("disabled", true);
+            }
+        }
+
+        $("#userslist").sortable({
+            delay: 150,
+            axis: "y",
+            opacity: 0.8,
+            connectWith: "ul",
+            sort: function () {
+                if ($(this).hasClass("cancel")) {
+                    $(this).sortable("cancel");
+                }
+            },
+            update: function (event, ui) {
+                console.log('userslist.sortable update event ');
+                if (adminAction === '') {
+                    updateDbWithUserListOrder();
+                }
+            },
+            stop: function (event, ui) {
+                console.log('userslist.sortable stop event ');
+                if (adminAction === 'killFighter') {
+                    $(this).sortable("cancel");
+
+                    var userToKick = ui.item[0].id
+
+                    database.ref(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/users/' + userToKick).remove();
+                    adminAction = '';
+                }
+
+            },
+            receive: function (event, ui) {
+                console.log('userslist.sortable stop event ');
+            },
+            remove: function (event, ui) {
+                console.log('userslist.sortable remove event ');
+            }
+
+        }).disableSelection();
+
+        $(".list-group-item").draggable({
+            helper: 'clone',
+            revert: 'invalid',
+            connectToSortable: "#userslist"
+        }).disableSelection();
+
+
+
+
+
+
+        // ############## click events ##############
+        //
+
+
+
+        //fight button in users list
+        //
+        $("#userslist").on('click', 'a', function () {
+
+            console.log('click.btn-user-fight');
+
+            var li = $(this).parent();
+
+            $(li).toggleClass('incombat');
+
+            var nrOfPlayersInFight = $("#userslist .incombat").length;
+            if (nrOfPlayersInFight > roomConfig.maxNrOfPlayersInFight) {
+                //toggle back the combat class
+                //
+                $(li).toggleClass('incombat');
+
+            } else {
+                var isInCombat = $(li).hasClass('incombat');
+                var user = $(li).attr('id');
+
+                firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/users/' + user).update({ inCombat: isInCombat });
+
+                if (isInCombat === true) {
+                    //add user to combat
+                    firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/conflict/' + user).set({ "userid": user });
+                } else {
+                    //remove user from combat
+                    firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/conflict/' + user).remove();
+                }
+            }
+
+            console.log(li);
+        });
+
+        $("#add-enemy-button").click(function (e) {
+
+            console.log('add-enemy-button.click ');
+            e.preventDefault();
+
+            var enemyName = $("#add-enemy-input").val();
+
+            //add enemy to room
+            //
+            database.ref(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/users/' + enemyName).set({ "name": roomConfig.enemyNamePrefix + enemyName + roomConfig.enemyNameSuffix, "sortOrder": 99, "inCombat": false }).then(() => {
+                $("#add-enemy-input").val('');
+            });
+        });
+
+
+
+
+
+
+
+    }
+
+
 $(document).ready(function () {
 
     const roller = new DiceRoller();
@@ -508,132 +637,5 @@ $(document).ready(function () {
     });
 
 
-    //admin fearur41
-    //
-    function activateAdminFeatures() {
-
-        $(".admingroup").show();
-        $("#add-enemy-button").prop("disabled", true);
-
-        $('#add-enemy-input').keyup(validateAddEnemyButton);
-
-        function validateAddEnemyButton() {
-
-            if ($('#add-enemy-input').val().length > 0) {
-                $("#add-enemy-button").prop("disabled", false);
-            }
-            else {
-                $("#add-enemy-button").prop("disabled", true);
-            }
-        }
-
-        $("#userslist").sortable({
-            delay: 150,
-            axis: "y",
-            opacity: 0.8,
-            connectWith: "ul",
-            sort: function () {
-                if ($(this).hasClass("cancel")) {
-                    $(this).sortable("cancel");
-                }
-            },
-            update: function (event, ui) {
-                console.log('userslist.sortable update event ');
-                if (adminAction === '') {
-                    updateDbWithUserListOrder();
-                }
-            },
-            stop: function (event, ui) {
-                console.log('userslist.sortable stop event ');
-                if (adminAction === 'killFighter') {
-                    $(this).sortable("cancel");
-
-                    var userToKick = ui.item[0].id
-
-                    database.ref(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/users/' + userToKick).remove();
-                    adminAction = '';
-                }
-
-            },
-            receive: function (event, ui) {
-                console.log('userslist.sortable stop event ');
-            },
-            remove: function (event, ui) {
-                console.log('userslist.sortable remove event ');
-            }
-
-        }).disableSelection();
-
-        $(".list-group-item").draggable({
-            helper: 'clone',
-            revert: 'invalid',
-            connectToSortable: "#userslist"
-        }).disableSelection();
-
-
-
-
-
-
-        // ############## click events ##############
-        //
-
-
-
-        //fight button in users list
-        //
-        $("#userslist").on('click', 'a', function () {
-
-            console.log('click.btn-user-fight');
-
-            var li = $(this).parent();
-
-            $(li).toggleClass('incombat');
-
-            var nrOfPlayersInFight = $("#userslist .incombat").length;
-            if (nrOfPlayersInFight > roomConfig.maxNrOfPlayersInFight) {
-                //toggle back the combat class
-                //
-                $(li).toggleClass('incombat');
-
-            } else {
-                var isInCombat = $(li).hasClass('incombat');
-                var user = $(li).attr('id');
-
-                firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/users/' + user).update({ inCombat: isInCombat });
-
-                if (isInCombat === true) {
-                    //add user to combat
-                    firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/conflict/' + user).set({ "userid": user });
-                } else {
-                    //remove user from combat
-                    firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/conflict/' + user).remove();
-                }
-            }
-
-            console.log(li);
-        });
-
-        $("#add-enemy-button").click(function (e) {
-
-            console.log('add-enemy-button.click ');
-            e.preventDefault();
-
-            var enemyName = $("#add-enemy-input").val();
-
-            //add enemy to room
-            //
-            database.ref(roomConfig.gameRoot + '/rooms/' + currentRoom.name + '/users/' + enemyName).set({ "name": roomConfig.enemyNamePrefix + enemyName + roomConfig.enemyNameSuffix, "sortOrder": 99, "inCombat": false }).then(() => {
-                $("#add-enemy-input").val('');
-            });
-        });
-
-
-
-
-
-
-
-    }
 
 });
