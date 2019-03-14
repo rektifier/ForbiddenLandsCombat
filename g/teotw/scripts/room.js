@@ -354,7 +354,7 @@ $(document).ready(function () {
 
                         cleanDBData();
 
-                        $("#navbarDropdown").text(currentUser.displayName);
+                        //$("#navbarDropdown").text(currentUser.displayName);
                         //is the logged in user the room admin?
                         //
                         if (currentRoom.owner === currentUser.displayName) {
@@ -497,12 +497,18 @@ $(document).ready(function () {
         console.log('clicked ' + statvalue)
       });
 
-      $('label').click(function () {
+    $('label').click(function () {
         $('span', this).text(function(i, text){
             return text === "-" ? "+" : "-";
         });
-        //$('span', this).text(checked ? '+' : '-');
     });
+
+    $('.btn-add-feature').click(function(event) {
+        
+        var statvalue = $(this).data('statvalue');
+        console.log('clicked ' + statvalue)
+      });
+    
 
     //admin fearur41
     //

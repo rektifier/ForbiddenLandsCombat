@@ -17,13 +17,15 @@
 
 
         <style>
-            .btn-group-xs > .btn, .btn-xs {
-                padding  : .25rem .25rem;
-                font-size  : .875rem;
-                line-height  : .5;
-                border-radius : .2rem;
-                }
-            
+
+            .btn-group-xs>.btn,
+            .btn-xs {
+                padding: .25rem .25rem;
+                font-size: .875rem;
+                line-height: .5;
+                border-radius: .2rem;
+            }
+
             .top-buffer {
                 margin-top: 20px;
             }
@@ -277,51 +279,54 @@
 
             <!-- Sidebar -->
             <div class="bg-light border-right" id="sidebar-wrapper">
+                
+                
                 <div id="roomNameHeader" class="sidebar-heading"></div>
 
 
-                <div class="list-group list-group-flush ">    
-                <div id="userslistwithmenu" class="list-group list-group-flush ">
 
-                </div>
-                  
-                       
 
-                        
+                <div class="list-group list-group-flush ">
+                    <div id="userslistwithmenu" class="list-group list-group-flush ">
+
+                    </div>
+
+
                     <ul class="list-group">
-                            <li id="Chrome" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">rektifier</li>
+                        <li id="Chrome" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">rektifier</li>
                     </ul>
 
                     <!-- <ul class="list-group" id="userslist">                        
                     </ul> -->
-                  
-                   
+
+
                     <div class="input-group admingroup">
                         <input type="text" id="add-enemy-input" class="form-control" placeholder="Enemy name">
                         <div class="input-group-append">
                             <button id="add-enemy-button" type="button" class="btn btn-primary">Add</button>
                         </div>
-                    </div> 
+                    </div>
 
                     <hr />
                     <a id="settings-button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="modal" data-target="#settingsModal" href="#">Character stats</a>
                     <a id="leave-room-button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="modal" data-target="#settingsModal" href="javascript:void(0)">Leave room</a>
-                    </div>
+                </div>
             </div>
             <!-- /#sidebar-wrapper -->
+             <!-- <button class="btn btn-primary" id="menu-toggle" data-toggle="tooltip" data-placement="top" title="Dölj meny"> Menu</button>  -->
 
             <!-- Page Content -->
             <div id="page-content-wrapper">
-                
+
 
                 <div class="container-fluid">
 
-                    
-                <div class="row">
-                    <div class="col-md-12 mb-4">
-                     </div>
-                </div>
-          
+
+                    <div class="row">
+                        <div class="col-md-12 mb-4">
+                        </div>
+                    </div>
+
                     <div class="row h-100" id="playground">
                         <div class="col h-100">
                             <div class="row">
@@ -336,261 +341,339 @@
 
                                                         <table>
                                                             <thead>
-                                                            <th class="text-center"><img src="images/offencive_icon.png" class="selectable" statvalue="5">DEXTERITY</th>
-                                                            <th></th>
-                                                            <th class="text-center"><img src="images/defensive_icon.png" class="selectable" statvalue="3">VITALITY</th>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="text-center">
-                                                                        <h2>5</h2>
-                                                                    </td>
-                                                                    <td style="width:20px"></td>
-                                                                    <td class="text-center">
-                                                                        <h2>3</h2>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-
-                                                    </div>
-                                                </div>
-                                            </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
-                                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>FEATURES</strong></li>
-                                                <li class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-typeofdice="-" name="physical-features-items"> Högt blodtryck <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
-                                                <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
-                                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
-                                                <li class="list-group-item py-1 list-group-item-success">
-                                                    <div class="form-check form-check-inline">1</div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl1"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl1"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl1"></div>
-                                                </li>  
-                                                <li class="list-group-item py-1 list-group-item-success">
-                                                    <div class="form-check form-check-inline">2</div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl2"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl2"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl2"></div>
-                                                </li>                                                                                                         
-                                                <li class="list-group-item py-1 list-group-item-success">
-                                                    <div class="form-check form-check-inline">3</div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl3"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl3"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl3"></div>
-                                                </li>                                         
-                                            </ul>
-                                        </td>
-                                    </tr>    
-                                    <tr>
-                                            <td>
-                                                <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
-                                                    <li class="list-group-item py-1 list-group-item-warning text-center"><strong>TRAUMA</strong></li>
-                                                    <li class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-typeofdice="-" name="physical-features-items"> Högt blodtryck <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
-                                                    <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
-                                                    <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
-                                                </ul>
-                                            </td>
-                                        </tr>                                
-                                    </table>
-                            </div>
-                            <!-- mental -->
-                            <div class="col">
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <div class="card mb-3 shadow-sm bg-white rounded">
-                                                <div class="card-header text-center list-group-item-warning"><strong>MENTAL</strong></div>
-                                                <div class="card-body">
-
-                                                     <table>
-                                                        <thead>
-                                                            <th class="text-center"><img src="images/offencive_icon.png" class="selectable" data-statvalue="5">LOGIC</th>
-                                                            <th></th>
-                                                            <th class="text-center"><img src="images/defensive_icon.png" class="selectable" data-statvalue="3">WILLPOWER</th>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td class="text-center"><h2>5</h2></td>
-                                                                <td style="width:20px"></td>
-                                                                <td class="text-center"><h2>3</h2></td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table> 
-
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <ul class="list-group mb-3 shadow-sm bg-white rounded" id="mental-features-items">
-                                            <li class="list-group-item py-1 list-group-item-warning text-center"><strong>FEATURES</strong></li>
-                                            <li class="list-group-item py-1">Cras justo odio</li>
-                                            <li class="list-group-item py-1">Dapibus ac facilisis in</li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                <tr>
-                                        <td>
-                                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
-                                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
-                                                <li class="list-group-item py-1 list-group-item-success">
-                                                    <div class="form-check form-check-inline">1</div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl1"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl1"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl1"></div>
-                                                </li>  
-                                                <li class="list-group-item py-1 list-group-item-success">
-                                                    <div class="form-check form-check-inline">2</div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl2"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl2"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl2"></div>
-                                                </li>                                                                                                         
-                                                <li class="list-group-item py-1 list-group-item-success">
-                                                    <div class="form-check form-check-inline">3</div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl3"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl3"></div>
-                                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl3"></div>
-                                                </li>                                                  
-                                            </ul>
-                                        </td>
-                                    </tr>                                 
-                                </table>
-
-                            </div>
-                            <!-- SOCIAL -->
-                            <div class="col">
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                <div class="card mb-3 shadow-sm bg-white rounded">
-                                                    <div class="card-header text-center list-group-item-warning"><strong>SOCIAL</strong></div>
-                                                    <div class="card-body">
-
-                                                        <table>
-                                                            <thead>
-                                                            <th class="text-center"><img src="images/offencive_icon.png">CHARISMA</th>
-                                                            <th></th>
-                                                            <th class="text-center"><img src="images/defensive_icon.png">EMPATHY</th>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="text-center"><h2>5</h2></td>
-                                                                    <td style="width:20px"></td>
-                                                                    <td class="text-center"><h2>3</h2></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-
-                                                    </div>
-                                                </div>
-                                            </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="social-features-items">
-                                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>FEATURES</strong></li>
-                                                <li class="list-group-item py-1 ">Dapibus ac facilisis in <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
-                                                <li class="list-group-item py-1">Morbi leo risus <span class="badge">12</span></li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                            <td>
-                                                <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
-                                                    <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
-                                                    <li class="list-group-item py-1 list-group-item-success">
-                                                        <div class="form-check form-check-inline">1</div>
-                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl1"></div>
-                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl1"></div>
-                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl1"></div>
-                                                    </li>  
-                                                    <li class="list-group-item py-1 list-group-item-success">
-                                                        <div class="form-check form-check-inline">2</div>
-                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl2"></div>
-                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl2"></div>
-                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl2"></div>
-                                                    </li>                                                                                                         
-                                                    <li class="list-group-item py-1 list-group-item-success">
-                                                        <div class="form-check form-check-inline">3</div>
-                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl3"></div>
-                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl3"></div>
-                                                        <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl3"></div>
-                                                    </li>                                                      
-                                                </ul>
-                                            </td>
-                                        </tr>                                         
-                                    </table>
-                            </div>
-
-                            <div class="col h-100">
-                                    <div>
-                                        <table class="table table-sm table-borderless">
+                                            <th class="text-center"><img src="images/offencive_icon.png" class="selectable" statvalue="5">DEXTERITY</th>
+                                            <th></th>
+                                            <th class="text-center"><img src="images/defensive_icon.png" class="selectable" statvalue="3">VITALITY</th>
+                                            </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>Positiva</td>
-                                                    <td class="text-left">
-                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                            <label class="btn btn-light btn-sm active"><input type="radio" name="dice-positive" value="1d6" autocomplete="off" checked=""> 1</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="2d6" autocomplete="off"> 2</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="3d6" autocomplete="off"> 3</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="4d6" autocomplete="off"> 4</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="5d6" autocomplete="off"> 5</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="6d6" autocomplete="off"> 6</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="7d6" autocomplete="off"> 7</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="8d6" autocomplete="off"> 8</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="9d6" autocomplete="off"> 9</label>
-                                                            <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="10d6" autocomplete="off"> 10</label>
-                                                        </div>
+                                                    <td class="text-center">
+                                                        <h2>5</h2>
                                                     </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Negativa</td>
-                                                    <td class="text-left">
-                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                            <label class="btn btn-dark btn-sm active"><input type="radio" name="dice-negative" value="0" autocomplete="off" checked=""> 0</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="1d6" autocomplete="off"> 1</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="2d6" autocomplete="off"> 2</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="3d6" autocomplete="off"> 3</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="4d6" autocomplete="off"> 4</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="5d6" autocomplete="off"> 5</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="6d6" autocomplete="off"> 6</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="7d6" autocomplete="off"> 7</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="8d6" autocomplete="off"> 8</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="9d6" autocomplete="off"> 9</label>
-                                                            <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="10d6" autocomplete="off"> 10</label>
-                                                        </div>
+                                                    <td style="width:20px"></td>
+                                                    <td class="text-center">
+                                                        <h2>3</h2>
                                                     </td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td class="text-left"><button id="btn-throw-dice" type="button" class="btn btn-primary btn-sm" style="white-space: nowrap;">Kasta tärningarna</button></td>
                                                 </tr>
                                             </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="dicerolls_area">
-                                        <ul id="dicerolls-messages" class="list-group list-group-flush list-dicerolls-messages"></ul>
-                                    </div>
-                                    <div>
-                                            <label id="lblfilter-green" class="btn btn-success"><span>-</span></label>
+                                    </table>
 
-
-                                    </div>
                                 </div>
-                            
+                            </div>
+                            </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
+                                        <li class="list-group-item py-1 list-group-item-warning text-center">
+                                            <div style="margin: 0 auto; width: 100px;"><strong>FEATURES</strong>
+                                                <div style="float:right" class="dropdown">
+                                                    <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                                    <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+                                                        <li>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <label class="input-group-text" id="btnGroupAddon"><span class="span-add-feature">-</span></label>
+                                                                            </div>
+                                                                            <input type="text" class="form-control input-add-feature" placeholder="Feature" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <button type="button" class="btn btn-success btn-block btn-add-feature">Add feature</button>
+                                                                    </div>                                       
+                                                                </div>
+                                                            </div>
+                                                        </li>                        
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-typeofdice="-" name="physical-features-items"> Högt blodtryck <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+                                        <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
+                                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
+                                        <li class="list-group-item py-1 list-group-item-success">
+                                            <div class="form-check form-check-inline">1</div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl1"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl1"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl1"></div>
+                                        </li>
+                                        <li class="list-group-item py-1 list-group-item-success">
+                                            <div class="form-check form-check-inline">2</div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl2"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl2"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl2"></div>
+                                        </li>
+                                        <li class="list-group-item py-1 list-group-item-success">
+                                            <div class="form-check form-check-inline">3</div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl3"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl3"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" name="physical-stress-lvl3"></div>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
+                                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>TRAUMA</strong></li>
+                                        <li class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-typeofdice="-" name="physical-features-items"> Högt blodtryck <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+                                        <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+                                        <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            </table>
                         </div>
+                        <!-- mental -->
+                        <div class="col">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="card mb-3 shadow-sm bg-white rounded">
+                                            <div class="card-header text-center list-group-item-warning"><strong>MENTAL</strong></div>
+                                            <div class="card-body">
+
+                                                <table>
+                                                    <thead>
+                                    <th class="text-center"><img src="images/offencive_icon.png" class="selectable" data-statvalue="5">LOGIC</th>
+                                    <th></th>
+                                    <th class="text-center"><img src="images/defensive_icon.png" class="selectable" data-statvalue="3">WILLPOWER</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center">
+                                                <h2>5</h2>
+                                            </td>
+                                            <td style="width:20px"></td>
+                                            <td class="text-center">
+                                                <h2>3</h2>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="mental-features-items">
+                                <li class="list-group-item py-1 list-group-item-warning text-center">
+                                        <div style="margin: 0 auto; width: 100px;"><strong>FEATURES</strong>
+                                            <div style="float:right" class="dropdown">
+                                                <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                                <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+                                                    <li>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <div class="input-group-prepend">
+                                                                            <label class="input-group-text" id="btnGroupAddon"><span class="span-add-feature">-</span></label>
+                                                                        </div>
+                                                                        <input type="text" class="form-control input-add-feature" placeholder="Feature" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <button type="button" class="btn btn-success btn-block btn-add-feature">Add feature</button>
+                                                                </div>                                       
+                                                            </div>
+                                                        </div>
+                                                    </li>                        
+                                                </ul>
+                                            </div>
+                                        </div>
+                                </li>
+                                <li class="list-group-item py-1">Cras justo odio</li>
+                                <li class="list-group-item py-1">Dapibus ac facilisis in</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
+                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
+                                <li class="list-group-item py-1 list-group-item-success">
+                                    <div class="form-check form-check-inline">1</div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl1"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl1"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl1"></div>
+                                </li>
+                                <li class="list-group-item py-1 list-group-item-success">
+                                    <div class="form-check form-check-inline">2</div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl2"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl2"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl2"></div>
+                                </li>
+                                <li class="list-group-item py-1 list-group-item-success">
+                                    <div class="form-check form-check-inline">3</div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl3"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl3"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" name="mental-stress-lvl3"></div>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    </table>
+
+                </div>
+                <!-- SOCIAL -->
+                <div class="col">
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="card mb-3 shadow-sm bg-white rounded">
+                                    <div class="card-header text-center list-group-item-warning"><strong>SOCIAL</strong></div>
+                                    <div class="card-body">
+
+                                        <table>
+                                            <thead>
+                            <th class="text-center"><img src="images/offencive_icon.png">CHARISMA</th>
+                            <th></th>
+                            <th class="text-center"><img src="images/defensive_icon.png">EMPATHY</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">
+                                        <h2>5</h2>
+                                    </td>
+                                    <td style="width:20px"></td>
+                                    <td class="text-center">
+                                        <h2>3</h2>
+                                    </td>
+                                </tr>
+                            </tbody>
+                    </table>
+
+                </div>
+            </div>
+            </td>
+            </tr>
+            <tr>
+                <td>
+                    <ul class="list-group mb-3 shadow-sm bg-white rounded" id="social-features-items">
+                        <li class="list-group-item py-1 list-group-item-warning text-center">
+                            <div style="margin: 0 auto; width: 100px;"><strong>FEATURES</strong>
+                            <div style="float:right" class="dropdown">
+                                <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+                                    <li>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <label class="input-group-text" id="btnGroupAddon"><span class="span-add-feature">-</span></label>
+                                                        </div>
+                                                        <input type="text" class="form-control input-add-feature" placeholder="Feature" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="button" class="btn btn-success btn-block btn-add-feature">Add feature</button>
+                                                </div>                                       
+                                            </div>
+                                        </div>
+                                    </li>                        
+                                </ul>
+                            </div>
+                        </div></li>
+                        <li class="list-group-item py-1 ">Dapibus ac facilisis in <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+                        <li class="list-group-item py-1">Morbi leo risus <span class="badge">12</span></li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
+                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
+                        <li class="list-group-item py-1 list-group-item-success">
+                            <div class="form-check form-check-inline">1</div>
+                            <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl1"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl1"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl1"></div>
+                        </li>
+                        <li class="list-group-item py-1 list-group-item-success">
+                            <div class="form-check form-check-inline">2</div>
+                            <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl2"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl2"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl2"></div>
+                        </li>
+                        <li class="list-group-item py-1 list-group-item-success">
+                            <div class="form-check form-check-inline">3</div>
+                            <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl3"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl3"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" name="social-stress-lvl3"></div>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            </table>
+        </div>
+
+        <div class="col h-100">
+            <div>
+                <table class="table table-sm table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>Positiva</td>
+                            <td class="text-left">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-light btn-sm active"><input type="radio" name="dice-positive" value="1d6" autocomplete="off" checked=""> 1</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="2d6" autocomplete="off"> 2</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="3d6" autocomplete="off"> 3</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="4d6" autocomplete="off"> 4</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="5d6" autocomplete="off"> 5</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="6d6" autocomplete="off"> 6</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="7d6" autocomplete="off"> 7</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="8d6" autocomplete="off"> 8</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="9d6" autocomplete="off"> 9</label>
+                                    <label class="btn btn-light btn-sm"><input type="radio" name="dice-positive" value="10d6" autocomplete="off"> 10</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Negativa</td>
+                            <td class="text-left">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-dark btn-sm active"><input type="radio" name="dice-negative" value="0" autocomplete="off" checked=""> 0</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="1d6" autocomplete="off"> 1</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="2d6" autocomplete="off"> 2</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="3d6" autocomplete="off"> 3</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="4d6" autocomplete="off"> 4</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="5d6" autocomplete="off"> 5</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="6d6" autocomplete="off"> 6</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="7d6" autocomplete="off"> 7</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="8d6" autocomplete="off"> 8</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="9d6" autocomplete="off"> 9</label>
+                                    <label class="btn btn-dark btn-sm"><input type="radio" name="dice-negative" value="10d6" autocomplete="off"> 10</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-left"><button id="btn-throw-dice" type="button" class="btn btn-primary btn-sm" style="white-space: nowrap;">Kasta tärningarna</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="dicerolls_area">
+                <ul id="dicerolls-messages" class="list-group list-group-flush list-dicerolls-messages"></ul>
+            </div>
+
+        </div>
+
+        </div>
 
 
 
@@ -693,6 +776,10 @@
             $.fn.ignore = function (sel) {
                 return this.clone().find(sel || ">*").remove().end();
             };
+
+            $('.dropdown-menu').find('label').click(function (e) {
+                e.stopPropagation();
+            });
 
         </script>
 
