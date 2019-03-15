@@ -11,7 +11,7 @@ function isEmpty(str) {
 }
 
 function redirectToLogin(gameRootName) {
-    window.location.href = "/ForbiddenLandsCombat/index.html";
+    window.location.href = "index.html";
 }
 
 var showAlert = function () { }
