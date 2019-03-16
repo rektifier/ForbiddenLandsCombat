@@ -192,15 +192,19 @@
 
                         firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
 
+                        $("#reg-displayname-input").val();
+                        $("#reg-username-input").val();
+                        $("#reg-password-input").val();
+
                             var user = firebase.auth().currentUser;
                             if(user){
                                 user.updateProfile({
-                                        displayName: name
-                                    }).then(
-                                        (s)=> {
-                                            showSection('adventure');
-                                        }
-                                    );
+                                    displayName: name
+                                }).then(
+                                    (s)=> {
+                                        showSection('adventure');
+                                    }
+                                );
                             }
 
                         }).catch(function(error) {
@@ -232,86 +236,23 @@
 
                     if (isEmpty(email) === false && isEmpty(password) === false) {
 
+                        $("#login-password-input").val();
 
-                            $("body").css("cursor", "progress");
+                        $("body").css("cursor", "progress");
 
-                            firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-                                
-                                $("body").css("cursor", "default");
+                        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                            
+                            $("body").css("cursor", "default");
 
-                                var errorCode = error.code;
-                                var errorMessage = error.message;
-                                if (errorCode == 'auth/weak-password') {
-                                    alert('The password is too weak.');
-                                } else {
-                                    alert(errorMessage);
-                                }
-                                console.log(error);
-                            });
-
-                            // firebase.auth().signInAnonymously().then(() => {
-
-                            //     var currentUser = firebase.auth().currentUser;
-
-                            //     if (currentUser) {
-                            //         currentUser.updateProfile({
-                            //             displayName: username
-                            //         }).then(() => {
-
-                            //             //check if adventure exists
-                            //             //
-                            //             database.ref('/adventures/' + adventure).once("value").then(function (snapshot) {
-
-                            //                 if (snapshot.exists()) {
-                            //                     //room exists
-                            //                     var room = snapshot.val();
-
-                            //                     if (username === room.owner) {
-                            //                         window.location.href = 'adventure.html?id=' + adventure;
-                            //                     } else {
-                            //                         //add user to room
-                            //                         database.ref('/adventures/' + adventure + '/members/' + username).set({ "name": username }).then(() => {
-                            //                             window.location.href = 'adventure.html?id=' + adventure;
-                            //                         });
-                            //                     }
-                            //                 }
-                            //                 else {
-
-                            //                     //create room with nice template
-                            //                     //
-                            //                     // set current user as owner
-                            //                     //
-                            //                     database.ref('/adventures/' + adventure).set({ "owner": username, "title": adventure, "game": "End of the world", "day": 1 }).then(() => {
-                            //                         window.location.href = 'adventure.html?id=' + adventure;
-                            //                     });
-                            //                 }
-
-
-
-                            //             });
-
-                            //         });
-
-                            //     }
-
-                            //     $("body").css("cursor", "default");
-
-                            // }).catch(function (error) {
-
-                            //     $("body").css("cursor", "default");
-
-                            //     // Handle Errors here.
-                            //     var errorCode = error.code;
-                            //     var errorMessage = error.message;
-
-                            //     console.log(errorCode);
-                            //     console.log(errorMessage);
-
-                            //     return;
-                            // });
-
-
-
+                            var errorCode = error.code;
+                            var errorMessage = error.message;
+                            if (errorCode == 'auth/weak-password') {
+                                alert('The password is too weak.');
+                            } else {
+                                alert(errorMessage);
+                            }
+                            console.log(error);
+                        });
                     }
                 });
 
