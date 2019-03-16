@@ -48,10 +48,10 @@ var latestDiceRoll = null;
 
 function addUserToList(key, user) {
 
-    console.log('addUserToList(' + user.name + ')');
+    console.log('addUserToList(' + user.displayName + ')');
 
     var exists = false;
-    if ($("#userslist li").each(function (index) {
+    if ($("#userslist div").each(function (index) {
 
         var text = $(this).attr('id');
         if (text == key) {
@@ -59,14 +59,14 @@ function addUserToList(key, user) {
         }
     }));
 
-    console.log('addUserToList(' + user.name + ') exists: ' + exists);
+    console.log('addUserToList(' + user.displayName + ') exists: ' + exists);
 
     if (exists === false) {
 
         if (isRoomAdmin) {
-            $("#userslist").append('<div class="btn-group dropright"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.name + '</button><div class="dropdown-menu"><button class="dropdown-item" type="button">Add to fight</button><button class="dropdown-item" type="button">Send message</button><div class="dropdown-divider"></div><button class="dropdown-item btn-kick-member" data-uid="'+key+'" type="button">Kick from room</button></div></div>');
+            $("#userslist").append('<div id="' + key + '" class="btn-group dropright"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.displayName + '</button><div class="dropdown-menu"><button class="dropdown-item" type="button">Add to fight</button><button class="dropdown-item" type="button">Send message</button><div class="dropdown-divider"></div><button class="dropdown-item btn-kick-member" data-uid="'+key+'" type="button">Kick from room</button></div></div>');
         } else {
-            $("#userslist").append('<li id="' + key + '" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">' + user.name + '</li>');
+            $("#userslist").append('<div id="' + key + '" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">' + user.displayName + '</div>');
         }
 
     }
@@ -75,7 +75,7 @@ function addUserToList(key, user) {
 function removeUserFromList(username) {
     console.log('removeUserFromList(' + username + ')');
 
-    var user = $("#userslist").find('li#' + username);
+    var user = $("#userslist").find('div#' + username);
     if (user !== 'undefined' && user !== null && user.length > 0) {
         $(user).remove();
     }
@@ -254,10 +254,13 @@ function initGame() {
     usersRef.on("child_removed", function (snapshot) {
         console.log('on.child_removed');
         var removedUser = snapshot.val();
+        var removedKey = snapshot.key;
 
-        removeUserFromList(removedUser.displayName);
+        console.log(removedUser);
 
-        if (snapshot.key === currentUser.displayName && isRoomAdmin === false) {
+        removeUserFromList(removedKey);
+
+        if (snapshot.key === currentUser.uid && isRoomAdmin === false) {
             redirectToLogin();
         }
     });
@@ -269,10 +272,18 @@ function initGame() {
         var userId = snapshot.key;
         var user = snapshot.val();
 
-        $("#"+userId).text(user.name);
+        console.log(user);
+
+        
+        if ($('#'+userId+':has(:button)').length > 0) {
+            $('div#'+userId + ' button:first').text(user.displayName);
+        }else{
+            $("#"+userId).text(user.displayName);
+        }
+
 
         if(userId === currentUser.uid){
-            $("#inputDisplayName").val(user.name);
+            $("#inputDisplayName").val(user.displayName);
         }
         console.log(user);
     });
@@ -287,7 +298,7 @@ function initGame() {
         if (!(isRoomAdmin && userId === currentUser.uid)) {
             addUserToList(userId, user);
             if(userId === currentUser.uid){
-                $("#inputDisplayName").val(user.name);
+                $("#inputDisplayName").val(user.displayName);
             }
         }
 
@@ -402,18 +413,15 @@ function activateAdminFeatures() {
                 // updateDbWithUserListOrder();
             }
         },
-        stop: function (event, ui) {
-            console.log('userslist.sortable stop event ');
-            if (adminAction === 'killFighter') {
-                $(this).sortable("cancel");
+        // stop: function (event, ui) {
+        //     console.log('userslist.sortable stop event ');
+        //     if (adminAction === 'killFighter') {
+        //         $(this).sortable("cancel");
 
-                var userToKick = ui.item[0].id
 
-                database.ref(roomConfig.gameRoot + '/rooms/' + currentAdventure.name + '/users/' + userToKick).remove();
-                adminAction = '';
-            }
+        //     }
 
-        },
+        // },
         receive: function (event, ui) {
             console.log('userslist.sortable stop event ');
         },
@@ -430,15 +438,6 @@ function activateAdminFeatures() {
     }).disableSelection();
 
 
-    $(".btn-kick-member").click(function(){
-
-        var uidToKick = $(this).data("uid");
-
-        if(isEmpty(uidToKick) === false){
-            database.ref('/adventures/' + adventureId + '/members/' + uidToKick).remove();
-        }
-        
-    });
 
 
 
@@ -533,7 +532,6 @@ $(document).ready(function () {
     $("#btn-throw-dice").click(function (e) {
         console.log('btn-throw-dice.click');
         e.preventDefault();
-
         var positiveDice = [];
         var negativeDice = [];
 
@@ -611,7 +609,7 @@ $(document).ready(function () {
 
         var characterName = $("#inputDisplayName").val();
 
-        database.ref('/adventures/' + adventureId + '/members/' + currentUser.uid).update({ name: characterName});
+        database.ref('/adventures/' + adventureId + '/members/' + currentUser.uid).update({ displayName: characterName});
 
         var radiovitality = $("input[name='radiovitality']:checked").val();
         var radiodexterity = $("input[name='radiodexterity']:checked").val();
@@ -663,6 +661,20 @@ $(document).ready(function () {
         }
     });
 
+
+    //efterson knappen är dynamiskt genererad funkar inte jquery
+    //
+    $(document).on('click', '.btn-kick-member', function(e)
+    {
+        console.log('btn-kick-member.click');
+        e.preventDefault();
+
+        var uidToKick = $(this).data("uid");
+
+        if(isEmpty(uidToKick) === false){
+            database.ref('/adventures/' + adventureId + '/members/' + uidToKick).remove();
+        }
+    });
 
 
 });
