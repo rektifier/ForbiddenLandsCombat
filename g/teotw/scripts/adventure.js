@@ -64,7 +64,7 @@ function addUserToList(key, user) {
     if (exists === false) {
 
         if (isRoomAdmin) {
-            $("#userslist").append('<div class="btn-group dropright"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.name + '</button><div class="dropdown-menu"><button class="dropdown-item" type="button">Add to fight</button><button class="dropdown-item" type="button">Send message</button><div class="dropdown-divider"></div><button class="dropdown-item" type="button">Kick from room</button></div></div>');
+            $("#userslist").append('<div class="btn-group dropright"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.name + '</button><div class="dropdown-menu"><button class="dropdown-item" type="button">Add to fight</button><button class="dropdown-item" type="button">Send message</button><div class="dropdown-divider"></div><button class="dropdown-item btn-kick-member" data-uid="'+key+'" type="button">Kick from room</button></div></div>');
         } else {
             $("#userslist").append('<li id="' + key + '" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">' + user.name + '</li>');
         }
@@ -430,7 +430,15 @@ function activateAdminFeatures() {
     }).disableSelection();
 
 
+    $(".btn-kick-member").click(function(){
 
+        var uidToKick = $(this).data("uid");
+
+        if(isEmpty(uidToKick) === false){
+            database.ref('/adventures/' + adventureId + '/members/' + uidToKick).remove();
+        }
+        
+    });
 
 
 
