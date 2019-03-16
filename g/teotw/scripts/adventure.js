@@ -5,7 +5,7 @@ var currentAdventure;
 var currentAdventureTitle;
 var adminAction = '';
 var isInCombat = false;
-var currentCharacterSheet = [];
+var currentCharacterSheet;
 
 var latestDiceRoll = null;
 // var latestDiceRoll = {
@@ -125,7 +125,23 @@ function appendDiceRollsMessage(message, owner, createdOn, isLatest) {
     $('#dicerolls-messages').prepend(result);
 }
 
-function printStat(stat){
+function createTraumaItem(type,value,name){
+
+}
+
+function createFeatureItem(key,value,name){
+
+    //ul.physical-trauma-items
+
+    var colorClass = 'danger';
+    if(value === '+'){
+        colorClass = 'success';
+    }
+
+    return '<li id="'+key+'" class="list-group-item py-1 list-group-item-'+colorClass+'"><input type="checkbox" data-typeofdice="'+value+'"> '+name+'<button type="button" class="close"><span class="delete-feature" aria-hidden="true">&times;</span></button></li>';
+}
+
+function printStat(key,stat,eventtype){
 
     switch (stat.category) {
 
@@ -146,10 +162,44 @@ function printStat(stat){
             break;
         
         case 'trauma':
+
+            switch (eventtype) {
+                case 'removed':
+                    
+                break;
+                case 'added':
+                
+                break;                    
+                case 'changed':
+                
+                break;                    
+            
+                default:
+                    break;
+            }
+            
             
             break;
         
         case 'feature':
+        // physical-features-items
+        switch (eventtype) {
+            case 'removed':                
+                $('#'+key).remove();                
+            break;
+
+            case 'added':
+                var newFeature = createFeatureItem(key,stat.value,stat.name);
+                $('#'+stat.type+'-features-items').append(newFeature);
+            
+            break;         
+
+            case 'changed':            
+            break;                    
+        
+            default:
+                break;
+        }
             
             break;                    
     
@@ -182,24 +232,25 @@ function initGame() {
 
         //currentUserRef.onDisconnect().remove();
         
+        currentCharacterSheet = [];
         //get user if we have one
         //
         characterSheetRef.on('child_added',function (snapshot) {
-            console.log('characterSheetRef.on');
+            console.log('characterSheetRef.on.child.added');
 
             if (snapshot.exists()) {               
                     var userstat = snapshot.val();
+                    var statkey = snapshot.key;
                     console.log(userstat);
 
-                    currentCharacterSheet.push({key:snapshot.key,stat:userstat});
-                    printStat(userstat);   
+                    currentCharacterSheet.push({key:statkey,stat:userstat});
+                    printStat(statkey,userstat,'added');   
             }else{
                 console.log('Could not find a charactersheet. Lets create one!');
 
                 for (let index = 0; index < characterAttributes.length; index++) {
                     const stat = characterAttributes[index];
 
-                    //database.ref('/charactersheets/' + adventureId +'/' + currentUser.uid).put();
                     database.ref('/charactersheets/' + adventureId +'/' + currentUser.uid).push({
 
                         category:'attribute',
@@ -210,27 +261,29 @@ function initGame() {
                     }).catch(function (error) {
                         console.error('Error writing new message to Firebase Database', error);
                     });
-
-                    
-                    
                 }
             }
         });
 
         characterSheetRef.on("child_removed", function (snapshot) {
             console.log('on.child_removed');
-            var removedKey = snapshot.ke;
+            var removedKey = snapshot.key;
+            var removedStat = snapshot.val();
 
+            removeCharacterSheetObject(removedKey);
+
+            printStat(removedKey,removedStat,'removed');    
             
         });
 
         characterSheetRef.on("child_changed", function (snapshot) {
             console.log('characterSheetRef.on.child_changed');
-            var changedMember = snapshot.val();
-            var changedUserId = snapsh.key;
+            var changedStat = snapshot.val();
+            var changedKey = snapshot.key;
 
-           
-            
+            replaceCharacterObject(changedKey,changedStat);
+
+            printStat(changedKey,changedStat,'changed');            
         });
         
     }
@@ -495,6 +548,82 @@ function activateAdminFeatures() {
     });
 }
 
+function setCharacterSheetValue(category,type,name,value){
+
+    for (var item in currentCharacterSheet) {
+        if (currentCharacterSheet[item].stat.category == category 
+            && currentCharacterSheet[item].stat.type == type
+            && currentCharacterSheet[item].stat.name == name ) {
+
+                currentCharacterSheet[item].stat.value = value;
+                return;
+            }
+    }
+
+    //is it new?
+    var newStat = {};
+    if(isEmpty(category) == false && category !== undefined)
+        newStat.category = category;
+
+    if(isEmpty(type) == false && type !== undefined)
+        newStat.type = type;
+    
+    if(isEmpty(name) == false && name !== undefined)
+        newStat.name = name;
+    
+    if(isEmpty(value) == false && value !== undefined)
+        newStat.value = value;      
+
+    var newRef = database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid).push();
+    
+    currentCharacterSheet.push({key:newRef.key,stat:newStat});
+
+
+    newRef.set(newStat).catch(function (error) {
+        console.error('Error writing new stat to charactersheet in Firebase Database', error);
+    });
+}
+
+function addCharacterSheetObject(newStat){
+
+    for (var item in currentCharacterSheet) {
+        if (currentCharacterSheet[item].key == newStat.key) {
+            return;
+        }
+      }
+
+    var newRef = database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid).push();
+    
+    currentCharacterSheet.push({key:newRef.key,stat:newStat});
+
+    newRef.set(newStat).catch(function (error) {
+        console.error('Error writing new stat to charactersheet in Firebase Database', error);
+    });
+}
+
+function removeCharacterSheetObject(key){
+    currentCharacterSheet = currentCharacterSheet.filter(function(returnableObjects){
+        return returnableObjects.key !== key;
+    });
+}
+
+function replaceCharacterObject(key,stat){
+    for (var item in currentCharacterSheet) {
+        if (currentCharacterSheet[item].key == key) {
+            currentCharacterSheet[item].stat = stat;
+            break; //Stop this loop, we found it!
+        }
+      }
+}
+
+function updateCharacterSheet(){
+    var updates = {};
+    currentCharacterSheet.forEach((change) => {
+        updates[change.key] = change.stat;
+    });
+
+    database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid).update(updates);
+}
 
 $(document).ready(function () {
 
@@ -510,6 +639,14 @@ $(document).ready(function () {
 
     // initialize Firebase
     initFirebaseAuth();
+
+    $('#checkbox1').change(function() {
+        if(this.checked) {
+            var returnVal = confirm("Are you sure?");
+            $(this).prop("checked", returnVal);
+        }
+        $('#textbox1').val(this.checked);        
+    });
 
     //leave the room
     //
@@ -527,7 +664,6 @@ $(document).ready(function () {
         }
         redirectToLogin();
     });
-
 
     $("#btn-throw-dice").click(function (e) {
         console.log('btn-throw-dice.click');
@@ -582,30 +718,9 @@ $(document).ready(function () {
         $(".btn-group").find(">:first-child").children('input').first().prop("checked", true);
     });
 
-    // //ToDO: fixa så att admin kan sätta day, owner och title på adventure
-    // //room settings
-    // //
-    // $("#btn-settings-save").click(function (e) {
-    //     console.log('btn-settings-save.click');
-    //     e.preventDefault();
-
-    //     var owner = $("#settingsRoomOwner").val();
-    //     var roomname = $("#settingsRoomName").val();
-    //     var title = $("#settingsRoomTitle").val();
-
-    //     database.ref('/adventures/' + adventureId).update({ "owner": owner, "title": day, "title": day });
-
-    //     $("#roomNameHeader").html('<strong>' + roomname + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>' + title + '</small></p><footer class="blockquote-footer"a><small>' + owner + ' in <cite title="Source Title">' + roomConfig.gameName + '</cite></small></footer></blockquote>');
-
-    // });
-
-
-    
-
     $("#btn-attributes-save").click(function (e) {
         console.log('btn-attributes-save.click');
-       e.preventDefault();
-        
+       e.preventDefault();        
 
         var characterName = $("#inputDisplayName").val();
 
@@ -618,19 +733,26 @@ $(document).ready(function () {
         var radiocharisma = $("input[name='radiocharisma']:checked").val();    
         var radioempathy = $("input[name='radioempathy']:checked").val();    
 
+        //is character sheet initiated?
+        //
+        if(currentCharacterSheet)
+        {
+            setCharacterSheetValue('attribute','physical','vitality',radiovitality);
+            setCharacterSheetValue('attribute','physical','dexterity',radiodexterity);
+
+            setCharacterSheetValue('attribute','mental','willpower',radiowillpower);
+            setCharacterSheetValue('attribute','mental','logic',radiologic);
+
+            setCharacterSheetValue('attribute','social','charisma',radiocharisma);
+            setCharacterSheetValue('attribute','social','empathy',radioempathy);
+        }        
+
+        updateCharacterSheet();
         
         $('#settingsModal').modal('toggle');
+    });    
 
 
-    });
-    
-
-    $(".delete-feature").click(function (e) {
-        console.log('delete-feature.click');
-        e.preventDefault();
-
-        alert('detele');
-    });
 
     $('.selectable').click(function (e) {
         var statvalue = $(this).data('statvalue');
@@ -655,10 +777,33 @@ $(document).ready(function () {
 
             console.log(statype);
             console.log(positiveOrNegative);
+
+            setCharacterSheetValue('feature',statype,featureName,positiveOrNegative);        
+            updateCharacterSheet();
         }
         else{
             e.stopPropagation();
         }
+    });
+
+    var timeoutHandle = window.setTimeout(function() {
+    }, 2000);
+
+    $('.checkbox-stress').click(function(e){
+        console.log('checkbox-stress.click');
+
+        window.clearTimeout(timeoutHandle);
+
+        var type = $(this).data('statype');
+        var category = $(this).data('category');
+        var nrOfChecked = $('.checkbox-stress-' + type + ':checked').length;
+
+        timeoutHandle = window.setTimeout(function() {
+
+            setCharacterSheetValue(category,type,undefined,nrOfChecked);        
+            updateCharacterSheet();
+
+        }, 2000);
     });
 
 
@@ -674,6 +819,14 @@ $(document).ready(function () {
         if(isEmpty(uidToKick) === false){
             database.ref('/adventures/' + adventureId + '/members/' + uidToKick).remove();
         }
+    });
+
+    $(document).on('click', '.delete-feature', function(e){
+        console.log('delete-feature.click');
+        e.preventDefault();
+
+        var featureId = $(this).closest('li').attr('id');
+        database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid+'/'+featureId).remove();
     });
 
 
