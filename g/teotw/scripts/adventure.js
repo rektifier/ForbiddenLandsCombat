@@ -5,7 +5,7 @@ var currentAdventure;
 var currentAdventureTitle;
 var adminAction = '';
 var isInCombat = false;
-var currentCharacterSheet;
+var currentCharacterSheet = [];
 
 var latestDiceRoll = null;
 // var latestDiceRoll = {
@@ -323,6 +323,7 @@ function initFirebaseAuth() {
 function authStateObserver(user) {
 
     if (user) {
+        console.log('User is logged in');
         currentUser = firebase.auth().currentUser;
 
         //load current adventure
@@ -360,6 +361,7 @@ function authStateObserver(user) {
             }
         });
     } else {
+        console.log('User is not logged in');
         redirectToLogin();
     }
 
@@ -492,7 +494,7 @@ $(document).ready(function () {
     const roller = new DiceRoller();
 
     adventureId = getParameterByName('id');
-    if (adventureId === null || adventureId === "") {// || currentUser === undefined || currentUser.displayName === '') {
+    if(isEmpty(adventureId)){
         redirectToLogin();
     }
 
