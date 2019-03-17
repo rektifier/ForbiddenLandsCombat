@@ -296,32 +296,6 @@
                           
                         });
 
-                        // database.ref('/adventures/' + adventure).once("value").then(function (snapshot) {
-
-                        //     if (snapshot.exists()) {
-                        //         //room exists
-                        //         var room = snapshot.val();
-
-                        //         if (username === room.owner) {
-                        //             window.location.href = 'adventure.html?id=' + adventure;
-                        //         } else {
-                        //             //add user to room
-                        //             database.ref('/adventures/' + adventure + '/members/' + username).set({ "name": username }).then(() => {
-                        //                 window.location.href = 'adventure.html?id=' + adventure;
-                        //             });
-                        //         }
-                        //     }
-                        //     else {
-
-                        //         //create room with nice template
-                        //         //
-                        //         // set current user as owner
-                        //         //
-                        //         database.ref('/adventures/' + adventure).set({ "owner": username, "title": adventure, "game": "End of the world", "day": 1 }).then(() => {
-                        //             window.location.href = 'adventure.html?id=' + adventure;
-                        //         });
-                        //     }
-                        // });
                     }
                     
                 });
@@ -347,24 +321,6 @@
                     }
                 });
 
-                // firebase.auth().signInWithEmailAndPassword(email, password).then(()=>{}).catch(function(error) {
-                // // Handle Errors here.
-                // var errorCode = error.code;
-                // var errorMessage = error.message;
-                // // ...
-                // });
-
-                // firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
-
-                //     //user is registered
-                //     //
-
-                // }).catch(function(error) {
-                //     // Handle Errors here.
-                //     var errorCode = error.code;
-                //     var errorMessage = error.message;
-                //     // ...
-                // });
 
 
             });
