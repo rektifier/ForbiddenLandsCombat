@@ -125,13 +125,17 @@ function appendDiceRollsMessage(message, owner, createdOn, isLatest) {
     $('#dicerolls-messages').prepend(result);
 }
 
-function createTraumaItem(type,value,name){
-
+function createTraumaItem(key,value,name){
+    var notation = '1M';    
+    if(value <= 3){
+        notation = '1D';
+    }else if(value <= 6){
+        notation = '1V';
+    }
+    return '<li id="'+key+'" class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-value="'+value+'"> '+name+'('+notation+')<button type="button" class="close"><span class="delete-trauma" aria-hidden="true">&times;</span></button></li>';
 }
 
 function createFeatureItem(key,value,name){
-
-    //ul.physical-trauma-items
 
     var colorClass = 'danger';
     if(value === '+'){
@@ -152,22 +156,31 @@ function printStat(key,stat,eventtype){
             break;
 
         case 'stress':
-            for (let index = 0; index < 9; index++) {
+            for (let index = 1; index <= 9; index++) {
                 $('#'+stat.type+'-stress-'+index).attr('checked', false);
+                // document.getElementById("checkbox").checked = false;
             }
-
-            for (let index = 1; index < stat.value+1; index++) {                
-                $('#'+stat.type+'-stress-'+index).attr('checked', true);
-            }            
+           
+            if(stat.vaue > 0)
+            {
+                for (let index = 1; index < stat.value+1; index++) {                
+                    $('#'+stat.type+'-stress-'+index).attr('checked', true);
+                } 
+            }
+           
             break;
         
         case 'trauma':
 
             switch (eventtype) {
                 case 'removed':
-                    
+                $('#'+key).remove();     
                 break;
+
                 case 'added':
+                var newTrauma = createTraumaItem(key,stat.value,stat.name);
+                $('#'+stat.type+'-trauma-items').append(newTrauma);
+                
                 
                 break;                    
                 case 'changed':
@@ -182,24 +195,24 @@ function printStat(key,stat,eventtype){
             break;
         
         case 'feature':
-        // physical-features-items
-        switch (eventtype) {
-            case 'removed':                
-                $('#'+key).remove();                
-            break;
-
-            case 'added':
-                var newFeature = createFeatureItem(key,stat.value,stat.name);
-                $('#'+stat.type+'-features-items').append(newFeature);
-            
-            break;         
-
-            case 'changed':            
-            break;                    
-        
-            default:
+            // physical-features-items
+            switch (eventtype) {
+                case 'removed':                
+                    $('#'+key).remove();                
                 break;
-        }
+
+                case 'added':
+                    var newFeature = createFeatureItem(key,stat.value,stat.name);
+                    $('#'+stat.type+'-features-items').append(newFeature);
+                
+                break;         
+
+                case 'changed':            
+                break;                    
+            
+                default:
+                    break;
+            }
             
             break;                    
     
@@ -772,13 +785,13 @@ $(document).ready(function () {
         console.log(featureName);
 
         if(isEmpty(featureName) == false){
-            var statype = $(this).data('statype');
+            var stattype = $(this).data('stattype');
             var positiveOrNegative = $(this).parent('div').siblings('div').find('.span-add-feature').text();
 
-            console.log(statype);
+            console.log(stattype);
             console.log(positiveOrNegative);
 
-            setCharacterSheetValue('feature',statype,featureName,positiveOrNegative);        
+            setCharacterSheetValue('feature',stattype,featureName,positiveOrNegative);        
             updateCharacterSheet();
         }
         else{
@@ -786,24 +799,44 @@ $(document).ready(function () {
         }
     });
 
-    var timeoutHandle = window.setTimeout(function() {
-    }, 2000);
+    $('.btn-add-trauma').click(function (e) {
+        console.log('.btn-add-trauma.clicked ');
+
+        var traumaName = $(this).parent('div').siblings('div').find('.input-add-trauma').val();
+        console.log(traumaName);
+
+        if(isEmpty(traumaName) == false){
+            var stattype = $(this).data('stattype');
+
+            console.log(stattype);
+
+            //get nr of stress to remove
+            //            
+            var nrOfStress = $('.checkbox-stress-'+stattype+':checked').length;
+
+            setCharacterSheetValue('trauma',stattype,traumaName,nrOfStress);      
+            setCharacterSheetValue('stress',stattype,undefined,0);      
+
+            updateCharacterSheet();
+        }
+        else{
+            e.stopPropagation();
+        }
+    });
+
 
     $('.checkbox-stress').click(function(e){
         console.log('checkbox-stress.click');
 
-        window.clearTimeout(timeoutHandle);
 
-        var type = $(this).data('statype');
+        var type = $(this).data('stattype');
         var category = $(this).data('category');
         var nrOfChecked = $('.checkbox-stress-' + type + ':checked').length;
 
-        timeoutHandle = window.setTimeout(function() {
 
-            setCharacterSheetValue(category,type,undefined,nrOfChecked);        
-            updateCharacterSheet();
+        setCharacterSheetValue(category,type,undefined,nrOfChecked);        
+        updateCharacterSheet();
 
-        }, 2000);
     });
 
 
@@ -827,6 +860,14 @@ $(document).ready(function () {
 
         var featureId = $(this).closest('li').attr('id');
         database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid+'/'+featureId).remove();
+    });
+
+    $(document).on('click', '.delete-trauma', function(e){
+        console.log('delete-trauma.click');
+        e.preventDefault();
+
+        var traumaId = $(this).closest('li').attr('id');
+        database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid+'/'+traumaId).remove();
     });
 
 

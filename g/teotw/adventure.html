@@ -380,7 +380,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <button type="button" class="btn btn-success btn-block btn-add-feature" data-statype="physical">Add feature</button>
+                                                                        <button type="button" class="btn btn-success btn-block btn-add-feature" data-stattype="physical">Add feature</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -395,25 +395,45 @@
                             <tr>
                                 <td>
                                     <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-stress-items">
-                                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
+                                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong> 
+                                            <div style="float:right" class="dropdown">
+                                                    <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                                    <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+                                                        <li>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control input-add-trauma" placeholder="Trauma">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <button type="button" class="btn btn-success btn-block btn-add-trauma" data-stattype="physical">Convert to trauma</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                        </li>
                                         <li class="list-group-item py-1 list-group-item-success">
                                             <div class="form-check form-check-inline">3</div>
-                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-7" class="checkbox-stress checkbox-stress-physical" data-statype="physical" data-category="stress"></div>
-                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-8" class="checkbox-stress checkbox-stress-physical" data-statype="physical" data-category="stress"></div>
-                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-9" class="checkbox-stress checkbox-stress-physical" data-statype="physical" data-category="stress"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-7" class="checkbox-stress checkbox-stress-physical" data-stattype="physical" data-category="stress"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-8" class="checkbox-stress checkbox-stress-physical" data-stattype="physical" data-category="stress"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-9" class="checkbox-stress checkbox-stress-physical" data-stattype="physical" data-category="stress"></div>
                                         </li>
 
                                         <li class="list-group-item py-1 list-group-item-success">
                                             <div class="form-check form-check-inline">2</div>
-                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-4" class="checkbox-stress checkbox-stress-physical" data-statype="physical" data-category="stress"></div>
-                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-5" class="checkbox-stress checkbox-stress-physical" data-statype="physical" data-category="stress"></div>
-                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-6" class="checkbox-stress checkbox-stress-physical" data-statype="physical" data-category="stress"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-4" class="checkbox-stress checkbox-stress-physical" data-stattype="physical" data-category="stress"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-5" class="checkbox-stress checkbox-stress-physical" data-stattype="physical" data-category="stress"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-6" class="checkbox-stress checkbox-stress-physical" data-stattype="physical" data-category="stress"></div>
                                         </li>
                                         <li class="list-group-item py-1 list-group-item-success">
                                             <div class="form-check form-check-inline">1</div>
-                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-1" class="checkbox-stress checkbox-stress-physical" data-statype="physical" data-category="stress"></div>
-                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-2" class="checkbox-stress checkbox-stress-physical" data-statype="physical" data-category="stress"></div>
-                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-3" class="checkbox-stress checkbox-stress-physical" data-statype="physical" data-category="stress"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-1" class="checkbox-stress checkbox-stress-physical" data-stattype="physical" data-category="stress"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-2" class="checkbox-stress checkbox-stress-physical" data-stattype="physical" data-category="stress"></div>
+                                            <div class="form-check form-check-inline"><input type="checkbox" id="physical-stress-3" class="checkbox-stress checkbox-stress-physical" data-stattype="physical" data-category="stress"></div>
                                         </li>
                                     </ul>
                                 </td>
@@ -422,9 +442,6 @@
                                 <td>
                                     <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-trauma-items">
                                         <li class="list-group-item py-1 list-group-item-warning text-center"><strong>TRAUMA</strong></li>
-                                        <li class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-typeofdice="-" name="physical-features-items"> Högt blodtryck <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
-                                        <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
-                                        <li class="list-group-item py-1 list-group-item-success"><input type="checkbox" data-typeofdice="+" name="physical-features-items"> Morbi leo risus <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
                                     </ul>
                                 </td>
                             </tr>
@@ -483,7 +500,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
-                                                                <button type="button" class="btn btn-success btn-block btn-add-feature" data-statype="mental">Add feature</button>
+                                                                <button type="button" class="btn btn-success btn-block btn-add-feature" data-stattype="mental">Add feature</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -498,26 +515,53 @@
                     <tr>
                         <td>
                             <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
-                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
+                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong>
+                                    <div style="float:right" class="dropdown">
+                                            <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                            <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control input-add-trauma" placeholder="Trauma">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <button type="button" class="btn btn-success btn-block btn-add-trauma" data-stattype="mental">Convert to trauma</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div></li>
                                 <li class="list-group-item py-1 list-group-item-success">
                                     <div class="form-check form-check-inline">3</div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-7" class="checkbox-stress checkbox-stress-mental" data-statype="mental" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-8" class="checkbox-stress checkbox-stress-mental" data-statype="mental" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-9" class="checkbox-stress checkbox-stress-mental" data-statype="mental" data-category="stress"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-7" class="checkbox-stress checkbox-stress-mental" data-stattype="mental" data-category="stress"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-8" class="checkbox-stress checkbox-stress-mental" data-stattype="mental" data-category="stress"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-9" class="checkbox-stress checkbox-stress-mental" data-stattype="mental" data-category="stress"></div>
                                 </li>
                                 <li class="list-group-item py-1 list-group-item-success">
                                     <div class="form-check form-check-inline">2</div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-4" class="checkbox-stress checkbox-stress-mental" data-statype="mental" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-5" class="checkbox-stress checkbox-stress-mental" data-statype="mental" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-6" class="checkbox-stress checkbox-stress-mental" data-statype="mental" data-category="stress"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-4" class="checkbox-stress checkbox-stress-mental" data-stattype="mental" data-category="stress"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-5" class="checkbox-stress checkbox-stress-mental" data-stattype="mental" data-category="stress"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-6" class="checkbox-stress checkbox-stress-mental" data-stattype="mental" data-category="stress"></div>
                                 </li>
                                 <li class="list-group-item py-1 list-group-item-success">
                                     <div class="form-check form-check-inline">1</div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-1" class="checkbox-stress checkbox-stress-mental" data-statype="mental" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-2" class="checkbox-stress checkbox-stress-mental" data-statype="mental" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-3" class="checkbox-stress checkbox-stress-mental" data-statype="mental" data-category="stress"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-1" class="checkbox-stress checkbox-stress-mental" data-stattype="mental" data-category="stress"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-2" class="checkbox-stress checkbox-stress-mental" data-stattype="mental" data-category="stress"></div>
+                                    <div class="form-check form-check-inline"><input type="checkbox" id="mental-stress-3" class="checkbox-stress checkbox-stress-mental" data-stattype="mental" data-category="stress"></div>
                                 </li>
                             </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="mental-trauma-items">
+                                    <li class="list-group-item py-1 list-group-item-warning text-center"><strong>TRAUMA</strong>
+                                        </li>
+                             </ul>
                         </td>
                     </tr>
                     </table>
@@ -575,7 +619,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <button type="button" class="btn btn-success btn-block btn-add-feature" data-statype="social">Add feature</button>
+                                                        <button type="button" class="btn btn-success btn-block btn-add-feature" data-stattype="social">Add feature</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -590,28 +634,54 @@
             <tr>
                 <td>
                     <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
-                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong></li>
+                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong>
+                            <div style="float:right" class="dropdown">
+                                    <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                    <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+                                        <li>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control input-add-trauma" placeholder="Trauma">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="button" class="btn btn-success btn-block btn-add-trauma" data-stattype="social">Convert to trauma</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div></li>
                         <li class="list-group-item py-1 list-group-item-success">
                             <div class="form-check form-check-inline">3</div>
-                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-7" class="checkbox-stress checkbox-stress-social" data-statype="social" data-category="stress"></div>
-                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-8" class="checkbox-stress checkbox-stress-social" data-statype="social" data-category="stress"></div>
-                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-9" class="checkbox-stress checkbox-stress-social" data-statype="social" data-category="stress"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-7" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-8" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-9" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
                         </li>
                         <li class="list-group-item py-1 list-group-item-success">
                             <div class="form-check form-check-inline">2</div>
-                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-4" class="checkbox-stress checkbox-stress-social" data-statype="social" data-category="stress"></div>
-                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-5" class="checkbox-stress checkbox-stress-social" data-statype="social" data-category="stress"></div>
-                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-6" class="checkbox-stress checkbox-stress-social" data-statype="social" data-category="stress"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-4" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-5" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-6" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
                         </li>
                         <li class="list-group-item py-1 list-group-item-success">
                             <div class="form-check form-check-inline">1</div>
-                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-1" class="checkbox-stress checkbox-stress-social" data-statype="social" data-category="stress"></div>
-                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-2" class="checkbox-stress checkbox-stress-social" data-statype="social" data-category="stress"></div>
-                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-3" class="checkbox-stress checkbox-stress-social" data-statype="social" data-category="stress"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-1" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-2" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                            <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-3" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
                         </li>
                     </ul>
                 </td>
             </tr>
+            <tr>
+                    <td>
+                        <ul class="list-group mb-3 shadow-sm bg-white rounded" id="social-trauma-items">
+                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>TRAUMA</strong></li>
+                         </ul>
+                    </td>
+                </tr>
             </table>
         </div>
 
