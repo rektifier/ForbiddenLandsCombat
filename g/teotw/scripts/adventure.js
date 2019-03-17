@@ -64,9 +64,9 @@ function addUserToList(key, user) {
     if (exists === false) {
 
         if (isRoomAdmin) {
-            $("#userslist").append('<div id="' + key + '" class="btn-group dropright"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.displayName + '</button><div class="dropdown-menu"><button class="dropdown-item" type="button">Add to fight</button><button class="dropdown-item" type="button">Send message</button><div class="dropdown-divider"></div><button class="dropdown-item btn-kick-member" data-uid="'+key+'" type="button">Kick from room</button></div></div>');
+            $("#userslist").append('<div id="' + key + '" class="btn-group dropright"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + user.displayName + ' <small><i>( '+user.userName+' )</i></small></button><div class="dropdown-menu"><button class="dropdown-item" type="button">Add to fight</button><button class="dropdown-item" type="button">Send message</button><div class="dropdown-divider"></div><button class="dropdown-item btn-kick-member" data-uid="'+key+'" type="button">Kick from room</button></div></div>');
         } else {
-            $("#userslist").append('<div id="' + key + '" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">' + user.displayName + '</div>');
+            $("#userslist").append('<div id="' + key + '" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">' + user.displayName + ' <small><i>( '+user.userName+' )</i></small></div>');
         }
 
     }
@@ -153,7 +153,7 @@ function printStat(key,stat,eventtype){
             $("#attribute_"+stat.type+'_'+stat.name).html(stat.value);
             $('[name="radio'+stat.name+'"]').removeAttr('checked');
             $("input[name=radio"+stat.name+"][value=" + stat.value + "]").prop('checked', true);
-            $('#img_'+stat.type + '_'+stat.name).data('statvalue',stat.value); //setter  img_physical_vitality
+            $('#th_'+stat.type + '_'+stat.name).data('statvalue',stat.value); //setter  img_physical_vitality
            
             break;
 
@@ -360,13 +360,13 @@ function initGame() {
         console.log('on.child_added');
         
         var userId = snapshot.key;
-        var user = snapshot.val();
-        console.log(user);
+        var member = snapshot.val();
+        console.log(member);
 
         if (!(isRoomAdmin && userId === currentUser.uid)) {
-            addUserToList(userId, user);
+            addUserToList(userId, member);
             if(userId === currentUser.uid){
-                $("#inputDisplayName").val(user.displayName);
+                $("#inputDisplayName").val(member.displayName);
             }
         }
 
@@ -413,8 +413,9 @@ function authStateObserver(user) {
 
                 currentAdventure = snapshot.val();
 
-                $("#roomNameHeader").html('<strong>' + currentAdventure.title + '</strong><blockquote class="blockquote"><footer class="blockquote-footer"a><small> by ' + currentAdventure.owner + ' in <cite title="Source Title">' + currentAdventure.game + '</cite></small></footer></blockquote>');
-
+                $(".adventure_owner").text(currentAdventure.owner);
+                $(".adventure_title").text(currentAdventure.title);
+                $(".adventure_game").text(currentAdventure.game);
                 //load current user
                 //
                 // vi tar det här vid ett senare tillfälle..
@@ -769,9 +770,23 @@ $(document).ready(function () {
 
 
 
-    $('.selectable').click(function (e) {
+    $('.selectable_attribute').click(function (e) {
+        
+        console.log('.selectable_attribute.click')
+
         var statvalue = $(this).data('statvalue');
-        console.log('clicked ' + statvalue)
+        var stattype = $(this).data('stattype');
+
+        //remove all selected attribute
+        //
+        $('.selectable_attribute span').removeClass('selectedAttribute');
+
+        console.log('value: ' + statvalue)
+        console.log('type: ' + stattype)
+
+        $(this).siblings('span:first').addClass('selectedAttribute');
+
+
     });
 
     $('label').click(function () {

@@ -283,7 +283,7 @@
                                 } else {
                                     var currentUserId = currentUser.uid;
                                   //  add user to adventure
-                                    database.ref('/adventures/' + adventureId + '/members/' + currentUserId).set({ "displayName": displayName }).then(() => {
+                                    database.ref('/adventures/' + adventureId + '/members/' + currentUserId).set({ "displayName": displayName, "userName":displayName }).then(() => {
                                         window.location.href = 'adventure.html?id=' + adventureId;
                                     });
                                 }
