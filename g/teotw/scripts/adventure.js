@@ -1,10 +1,10 @@
 var isRoomAdmin = false;
 var currentUser;
+var currentAdventureMember;
 var adventureId;
 var currentAdventure;
-var currentAdventureTitle;
-var adminAction = '';
-var isInCombat = false;
+// var adminAction = '';
+// var isInCombat = false;
 var currentCharacterSheet;
 
 var latestDiceRoll = null;
@@ -85,12 +85,21 @@ function removeUserFromList(username) {
 
 function sendDiceRoll(text) {
 
+    var owner = currentUser.displayName;
+    if(currentAdventureMember !== undefined)
+    {
+        if(isEmpty(currentAdventureMember.displayName) === false){
+            owner = currentAdventureMember.displayName;
+        }
+    }
+
+
     database.ref('/rolls/').push({
 
         adventureId:adventureId,
         createdOn: firebase.database.ServerValue.TIMESTAMP,
         message: text,
-        owner: currentUser.displayName
+        owner: owner
 
     }).catch(function (error) {
         console.error('Error writing new message to Firebase Database', error);
@@ -238,10 +247,12 @@ function initGame() {
         var currentUserRef = database.ref('/adventures/' + adventureId + '/members/' + currentUser.uid);
         currentUserRef.once('value', function (snapshot){
             if(snapshot.exists()){
-                var member = snapshot.val();
-                $("#inputDisplayName").val(member.name);
+                // var member = snapshot.val();
+                currentAdventureMember = snapshot.val();
+                $("#inputDisplayName").val(currentAdventureMember.displayName);
             }else{
-                $("#inputDisplayName").val(currentUser.displayName);
+                //$("#inputDisplayName").val(currentUser.displayName);
+                redirectToLogin();
             }
         });
 
@@ -303,12 +314,7 @@ function initGame() {
         
     }
 
-
-    // var startOfDay = moment().startOf('day').valueOf();//unix time format ( ms ) //.format("x");
-    // var startNow = moment().valueOf();
-   
     
-    //diceRollsRef.orderByChild('createdOn').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function (snapshot) {
     diceRollsRef.limitToLast(roomConfig.maxNrOfDiceRollsInList).on('child_added', function (snapshot) {
         console.log('diceRollsRef.orderByChild(createdOn).limitToLast(roomConfig.maxNrOfDiceRollsInList).on(child_added');
         var mess = snapshot.val();
@@ -478,9 +484,9 @@ function activateAdminFeatures() {
         },
         update: function (event, ui) {
             console.log('userslist.sortable update event ');
-            if (adminAction === '') {
-                // updateDbWithUserListOrder();
-            }
+            // if (adminAction === '') {
+            //     updateDbWithUserListOrder();
+            // }
         },
         // stop: function (event, ui) {
         //     console.log('userslist.sortable stop event ');
