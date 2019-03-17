@@ -153,36 +153,38 @@ function printStat(key,stat,eventtype){
             $("#attribute_"+stat.type+'_'+stat.name).html(stat.value);
             $('[name="radio'+stat.name+'"]').removeAttr('checked');
             $("input[name=radio"+stat.name+"][value=" + stat.value + "]").prop('checked', true);
+            $('#img_'+stat.type + '_'+stat.name).data('statvalue',stat.value); //setter  img_physical_vitality
+           
             break;
 
         case 'stress':
-            for (let index = 1; index <= 9; index++) {
-                $('#'+stat.type+'-stress-'+index).attr('checked', false);
-                // document.getElementById("checkbox").checked = false;
-            }
+
+            //uncheck all stress
+            //
+            $('.checkbox-stress-'+stat.type).prop("checked",false); 
            
-            if(stat.vaue > 0)
+            //set right amount of stress
+            //
+            if(isEmpty(stat.value) === false && stat.value > 0)
             {
                 for (let index = 1; index < stat.value+1; index++) {                
-                    $('#'+stat.type+'-stress-'+index).attr('checked', true);
+                    $('#'+stat.type+'-stress-'+index).prop("checked", true);
                 } 
-            }
-           
+            }           
             break;
         
         case 'trauma':
 
             switch (eventtype) {
                 case 'removed':
-                $('#'+key).remove();     
+                    $('#'+key).remove();     
                 break;
 
                 case 'added':
-                var newTrauma = createTraumaItem(key,stat.value,stat.name);
-                $('#'+stat.type+'-trauma-items').append(newTrauma);
-                
-                
-                break;                    
+                    var newTrauma = createTraumaItem(key,stat.value,stat.name);
+                    $('#'+stat.type+'-trauma-items').append(newTrauma);
+                break;     
+
                 case 'changed':
                 
                 break;                    
@@ -815,7 +817,7 @@ $(document).ready(function () {
             var nrOfStress = $('.checkbox-stress-'+stattype+':checked').length;
 
             setCharacterSheetValue('trauma',stattype,traumaName,nrOfStress);      
-            setCharacterSheetValue('stress',stattype,undefined,0);      
+            setCharacterSheetValue('stress',stattype,undefined,0);     
 
             updateCharacterSheet();
         }
