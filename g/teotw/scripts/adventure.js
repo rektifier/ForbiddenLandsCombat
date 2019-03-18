@@ -154,6 +154,16 @@ function createFeatureItem(key,value,name){
     return '<li id="'+key+'" class="list-group-item py-1 list-group-item-'+colorClass+'"><input type="checkbox" data-typeofdice="'+value+'"> '+name+'<button type="button" class="close"><span class="delete-feature" aria-hidden="true">&times;</span></button></li>';
 }
 
+function createEquipmentItem(key,value,name){
+    var notation =  value;
+    return '<li id="'+key+'" class="list-group-item py-1"><input type="checkbox" data-value="'+value+'"> '+name+'<button type="button" class="close"><span class="delete-item" aria-hidden="true">&times;</span></button></li>';
+}
+
+function createWeaponItem(key,value,name){
+    var notation =  value;
+    return '<li id="'+key+'" class="list-group-item py-1"><input type="checkbox" data-value="'+value+'"> '+name+' ( '+notation+' )<button type="button" class="close"><span class="delete-item" aria-hidden="true">&times;</span></button></li>';
+}
+
 function printStat(key,stat,eventtype){
 
     switch (stat.category) {
@@ -201,8 +211,6 @@ function printStat(key,stat,eventtype){
                 default:
                     break;
             }
-            
-            
             break;
         
         case 'feature':
@@ -223,11 +231,49 @@ function printStat(key,stat,eventtype){
             
                 default:
                     break;
-            }
+            }            
+            break; 
+        
+        case 'equipment':
+            switch (eventtype) {
+                
+                case 'removed':                
+                    $('#'+key).remove();                
+                break;
+
+                case 'added':
+                    var newEquipment = createEquipmentItem(key,stat.value,stat.name);
+                    $('#equipment-items').append(newEquipment);                
+                break;                     
             
-            break;                    
+                default:
+                    break;
+            }
+            break;
+
+            case 'weapon':
+            switch (eventtype) {
+                
+                case 'removed':                
+                    $('#'+key).remove();                
+                break;
+
+                case 'added':
+                    var newWeapon = createWeaponItem(key,stat.value,stat.name);
+                    $('#weapon-items').append(newWeapon);                
+                break;   
+
+                default:
+                    break;
+            }
+            break;
+
+
+            break;
     
         default:
+
+
             break;
     }
 
@@ -515,47 +561,6 @@ function activateAdminFeatures() {
 
 
 
-
-
-    // ############## click events ##############
-    //
-
-
-
-    // //fight button in users list
-    // //
-    // $("#userslist").on('click', 'a', function () {
-
-    //     console.log('click.btn-user-fight');
-
-    //     var li = $(this).parent();
-
-    //     $(li).toggleClass('incombat');
-
-    //     var nrOfPlayersInFight = $("#userslist .incombat").length;
-    //     if (nrOfPlayersInFight > roomConfig.maxNrOfPlayersInFight) {
-    //         //toggle back the combat class
-    //         //
-    //         $(li).toggleClass('incombat');
-
-    //     } else {
-    //         var isInCombat = $(li).hasClass('incombat');
-    //         var user = $(li).attr('id');
-
-    //         firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentAdventure.name + '/users/' + user).update({ inCombat: isInCombat });
-
-    //         if (isInCombat === true) {
-    //             //add user to combat
-    //             firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentAdventure.name + '/conflict/' + user).set({ "userid": user });
-    //         } else {
-    //             //remove user from combat
-    //             firebase.database().ref().child(roomConfig.gameRoot + '/rooms/' + currentAdventure.name + '/conflict/' + user).remove();
-    //         }
-    //     }
-
-    //     console.log(li);
-    // });
-
     $("#add-enemy-button").click(function (e) {
 
         console.log('add-enemy-button.click ');
@@ -594,7 +599,7 @@ function setCharacterSheetValue(category,type,name,value){
     if(isEmpty(name) == false && name !== undefined)
         newStat.name = name;
     
-    if(isEmpty(value) == false && value !== undefined)
+    if(value !== undefined && value !== null)
         newStat.value = value;      
 
     var newRef = database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid).push();
@@ -867,6 +872,29 @@ $(document).ready(function () {
         updateCharacterSheet();
     });
 
+    $('.btn-add-equpiment').click(function(e){
+        console.log('btn-add-equpiment.click');
+
+        var category = 'equipment';
+        var name = $('#input-add-equpiment').val();
+
+        setCharacterSheetValue(category,undefined,name,0);        
+        updateCharacterSheet();
+    });
+
+    $('.btn-add-weapon').click(function(e){
+        console.log('btn-add-weapon.click');
+
+        var category = 'weapon';
+        var value = '1'; //$('#input-add-weapon').val();
+        var name = $('#input-add-weapon').val();
+
+        setCharacterSheetValue(category,undefined,name,value);        
+        updateCharacterSheet();
+    });
+
+    
+
 
     //efterson knappen är dynamiskt genererad funkar inte jquery
     //
@@ -898,5 +926,13 @@ $(document).ready(function () {
         database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid+'/'+traumaId).remove();
     });
 
+    $(document).on('click', '.delete-item', function(e){
+        console.log('delete-item.click');
+        e.preventDefault();
+
+        var itemId = $(this).closest('li').attr('id');
+        database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid+'/'+itemId).remove();
+    });
+    
 
 });
