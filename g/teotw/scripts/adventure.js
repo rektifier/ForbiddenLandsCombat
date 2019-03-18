@@ -240,9 +240,7 @@ function initGame() {
     var diceRollsRef = database.ref('rolls').orderByChild('adventureId').equalTo(adventureId);
     var usersRef = database.ref('/adventures/' + adventureId + '/members/');
 
-    if (isRoomAdmin === false) {
-
-        var characterSheetRef = database.ref('/charactersheets/' + adventureId +'/' + currentUser.uid);
+    if (isRoomAdmin === false) {        
 
         var currentUserRef = database.ref('/adventures/' + adventureId + '/members/' + currentUser.uid);
         currentUserRef.once('value', function (snapshot){
@@ -251,13 +249,13 @@ function initGame() {
                 currentAdventureMember = snapshot.val();
                 $("#inputDisplayName").val(currentAdventureMember.displayName);
             }else{
-                //$("#inputDisplayName").val(currentUser.displayName);
                 redirectToLogin();
             }
         });
 
         //currentUserRef.onDisconnect().remove();
         
+        var characterSheetRef = database.ref('/charactersheets/' + adventureId +'/' + currentUser.uid);
         currentCharacterSheet = [];
         //get user if we have one
         //
@@ -411,6 +409,9 @@ function authStateObserver(user) {
         console.log('User is logged in');
         currentUser = firebase.auth().currentUser;
 
+        if(user.isAnonymous === true){
+            redirectToLogin('Please register to play TEOTW.');
+        };
         //load current adventure
         //
         database.ref('/adventures/' + adventureId).once("value").then(function (snapshot) {
@@ -854,20 +855,16 @@ $(document).ready(function () {
     $('.checkbox-stress').click(function(e){
         console.log('checkbox-stress.click');
 
-
         var type = $(this).data('stattype');
         var category = $(this).data('category');
-        //var nrOfChecked = $('.checkbox-stress-' + type + ':checked').length;
 
         var divider = '-';
         var id = $(this).prop('id');
         var lastIndex = id.lastIndexOf(divider)+1;
         var nrOfChecked = id.toString().substring(lastIndex);
 
-
         setCharacterSheetValue(category,type,undefined,nrOfChecked);        
         updateCharacterSheet();
-
     });
 
 

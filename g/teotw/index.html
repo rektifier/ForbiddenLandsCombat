@@ -34,6 +34,7 @@
                         <article class="card-body">
 
                             <button id="show-register-button" type="button" class="float-right btn btn-outline-primary">Registrera</button>
+                            <h5 id="message"></h5>
                             <h4 class="card-title mb-4 mt-1">Logga in</h4>
                             <form>
                                 <div class="form-group">
@@ -149,6 +150,17 @@
 
 
             $(document).ready(function () {
+
+                $("#message").hide();
+
+                var m = getParameterByName('m');
+                if(m !== undefined){
+                    if(isEmpty(m) == false){
+
+                        $("#message").text(decodeURIComponent(m));
+                        $("#message").show();
+                    }
+                }
 
                 $("div.gameName").text(roomConfig.gameName);
 
@@ -279,7 +291,7 @@
                                 });
 
                                 if (displayName === adventure.owner) {
-                                    window.location.href = 'owner.html?id=' + adventureId;
+                                    window.location.href = 'adventure.html?id=' + adventureId;
                                 } else {
                                     var currentUserId = currentUser.uid;
                                   //  add user to adventure
@@ -304,14 +316,25 @@
 
                     if (user) {
 
-                        showSection('adventure');
-                        $("body").css("cursor", "default");
+                        if(user.isAnonymous == true){
 
-                        currentUser = user;
+                            showSection('login');
+                            $("#message").text('Please register to play TEOTW.');
+                            $("#message").show();
+                            
 
-                        var displayName = user.displayName;
+                        }else{
+                            showSection('adventure');
+                            $("body").css("cursor", "default");
 
-                        $("#adventure-username-input").val(displayName);
+                            currentUser = user;
+
+                            var displayName = user.displayName;
+
+                            $("#adventure-username-input").val(displayName);
+                        }
+
+
 
                     } else {
 

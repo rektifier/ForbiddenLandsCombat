@@ -10,7 +10,13 @@ function isEmpty(str) {
     return (!str || 0 === str.length);
 }
 
-function redirectToLogin(gameRootName) {
+function redirectToLogin(message) {
+    if(message !== undefined){
+        if(isEmpty(message) === false){
+            window.location.href = "index.html?m="+ encodeURIComponent(message);
+            return;
+        }
+    }
     window.location.href = "index.html";
 }
 
