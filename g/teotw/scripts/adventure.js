@@ -176,7 +176,7 @@ function printStat(key,stat,eventtype){
             //
             if(isEmpty(stat.value) === false && stat.value > 0)
             {
-                for (let index = 1; index < stat.value+1; index++) {                
+                for (let index = 1; index <= stat.value; index++) {                
                     $('#'+stat.type+'-stress-'+index).prop("checked", true);
                 } 
             }           
@@ -639,6 +639,9 @@ function replaceCharacterObject(key,stat){
 }
 
 function updateCharacterSheet(){
+
+    console.log('update.charcter.sheet');
+
     var updates = {};
     currentCharacterSheet.forEach((change) => {
         updates[change.key] = change.stat;
@@ -854,7 +857,12 @@ $(document).ready(function () {
 
         var type = $(this).data('stattype');
         var category = $(this).data('category');
-        var nrOfChecked = $('.checkbox-stress-' + type + ':checked').length;
+        //var nrOfChecked = $('.checkbox-stress-' + type + ':checked').length;
+
+        var divider = '-';
+        var id = $(this).prop('id');
+        var lastIndex = id.lastIndexOf(divider)+1;
+        var nrOfChecked = id.toString().substring(lastIndex);
 
 
         setCharacterSheetValue(category,type,undefined,nrOfChecked);        

@@ -233,7 +233,9 @@ function initGame() {
     console.log('init game');
 
     var diceRollsRef = database.ref('rolls').orderByChild('adventureId').equalTo(adventureId);
-    var usersRef = database.ref('/adventures/' + adventureId + '/members/');
+    var usersRef = database.ref('/adventures/' + adventureId);
+
+    var characterSheetsRef = database.ref('/charactersheets/' + adventureId);
 
     if (isRoomAdmin === false) {
 
