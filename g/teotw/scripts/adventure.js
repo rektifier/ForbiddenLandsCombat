@@ -141,7 +141,7 @@ function createTraumaItem(key,value,name){
     }else if(value <= 6){
         notation = '1V';
     }
-    return '<li id="'+key+'" class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-value="'+value+'"> '+name+'('+notation+')<button type="button" class="close"><span class="delete-trauma" aria-hidden="true">&times;</span></button></li>';
+    return '<li id="'+key+'" class="list-group-item py-1 list-group-item-danger"><input type="checkbox" data-value="'+value+'"> '+name+'('+notation+')<button type="button" class="close delete-item"><span aria-hidden="true">&times;</span></button></li>';
 }
 
 function createFeatureItem(key,value,name){
@@ -151,17 +151,17 @@ function createFeatureItem(key,value,name){
         colorClass = 'success';
     }
 
-    return '<li id="'+key+'" class="list-group-item py-1 list-group-item-'+colorClass+'"><input type="checkbox" data-typeofdice="'+value+'"> '+name+'<button type="button" class="close"><span class="delete-feature" aria-hidden="true">&times;</span></button></li>';
+    return '<li id="'+key+'" class="list-group-item py-1 list-group-item-'+colorClass+'"><input type="checkbox" data-typeofdice="'+value+'"> '+name+'<button type="button" class="close delete-item"><span aria-hidden="true">&times;</span></button></li>';
 }
 
 function createEquipmentItem(key,value,name){
     var notation =  value;
-    return '<li id="'+key+'" class="list-group-item py-1"><input type="checkbox" data-value="'+value+'"> '+name+'<button type="button" class="close"><span class="delete-item" aria-hidden="true">&times;</span></button></li>';
+    return '<li id="'+key+'" class="list-group-item py-1"><input type="checkbox" data-value="'+value+'"> '+name+'<button type="button" class="close delete-item"><span aria-hidden="true">&times;</span></button></li>';
 }
 
 function createWeaponItem(key,value,name){
     var notation =  value;
-    return '<li id="'+key+'" class="list-group-item py-1"><input type="checkbox" data-value="'+value+'"> '+name+' ( '+notation+' )<button type="button" class="close"><span class="delete-item" aria-hidden="true">&times;</span></button></li>';
+    return '<li id="'+key+'" class="list-group-item py-1"><input type="checkbox" data-value="'+value+'"> '+name+' ( '+notation+' )<button type="button" class="close delete-item"><span aria-hidden="true">&times;</span></button></li>';
 }
 
 function printStat(key,stat,eventtype){
@@ -910,29 +910,15 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('click', '.delete-feature', function(e){
-        console.log('delete-feature.click');
-        e.preventDefault();
 
-        var featureId = $(this).closest('li').attr('id');
-        database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid+'/'+featureId).remove();
-    });
-
-    $(document).on('click', '.delete-trauma', function(e){
-        console.log('delete-trauma.click');
-        e.preventDefault();
-
-        var traumaId = $(this).closest('li').attr('id');
-        database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid+'/'+traumaId).remove();
-    });
-
-    $(document).on('click', '.delete-item', function(e){
+    $('#playground').on('click','.delete-item',function(e){   
         console.log('delete-item.click');
         e.preventDefault();
 
         var itemId = $(this).closest('li').attr('id');
         database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid+'/'+itemId).remove();
     });
+
     
 
 });
