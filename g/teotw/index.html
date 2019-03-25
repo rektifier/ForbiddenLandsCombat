@@ -291,7 +291,7 @@
                                 });
 
                                 if (displayName === adventure.owner) {
-                                    window.location.href = 'adventure.html?id=' + adventureId;
+                                    window.location.href = 'admin.html?id=' + adventureId;
                                 } else {
                                     var currentUserId = currentUser.uid;
                                   //  add user to adventure
@@ -300,7 +300,18 @@
                                     });
                                 }
                             }else{
-                                console.log('inget rum');
+                                database.ref('/adventures/').push({
+
+                                    day:1, // day
+                                    game: 'The End Of The World', // game
+                                    owner: roomConfig.gameName, //owner
+                                    title: adventureName //title
+
+                                    }).then(() => {
+                                        window.location.href = 'admin.html?id=' + adventureId;
+                                    }).catch(function (error) {
+                                    console.error('Error writing new message to Firebase Database', error);
+                                });
                             }
 
                             

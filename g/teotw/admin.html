@@ -525,7 +525,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
+                                                <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-stress-items">
                                                     <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong>
                                                         <div style="float:right" class="dropdown">
                                                                 <a href="#" data-toggle="dropdown" style="color:black">+</a>
@@ -579,122 +579,174 @@
                                 </div>
                                 <!-- SOCIAL -->
                                 <div class="col">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <div class="card mb-3 shadow-sm bg-white rounded">
-                                            <div class="card-header text-center list-group-item-warning"><strong>SOCIAL</strong></div>
-                                            <div class="card-body">
-
-                                                <table>
-                                                    <thead>
-                                    <th id="th_social_charisma" class="text-center selectable_attribute" data-statvalue="1" data-stattype="social"><img src="images/offencive_icon.png"><br>CHARISMA</th>
-                                    <th></th>
-                                    <th id="th_social_empathy" class="text-center selectable_attribute" data-statvalue="1" data-stattype="social"><img src="images/defensive_icon.png"><br>EMPATHY</th>
-                                    </thead>
-                                    <tbody>
+                                    <table>
                                         <tr>
-                                            <td class="text-center">
-                                                <h2 id="attribute_social_charisma">1</h2>
-                                            </td>
-                                            <td style="width:20px"></td>
-                                            <td class="text-center">
-                                                <h2 id="attribute_social_empathy">1</h2>
+                                            <td>
+                                                <div class="card mb-3 shadow-sm bg-white rounded">
+                                                    <div class="card-header text-center list-group-item-warning"><strong>SOCIAL</strong></div>
+                                                    <div class="card-body">
+
+                                                        <table>
+                                                            <thead>
+                                                                <th id="th_social_charisma" class="text-center selectable_attribute" data-statvalue="1" data-stattype="social"><img src="images/offencive_icon.png"><br>CHARISMA</th>
+                                                                <th></th>
+                                                                <th id="th_social_empathy" class="text-center selectable_attribute" data-statvalue="1" data-stattype="social"><img src="images/defensive_icon.png"><br>EMPATHY</th>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class="text-center">
+                                                                            <h2 id="attribute_social_charisma">1</h2>
+                                                                        </td>
+                                                                        <td style="width:20px"></td>
+                                                                        <td class="text-center">
+                                                                            <h2 id="attribute_social_empathy">1</h2>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
-                                    </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                    </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="social-features-items">
-                                <li class="list-group-item py-1 list-group-item-warning text-center">
-                                    <div style="margin: 0 auto; width: 100px;"><strong>FEATURES</strong>
-                                        <div style="float:right" class="dropdown">
-                                            <a href="#" data-toggle="dropdown" style="color:black">+</a>
-                                            <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
-                                                <li>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <div class="input-group">
-                                                                    <div class="input-group-prepend">
-                                                                        <label class="input-group-text"><span class="span-add-feature">-</span></label>
+                                        <tr>
+                                            <td>
+                                                <ul class="list-group mb-3 shadow-sm bg-white rounded" id="social-features-items">
+                                                    <li class="list-group-item py-1 list-group-item-warning text-center">
+                                                        <div style="margin: 0 auto; width: 100px;"><strong>FEATURES</strong>
+                                                            <div style="float:right" class="dropdown">
+                                                                <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                                                <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="form-group">
+                                                                                    <div class="input-group">
+                                                                                        <div class="input-group-prepend">
+                                                                                            <label class="input-group-text"><span class="span-add-feature">-</span></label>
+                                                                                        </div>
+                                                                                        <input type="text" class="form-control input-add-feature" placeholder="Feature">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <button type="button" class="btn btn-success btn-block btn-add-feature" data-stattype="social">Add feature</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <ul class="list-group mb-3 shadow-sm bg-white rounded" id="social-stress-items">
+                                                    <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong>
+                                                        <div style="float:right" class="dropdown">
+                                                                <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                                                <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+                                                                    <li>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="form-group">
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control input-add-trauma" placeholder="Trauma">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <button type="button" class="btn btn-success btn-block btn-add-trauma" data-stattype="social">Convert to trauma</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div></li>
+                                                    <li class="list-group-item py-1 list-group-item-success">
+                                                        <div class="form-check form-check-inline">3</div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-7" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-8" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-9" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                                                    </li>
+                                                    <li class="list-group-item py-1 list-group-item-success">
+                                                        <div class="form-check form-check-inline">2</div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-4" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-5" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-6" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                                                    </li>
+                                                    <li class="list-group-item py-1 list-group-item-success">
+                                                        <div class="form-check form-check-inline">1</div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-1" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-2" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                                                        <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-3" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <ul class="list-group mb-3 shadow-sm bg-white rounded" id="social-trauma-items">
+                                                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>TRAUMA</strong></li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col">
+                                    <!-- EQUIPMENT -->
+                                    <ul class="list-group mb-3 shadow-sm bg-white rounded" id="equipment-items">
+                                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>EQUIPMENT</strong> 
+                                            <div style="float:right" class="dropdown">
+                                                <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                                <ul class="dropdown-menu dropdown-menu-right" style="padding: 15px;min-width: 250px;">
+                                                    <li>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input id="input-add-equpiment" type="text" class="form-control" placeholder="Equipment">
                                                                     </div>
-                                                                    <input type="text" class="form-control input-add-feature" placeholder="Feature">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <button type="button" class="btn btn-success btn-block btn-add-equpiment">Add</button>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <button type="button" class="btn btn-success btn-block btn-add-feature" data-stattype="social">Add feature</button>
-                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <ul class="list-group mb-3 shadow-sm bg-white rounded" id="physical-features-items">
-                                <li class="list-group-item py-1 list-group-item-warning text-center"><strong>STRESS & RESISTANCE</strong>
-                                    <div style="float:right" class="dropdown">
-                                            <a href="#" data-toggle="dropdown" style="color:black">+</a>
-                                            <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
-                                                <li>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <div class="input-group">
-                                                                    <input type="text" class="form-control input-add-trauma" placeholder="Trauma">
+                                                    </li>
+                                                </ul>                                                    
+                                            </div>
+                                        </li>                                            
+                                    </ul>           
+
+                                    <!-- WEAPONs -->
+                                    <ul class="list-group mb-3 shadow-sm bg-white rounded" id="weapon-items">
+                                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>WEAPONS</strong> 
+                                            <div style="float:right" class="dropdown">
+                                                <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                                <ul class="dropdown-menu dropdown-menu-right" style="padding: 15px;min-width: 250px;">
+                                                    <li>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input id="input-add-weapon" type="text" class="form-control" placeholder="Weapon">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <button type="button" class="btn btn-success btn-block btn-add-weapon">Add</button>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <button type="button" class="btn btn-success btn-block btn-add-trauma" data-stattype="social">Convert to trauma</button>
-                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div></li>
-                                <li class="list-group-item py-1 list-group-item-success">
-                                    <div class="form-check form-check-inline">3</div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-7" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-8" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-9" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
-                                </li>
-                                <li class="list-group-item py-1 list-group-item-success">
-                                    <div class="form-check form-check-inline">2</div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-4" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-5" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-6" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
-                                </li>
-                                <li class="list-group-item py-1 list-group-item-success">
-                                    <div class="form-check form-check-inline">1</div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-1" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-2" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
-                                    <div class="form-check form-check-inline"><input type="checkbox" id="social-stress-3" class="checkbox-stress checkbox-stress-social" data-stattype="social" data-category="stress"></div>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                            <td>
-                                <ul class="list-group mb-3 shadow-sm bg-white rounded" id="social-trauma-items">
-                                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>TRAUMA</strong></li>
-                                </ul>
-                            </td>
-                        </tr>
-                    </table>
+                                                    </li>
+                                                </ul>                                                    
+                                            </div>
+                                        </li>                                            
+                                    </ul>     
                                 </div>
 
+                                <!-- dice -->
                                 <div class="col h-100">
                                     <div>
                                         <table class="table table-sm table-borderless">
@@ -757,10 +809,10 @@
 
 
 
-                <!-- <div class="alert alert-success" id="info-alert">
+                 <div class="alert alert-success" id="info-alert">
                             <button type="button" class="close" data-dismiss="alert">x</button>
                             <strong>! </strong><span id="alerttext"></span>
-                        </div> -->
+                        </div>
 
 
 
@@ -781,7 +833,7 @@
         <script src="../../scripts/bootstrap.bundle.min.js"></script>
 
         <script src="../../scripts/moment.js"></script>
-        <script src="scripts/owner.js?v=4"></script>
+        <script src="scripts/adventure.js?v=4"></script>
         <script src="../../scripts/dice-roller.js"></script>
 
         <!-- Menu Toggle Script -->

@@ -93,10 +93,8 @@ function sendDiceRoll(text) {
         }
     }
 
-
-    database.ref('/rolls/').push({
-
-        adventureId:adventureId,
+    database.ref('/rolls/' + adventureId).push({
+        
         createdOn: firebase.database.ServerValue.TIMESTAMP,
         message: text,
         owner: owner
@@ -283,8 +281,9 @@ function initGame() {
 
     console.log('init game');
 
-    var diceRollsRef = database.ref('rolls').orderByChild('adventureId').equalTo(adventureId);
+    var diceRollsRef = database.ref('rolls/' + adventureId);//.orderByChild('createdOn').equalTo(adventureId);
     var usersRef = database.ref('/adventures/' + adventureId + '/members/');
+    var startOfDay = moment().startOf('day').valueOf();
 
     if (isRoomAdmin === false) {        
 
@@ -358,8 +357,7 @@ function initGame() {
         
     }
 
-    
-    diceRollsRef.limitToLast(roomConfig.maxNrOfDiceRollsInList).on('child_added', function (snapshot) {
+    diceRollsRef.orderByChild('createdOn').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function (snapshot) {
         console.log('diceRollsRef.orderByChild(createdOn).limitToLast(roomConfig.maxNrOfDiceRollsInList).on(child_added');
         var mess = snapshot.val();
 
@@ -427,21 +425,23 @@ function initGame() {
 
 }
 
-// //ToDo: kan ej ha flera index i samma struktur. se över datat så att 
-// // vi kan rensa gamla dice rolls
-// function cleanDBData() {
-//     console.log('Clean old db data.')
 
-//     //clear old room data 24 hours ago
-//     //
-//     var cutOff = moment().subtract(24, 'hours').valueOf();
-//     database.ref('/rolls/').orderByChild('createdOn').endAt(cutOff).once("value").then(function (snapshot) {
-//         if (snapshot.exists()) {
-//             console.log('we have old dice rolls. removing..');
-//             snapshot.ref.remove();
-//         }
-//     });
-// }
+function cleanDBData() {
+    console.log('Clean old db data.')
+
+    //clear old adventure data 24 hours ago
+    //
+    if(isEmpty(adventureId) !== false){
+        var cutOff = moment().subtract(24, 'hours').valueOf();
+        database.ref('/rolls/' + adventureId).orderByChild('createdOn').endAt(cutOff).once("value").then(function (snapshot) {
+            if (snapshot.exists()) {
+                console.log('we have old dice rolls. removing..');
+                snapshot.ref.remove();
+            }
+        });
+    }
+
+}
 
 // Initiate firebase auth.
 function initFirebaseAuth() {
@@ -469,10 +469,8 @@ function authStateObserver(user) {
                 $(".adventure_owner").text(currentAdventure.owner);
                 $(".adventure_title").text(currentAdventure.title);
                 $(".adventure_game").text(currentAdventure.game);
-                //load current user
-                //
-                // vi tar det här vid ett senare tillfälle..
-                //cleanDBData();
+             
+
 
 
                 //is the logged in user the room admin?
@@ -485,6 +483,9 @@ function authStateObserver(user) {
                     $("#settingsRoomTitle").val(currentAdventure.title);
 
                     activateAdminFeatures();
+
+                    // rensa gammal databas-info
+                    cleanDBData();
                 }
 
                 initGame();
