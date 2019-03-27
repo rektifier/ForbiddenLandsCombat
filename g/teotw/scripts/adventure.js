@@ -562,19 +562,6 @@ function activateAdminFeatures() {
 
 
 
-    $("#add-enemy-button").click(function (e) {
-
-        console.log('add-enemy-button.click ');
-        e.preventDefault();
-
-        var enemyName = $("#add-enemy-input").val();
-
-        //add enemy to room
-        //
-        database.ref(roomConfig.gameRoot + '/rooms/' + currentAdventure.name + '/users/' + enemyName).set({ "name": roomConfig.enemyNamePrefix + enemyName + roomConfig.enemyNameSuffix, "sortOrder": 99, "inCombat": false }).then(() => {
-            $("#add-enemy-input").val('');
-        });
-    });
 }
 
 function setCharacterSheetValue(category,type,name,value){
