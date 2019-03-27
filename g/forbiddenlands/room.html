@@ -188,6 +188,25 @@
             <div id="page-content-wrapper">
 
                 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+           
+                <div>Dag <span id="nrOfDays">1</span></strong></div>
+                <div style="margin-left: 20px;"></div>
+                <div style="border-left: 1px solid #333;">&nbsp;</div>
+                <div style="margin-right: 20px;"></div>
+
+                <div class="btn-group quarterDay" role="group" aria-label="Quarter days" >
+                    <button type="button" class="btn btn-light active" data-quarterdayid="0">Morgon</button>
+                    <button type="button" class="btn btn-light" data-quarterdayid="1">Dag</button>
+                    <button type="button" class="btn btn-light" data-quarterdayid="2">Kväll</button>
+                    <button type="button" class="btn btn-light" data-quarterdayid="3">Natt</button>
+                </div>
+
+                <div class="admingroup" style="margin-left: 20px;">
+                        <button id="nextQuarterDay" type="button" class="btn btn-secondary"><</button>
+                        <button id="previousQuarterDay" type="button" class="btn btn-secondary">></button>
+                </div>
+
+                    
                     <!-- <button class="btn btn-primary" id="menu-toggle" data-toggle="tooltip" data-placement="top" title="Dölj meny"> Menu</button>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse"

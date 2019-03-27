@@ -169,6 +169,8 @@ function initGame() {
     var usersRef = database.ref('rooms/' + currentRoomName + '/users/');
     var conflictRef = database.ref('rooms/' + currentRoomName + '/conflict/');
 
+    var roomRef = database.ref('rooms/' + currentRoomName + '/info/')
+
     if(isRoomAdmin === false)
     {
         var currentUserRef = database.ref('rooms/' + currentRoomName + '/users/' + currentUser.displayName);
@@ -187,6 +189,21 @@ function initGame() {
     
         currentUserRef.onDisconnect().remove();
     }
+
+    roomRef.on('value', function(roomSnapshot){
+
+        console.log('room info');
+
+        var info = roomSnapshot.val();
+        var day = info.day;
+        var quarterDay = info.quarterDay;
+
+        console.log(info);
+
+        $("#nrOfDays").text(day);
+        $(".quarterDay").children('button').removeClass('active');
+        $(".quarterDay").children('button').eq(quarterDay).addClass('active');
+    });
 
     
     var startOfDay = moment().startOf('day').valueOf();//unix time format ( ms ) //.format("x");
@@ -339,6 +356,8 @@ function initGame() {
         });
 
     });
+
+
 }
 
 function showPlayground(owner) {
@@ -400,6 +419,8 @@ $(document).ready(function () {
     $(".admingroup").hide();
     $('#settings-button').hide();
     $(".btn-select-card").prop('disabled', true);
+    $(".quarterDay").children('button').removeClass('active');
+    
 
     hidePlaygrounds();
 
@@ -867,6 +888,8 @@ $(document).ready(function () {
             }
         }
 
+       
+
         $("#userslist").sortable({
             delay: 150,
             axis: "y",
@@ -1047,6 +1070,43 @@ $(document).ready(function () {
 
             $("#roomNameHeader").html('<strong>' + roomname+ '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+title+'</small></p><footer class="blockquote-footer"a><small>' + owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
 
+        });
+
+        $("#nextQuarterDay").click(function (e) {
+            console.log('nextQuarterDay.click');
+            e.preventDefault();
+            
+            var day = $("#nrOfDays").text();
+            var quarterDay = $(".quarterDay .active").data('quarterdayid');
+
+            if(quarterDay === 0){
+                if(day > 0){
+                    day = day-1;
+                    quarterDay = 3;                    
+                }
+            }else{
+                quarterDay--;
+            }
+
+            database.ref('rooms/' + currentRoomName + '/info').update({ "quarterDay": quarterDay, "day":day});
+
+        });
+
+        $("#previousQuarterDay").click(function (e) {
+            console.log('previousQuarterDay.click');
+            e.preventDefault();
+
+            //get current  day and quarterday
+            var day = $("#nrOfDays").text();
+            var quarterDay = $(".quarterDay .active").data('quarterdayid');
+
+            if(quarterDay === 3){
+                day++;
+                quarterDay = 0;                    
+            }else{
+                quarterDay++;
+            }
+            database.ref('rooms/' + currentRoomName + '/info').update({ "quarterDay": quarterDay, "day":day});
         });
 
 
