@@ -72,6 +72,8 @@ var logger = function()
     return pub;
 }();
 
+var gamesToPlay = [{name:'Svärdets Sång',url:'g/forbiddenlands/index.html'},{name:'The End Of The World',url:'g/teotw/index.html'}];
+
 
 
 //logger.disableLogger();

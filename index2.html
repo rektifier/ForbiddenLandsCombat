@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Forbidden Lands Fighting Pit">
+    <meta name="author" content="Mikael Ribeiro">
+    <title>Forbidden Lands Fighting Pit - Login</title>
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col" style="height:100px"></div>
+        </div>
+
+        <div class="row" id="login">
+
+            <div class="col"></div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                            <label for="input-group mb-3">Anslut till ett rum</label>
+                            <div class="input-group mb-3">                                
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Namn</span>
+                                </div>
+                                <input type="text" id="login-username-input" class="form-control" aria-label="Fighter" aria-describedby="inputGroup-sizing-default">
+                                <div class="input-group-append">
+                                    <button id="logout-button" type="button" class="btn btn-primary">Logga ut</button>
+                                </div>
+                                
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-room">Rum</span>
+                                </div>
+                                <input type="text" id="room-input" class="form-control" aria-label="Rum" aria-describedby="inputGroup-sizing-room">
+                                
+                            </div>
+
+                            <div class="form-group">
+                                <button id="login-button" type="button" class="btn btn-primary" name="login-button">Ta mig till fighten!</button>
+                                <a href="register.html">Registrera dig</a>
+                            </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col"></div>
+        </div>
+
+    </div>
+
+    <script src="scripts/jquery-3.3.1.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+    <script src="scripts/globalconfig.js"></script>
+    <script src="scripts/common.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            $("#logout-button").hide();
+
+            $("#logout-button").click(function (e) {
+                firebase.auth().signOut();
+            });
+
+            $('#room-input').keypress(function (e) {
+                var key = e.which;
+                if(key == 13){  // the enter key code                
+                    $('button[name = login-button]').click();
+                    return false;  
+                }
+            });   
+
+
+            $("#login-button").click(function (e) {
+
+                
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                var username = $("#login-username-input").val();
+                var roomname = $("#room-input").val();
+
+                if (username !== null && roomname !== null) {
+
+                    if(username.length > 0 && roomname.length > 0){
+
+                        $("body").css("cursor", "progress");
+
+                        firebase.auth().signInAnonymously().then(() => {
+
+                            var currentUser = firebase.auth().currentUser;
+
+                            if (currentUser) {
+                                currentUser.updateProfile({
+                                    displayName: username
+                                }).then(()=>{
+                                    //check if room exists
+                                    //
+                                    database.ref('rooms/' + roomname).once("value").then(function (snapshot) {
+
+                                        if (snapshot.exists()) {
+                                            //room exists
+                                            var room = snapshot.val();
+
+                                            if(username === room.owner){
+                                                window.location.href = "g/forbiddenlands/room.html?room=" + roomname; 
+                                            }else{
+                                                //add user to room
+                                                database.ref('rooms/' + roomname + '/users/' + username).set({ "name": username, "messages": {}, "inCombat":false, "sortOrder": 99 }).then(() => {
+                                                    window.location.href = "g/forbiddenlands/room.html?room=" + roomname;
+                                                });
+                                            }
+                                        } 
+                                        else{
+
+                                            //create room with nice template
+                                            //
+                                            // set current user as owner
+                                            //
+                                            database.ref('rooms/' + roomname).set({ "owner": username, "name": roomname}).then(() => {
+                                                window.location.href = "g/forbiddenlands/room.html?room=" + roomname;
+                                            });
+                                        }
+
+
+
+                                    });
+
+                                });
+
+                            }
+
+                            $("body").css("cursor", "default");
+
+                        }).catch(function (error) {
+
+                            $("body").css("cursor", "default");
+
+                            // Handle Errors here.
+                            var errorCode = error.code;
+                            var errorMessage = error.message;
+
+                            console.log(errorCode);
+                            console.log(errorMessage);
+
+                            return;
+                        });
+
+
+                    }
+
+                }
+            });
+
+            firebase.auth().onAuthStateChanged(function (user) {
+
+                if (user) {
+
+                    window.user = user;
+                    
+                    $("#logout-button").show();
+
+                    $("#login-username-input").val(user.displayName);
+                    $("#login-username-input").prop('disabled', true);
+
+                } else {
+
+                    window.user = null;
+
+                    $("#logout-button").hide();
+                    $("#login-username-input").val('');
+                    $("#login-username-input").prop('disabled', false);
+                }
+            });
+
+
+        });
+    </script>
+
+
+</body>
+
+</html>
