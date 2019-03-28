@@ -992,7 +992,7 @@ $(document).ready(function () {
 
                     var name = $(this).ignore("a").text();
                     var isInCombat = $(this).hasClass('incombat');
-                    users[text] = { "name": name, "sortOrder": index, "inCombat": isInCombat }
+                    users[text] = { "displayName": name, "sortOrder": index, "inCombat": isInCombat }
                 }));
 
                 database.ref('adventures/' + adventureId + '/members/').update(users);
