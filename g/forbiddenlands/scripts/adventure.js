@@ -96,18 +96,35 @@ function sendDiceRoll(text){
         }
     }
 
-    var compressed = LZString.compress(text);
+    // console.log(text);
+    // console.log(owner);
+
+    var compressed = LZString.compressToUTF16(text);
+    var coOwner = LZString.compressToUTF16(owner);
+
+    // console.log(compressed);
+    // console.log(coOwner);
+
+
     database.ref('rolls/' + adventureId).push({
-
-        createdOn: firebase.database.ServerValue.TIMESTAMP,
-        message: compressed,
-        owner: owner
-
+        c: firebase.database.ServerValue.TIMESTAMP,
+        m: compressed,
+        o: coOwner
     }).catch(function(error){
         console.error('Error writing new message to Firebase Database', error);
     });
 }
 
+function replaceHitAndMissWithImages(str){
+
+    if(str !== null)
+    {
+        str = str.split("$H").join('<img src="images/dice_hit.png" height="25">');
+        str = str.split("$M").join('<img src="images/dice_miss.png" height="25">');
+    }
+
+    return str;
+}
 
 function createDiceRollsMessage(owner,message,createdOn, isLatest){
     var messageTemplate = '';
@@ -124,6 +141,9 @@ function createDiceRollsMessage(owner,message,createdOn, isLatest){
 
 function appendDiceRollsMessage(message,owner,createdOn,isLatest){
     var messDate = moment(createdOn).format('YYYY-MM-DD kk:mm');
+
+    message = replaceHitAndMissWithImages(message);
+
     var result = createDiceRollsMessage(owner, message, messDate, isLatest);
 
     if(latestDiceRoll !== null){
@@ -145,7 +165,7 @@ function cleanDBData() {
     //
     if(isEmpty(adventureId) !== false){
         var cutOff = moment().subtract(24, 'hours').valueOf();
-        database.ref('/rolls/' + adventureId).orderByChild('createdOn').endAt(cutOff).once("value").then(function (snapshot) {
+        database.ref('/rolls/' + adventureId).orderByChild('c').endAt(cutOff).once("value").then(function (snapshot) {
             if (snapshot.exists()) {
                 console.log('we have old dice rolls. removing..');
                 snapshot.ref.remove();
@@ -207,11 +227,14 @@ function initGame() {
     //var startNow = moment().valueOf();
     
     
-    diceRollsRef.orderByChild('createdOn').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function(snapshot) {
+    diceRollsRef.orderByChild('c').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function(snapshot) {
         console.log('diceRollsRef.orderByChild(createdOn).startAt(startNow).on(child_added');
         var mess = snapshot.val();
-        var decompmessage = LZString.decompress(mess.message);
-        appendDiceRollsMessage(decompmessage,mess.owner,mess.createdOn,true);
+
+        var decompmessage = LZString.decompressFromUTF16(mess.m);
+        var decompowner = LZString.decompressFromUTF16(mess.o);
+
+        appendDiceRollsMessage(decompmessage,decompowner,mess.c,true);
     });
 
 
@@ -409,10 +432,6 @@ $(document).ready(function () {
 
                     currentAdventure = snapshot.val();
                     
-
-
-                    //$("#roomNameHeader").html('<strong>' + adventureId + ' <small>( owned by ' + currentAdventure.owner + ' )</small></strong>');
-
                     var adventureDescription = currentAdventure.description ? currentAdventure.description : '';
 
                     $("#roomNameHeader").html('<strong>' + currentAdventure.title + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+ adventureDescription +'</small></p><footer class="blockquote-footer"a><small>' + currentAdventure.owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
@@ -540,7 +559,7 @@ $(document).ready(function () {
         var hitResult = '';
 
         for (let index = 0; index < nrOfHits; index++) {
-            hitResult += '<img src="images/dice_hit.png" height="25">';                
+            hitResult += '$H';//'<img src="images/dice_hit.png" height="25">';                
         }
         var result = 'Stolthet:[' + diceRoll.total+ '] ' + hitResult;
 
@@ -592,7 +611,7 @@ $(document).ready(function () {
                 if(result == 1){
                     diceToReroll.nrOfMiss++;
                     diceToReroll.ge--;
-                    miss += '<img src="images/dice_miss.png" height="25">';
+                    miss += '$M';//'<img src="images/dice_miss.png" height="25">';
                 }
                 if(result == 6){
                     diceToReroll.ge--;
@@ -601,12 +620,12 @@ $(document).ready(function () {
                         //hit += 'X';
                     }else{
                         diceToReroll.nrOfHits++;                        
-                        hit += '<img src="images/dice_hit.png" height="25">';
+                        hit += '$H';//'<img src="images/dice_hit.png" height="25">';
                     }                    
                 }               
             });
 
-            var geResult = 'GE: [' + output.join(",") + '] ' + hit + ' ' + miss;
+            var geResult = 'GE:[' + output.join(",") + '] ' + hit + ' ' + miss;
 
             totalResult += geResult + '<br>';
         }
@@ -622,7 +641,7 @@ $(document).ready(function () {
                 if(result == 6){
                     diceToReroll.fv--;
                     diceToReroll.nrOfHits++;
-                    hit += '<img src="images/dice_hit.png" height="25">';
+                    hit += '$H';//'<img src="images/dice_hit.png" height="25">';
                 }              
             });
             
@@ -643,12 +662,12 @@ $(document).ready(function () {
                 if(result == 1){
                     diceToReroll.nrOfMiss++;
                     diceToReroll.va--;
-                    miss += '<img src="images/dice_miss.png" height="25">';
+                    miss += '$M';//'<img src="images/dice_miss.png" height="25">';
                 }
                 if(result == 6){
                     diceToReroll.nrOfHits++;
                     diceToReroll.va--;
-                    hit += '<img src="images/dice_hit.png" height="25">';
+                    hit += '$H';//'<img src="images/dice_hit.png" height="25">';
                 }          
             });
             
@@ -671,7 +690,7 @@ $(document).ready(function () {
 
             for (let index = 0; index < hit; index++) {
                 diceToReroll.nrOfHits++;
-                hitResult += '<img src="images/dice_hit.png" height="25">';                
+                hitResult += '$H';//'<img src="images/dice_hit.png" height="25">';                
             }
 
             diceToReroll.might = 0;
@@ -693,7 +712,7 @@ $(document).ready(function () {
 
             for (let index = 0; index < hit; index++) {
                 diceToReroll.nrOfHits++;
-                hitResult += '<img src="images/dice_hit.png" height="25">';                
+                hitResult += '$H';//'<img src="images/dice_hit.png" height="25">';                
             }
 
             diceToReroll.epic = 0;
@@ -715,7 +734,7 @@ $(document).ready(function () {
 
             for (let index = 0; index < hit; index++) {
                 diceToReroll.nrOfHits++;
-                hitResult += '<img src="images/dice_hit.png" height="25">';                
+                hitResult += '$H';//'<img src="images/dice_hit.png" height="25">';                
             }
 
             diceToReroll.legendary = 0;
@@ -726,17 +745,18 @@ $(document).ready(function () {
 
         var hitandmissresult = 'Resultat: ';
         for (let index = 0; index < diceToReroll.nrOfHits; index++) {
-            hitandmissresult += '<img src="images/dice_hit.png" height="25">';                
+            hitandmissresult += '$H';//'<img src="images/dice_hit.png" height="25">';                
         }
 
         for (let index = 0; index < diceToReroll.nrOfMiss; index++) {
-            hitandmissresult += '<img src="images/dice_miss.png" height="25">';                
+            hitandmissresult += '$M';//'<img src="images/dice_miss.png" height="25">';                
         }
 
         totalResult += '<br>' +  hitandmissresult;
 
-
-        return totalResult;
+      console.log(totalResult);
+      
+        return totalResult.trim();
     }
 
     $("#btn-throw-dice").click(function (e) {
