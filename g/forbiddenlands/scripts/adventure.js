@@ -96,10 +96,11 @@ function sendDiceRoll(text){
         }
     }
 
+    var compressed = LZString.compress(text);
     database.ref('rolls/' + adventureId).push({
 
         createdOn: firebase.database.ServerValue.TIMESTAMP,
-        message: text,
+        message: compressed,
         owner: owner
 
     }).catch(function(error){
@@ -209,9 +210,8 @@ function initGame() {
     diceRollsRef.orderByChild('createdOn').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function(snapshot) {
         console.log('diceRollsRef.orderByChild(createdOn).startAt(startNow).on(child_added');
         var mess = snapshot.val();
-
-        appendDiceRollsMessage(mess.message,mess.owner,mess.createdOn,true);
-        // scrollDiceRollsToBottom();
+        var decompmessage = LZString.decompress(mess.message);
+        appendDiceRollsMessage(decompmessage,mess.owner,mess.createdOn,true);
     });
 
 
@@ -566,7 +566,6 @@ $(document).ready(function () {
 
         var totalResult = '';
 
-
         diceToReroll.ge = nrOfDiceGE;
         diceToReroll.fv = nrOfDiceFV;
         diceToReroll.va = nrOfDiceVA;
@@ -577,26 +576,7 @@ $(document).ready(function () {
 
 
         if(isEmpty(diceToReroll.modifier) == false && diceToReroll.modifier > 0){
-
-            // diceToReroll.modifier = modifier;
             totalResult = 'Modifikation: [-'+modifier+']<br>';
-
-            // for (let index = 0; index < diceToReroll.modifier; index++) {
-            //     if(nrOfDiceFV > 0) {
-            //         nrOfDiceFV--;
-            //         modifier--;
-            //     }else{
-            //         break;
-            //     }          
-            // }
-            
-            // while (modifier--) {    
-            //     if(nrOfDiceFV > 0) {
-            //         nrOfDiceFV--;
-            //     }else{
-            //         break;
-            //     }
-            // }
         } 
         
             
