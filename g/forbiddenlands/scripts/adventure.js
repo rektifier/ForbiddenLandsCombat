@@ -717,7 +717,7 @@ $(document).ready(function () {
 
             diceToReroll.epic = 0;
             
-            var result = 'Episk: [' + output.join(",") + '] ' + hit ;
+            var result = 'Episk: [' + output.join(",") + '] ' + hitResult ;
             totalResult += result + '<br>';
         }
 
@@ -739,7 +739,7 @@ $(document).ready(function () {
 
             diceToReroll.legendary = 0;
             
-            var result = 'Legendarisk: [' + output.join(",") + '] ' + hit ;
+            var result = 'Legendarisk: [' + output.join(",") + '] ' + hitResult ;
             totalResult += result;
         }
 
