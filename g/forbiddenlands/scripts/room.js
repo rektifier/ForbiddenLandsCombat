@@ -632,19 +632,19 @@ $(document).ready(function () {
         diceToReroll.modifier = modifier;
 
 
-        if(isEmpty(modifier) == false && modifier > 0){
+        if(isEmpty(diceToReroll.modifier) == false && diceToReroll.modifier > 0){
 
-            diceToReroll.modifier = modifier;
+            // diceToReroll.modifier = modifier;
             totalResult = 'Modifikation: [-'+modifier+']<br>';
 
-            for (let index = 0; index < diceToReroll.modifier; index++) {
-                if(nrOfDiceFV > 0) {
-                    nrOfDiceFV--;
-                    modifier--;
-                }else{
-                    break;
-                }          
-            }
+            // for (let index = 0; index < diceToReroll.modifier; index++) {
+            //     if(nrOfDiceFV > 0) {
+            //         nrOfDiceFV--;
+            //         modifier--;
+            //     }else{
+            //         break;
+            //     }          
+            // }
             
             // while (modifier--) {    
             //     if(nrOfDiceFV > 0) {
@@ -655,7 +655,7 @@ $(document).ready(function () {
             // }
         } 
             
-       if(isEmpty(diceToReroll.ge) == false && diceToReroll.ge !== "0")
+        if(isEmpty(diceToReroll.ge) == false && diceToReroll.ge !== "0")
         {
             var miss = '';
             var hit = '';
@@ -670,12 +670,12 @@ $(document).ready(function () {
                     miss += '<img src="images/dice_miss.png" height="25">';
                 }
                 if(result == 6){
-                    if(modifier > 0){
-                        modifier--;
+                    diceToReroll.ge--;
+                    if(diceToReroll.modifier > 0){
+                        diceToReroll.modifier--;
                         //hit += 'X';
                     }else{
-                        diceToReroll.nrOfHits++;
-                        diceToReroll.ge--;
+                        diceToReroll.nrOfHits++;                        
                         hit += '<img src="images/dice_hit.png" height="25">';
                     }                    
                 }               
