@@ -70,7 +70,7 @@ function addUserToList(key, member) {
             combatClass = 'incombat';
         }
 
-        $("#userslist").append('<li id="' + key + '" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center ' + combatClass + '">' + member.displayName + fightBtn + '</li>');
+        $("#userslist").append('<li id="' + key + '" data-displayname="'+ member.displayName +'" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center ' + combatClass + '">' + member.displayName + fightBtn + '</li>');
 
     }
 }
@@ -167,12 +167,12 @@ function initGame() {
 
     if(isAdmin === false)
     {
-        var currentUserRef = database.ref('adventures/' + adventureId + '/members/' + currentUser.uid);
-    
+        var currentMemberRef = database.ref('adventures/' + adventureId + '/members/' + currentUser.uid);
+        
         //get user if we have one
         //
-        currentUserRef.once("value").then(function (snapshot) {
-            console.log('currentUserRef.once');
+        currentMemberRef.once("value").then(function (snapshot) {
+            console.log('currentMemberRef.once');
     
             if (snapshot.exists()) {
                 currentAdventureMember = snapshot.val();
@@ -183,7 +183,7 @@ function initGame() {
             }
         });
     
-        //currentUserRef.onDisconnect().remove();
+        //currentMemberRef.onDisconnect().remove();
     }
 
     roomRef.on('value', function(roomSnapshot){
@@ -203,7 +203,7 @@ function initGame() {
 
     
     var startOfDay = moment().startOf('day').valueOf();//unix time format ( ms ) //.format("x");
-    var startNow = moment().valueOf();
+    //var startNow = moment().valueOf();
     
     
     diceRollsRef.orderByChild('createdOn').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function(snapshot) {
@@ -219,7 +219,6 @@ function initGame() {
     //
     usersRef.on("child_removed", function (snapshot) {
         console.log('on.child_removed');
-        var removedUser = snapshot.val();
 
         database.ref('adventures/' + adventureId + '/conflict/' + snapshot.key).remove();
 
@@ -269,7 +268,9 @@ function initGame() {
             var combatEnemy = menuitem.filter(":contains('" + roomConfig.enemyNameSuffix + "')").first();
             var isAdminEnemy = combatEnemy !== undefined && combatEnemy.length > 0 && isAdmin;
 
-            if (userId === currentAdventureMember.displayName || isAdminEnemy) {
+            //if (userId === currentAdventureMember.displayName || isAdminEnemy) {
+            if (userId === currentUser.uid || isAdminEnemy) {
+                
                 isInCombat = true;
             }
 
@@ -284,7 +285,7 @@ function initGame() {
             }
 
             var playground = detectPlayground();
-            showPlayground(userId);
+            showPlayground(conflictData.displayName);
 
             if (conflictData.cards !== undefined) {
 
@@ -294,7 +295,7 @@ function initGame() {
 
                     var cardImg = fightingCards['baksida'];
 
-                    if (userId === currentAdventureMember.displayName || card.isVisible === true || isEnemy === true && isAdmin === true) {
+                    if (userId === currentUser.uid || card.isVisible === true || isEnemy === true && isAdmin === true) {
                         cardImg = fightingCards[card.cardid];
                     }
 
@@ -304,7 +305,7 @@ function initGame() {
                     $(playground).find(".card-played-" + card.sortOrder).attr('data-owner', userId);
 
                     //de/activate buttons 
-                    if (isInCombat && userId === currentAdventureMember.displayName || isEnemy === true && isAdmin === true) {
+                    if (isInCombat && userId === currentUser.uid  || isEnemy === true && isAdmin === true) {
 
                         //remove active on all group buttons
                         $(".btn-select-card-" + card.sortOrder).removeClass('active');
@@ -478,7 +479,7 @@ $(document).ready(function () {
         var isAlreadyActive = $(this).hasClass('active');
 
 
-        var currentFighter = currentAdventureMember.displayName;
+        var currentFighter = currentUser.uid; //currentAdventureMember.displayName;
         if (isAdmin) {
 
             //get the selected enemy89
@@ -946,16 +947,15 @@ $(document).ready(function () {
 
             } else {
                 var isInCombat = $(li).hasClass('incombat');
-                var user = $(li).attr('id');
-
-                firebase.database().ref().child('/adventures/' + adventureId + '/members/' + user).update({ inCombat: isInCombat });
+                var userid = $(li).attr('id');
+                var displayName = $(li).data('displayname');
 
                 if (isInCombat === true) {
                     //add user to combat
-                    firebase.database().ref().child('/adventures/' + adventureId + '/conflict/' + user).set({ "userid": user });
+                    firebase.database().ref().child('/adventures/' + adventureId + '/conflict/' + userid).set({ "displayName": displayName });
                 } else {
                     //remove user from combat
-                    firebase.database().ref().child('/adventures/' + adventureId + '/conflict/' + user).remove();
+                    firebase.database().ref().child('/adventures/' + adventureId + '/conflict/' + userid).remove();
                 }
             }
 
@@ -968,16 +968,16 @@ $(document).ready(function () {
             e.preventDefault();
 
             var enemyName = $("#add-enemy-input").val();
+            var enemyId = generateId();
 
             //add enemy to room
             //
-            database.ref('adventures/' + adventureId + '/members/' + enemyName).set({ "displayName": roomConfig.enemyNamePrefix + enemyName + roomConfig.enemyNameSuffix, "sortOrder": 99, "inCombat": false }).then(() => {
+            database.ref('adventures/' + adventureId + '/members/' + enemyId).set({ "displayName": roomConfig.enemyNamePrefix + enemyName + roomConfig.enemyNameSuffix, "sortOrder": 99, "inCombat": false }).then(() => {
                 $("#add-enemy-input").val('');
             });
         });
 
         $("#btn-random-initiative").click(function (e) {
-
             console.log('btn-random-initiative.click ');
             e.preventDefault();
 
@@ -988,14 +988,10 @@ $(document).ready(function () {
 
                 var users = {};
                 if ($(userList).each(function (index) {
-                    var text = $(this).attr('id');
-
-                    var name = $(this).ignore("a").text();
+                    var userid = $(this).attr('id');
                     var isInCombat = $(this).hasClass('incombat');
-                    users[text] = { "displayName": name, "sortOrder": index, "inCombat": isInCombat }
-                }));
-
-                database.ref('adventures/' + adventureId + '/members/').update(users);
+                    database.ref('adventures/' + adventureId + '/members/' + userid).update({"sortOrder": index, "inCombat": isInCombat});
+                })); 
             }
         });
 
