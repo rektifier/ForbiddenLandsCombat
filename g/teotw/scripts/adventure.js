@@ -10,7 +10,6 @@ var currentCharacterSheet;
 var latestDiceRoll = null;
 
 var diceRolls;
-var auth = new Auth();
 
 // var latestDiceRoll = {
 //     message:'',
@@ -633,8 +632,8 @@ $(document).ready(function () {
     $("#info-alert").hide();
     $(".admingroup").hide();
 
-    // initialize Firebase user auth
-    auth.initFirebaseAuth(authStateObserver);
+    // Listen to auth state changes.
+    firebase.auth().onAuthStateChanged(authStateObserver);
 
     $('#checkbox1').change(function() {
         if(this.checked) {

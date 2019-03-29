@@ -9,7 +9,6 @@ var isInCombat = false;
 var currentCharacterSheet;
 
 var diceRolls;
-var auth = new Auth();
 var latestDiceRoll = null;
 
 var diceToReroll = {
@@ -442,8 +441,11 @@ $(document).ready(function () {
 
     hidePlaygrounds();
 
-    // initialize Firebase user auth
-    auth.initFirebaseAuth(authStateObserver);
+    // Listen to auth state changes.
+    firebase.auth().onAuthStateChanged(authStateObserver);
+
+    // // initialize Firebase user auth
+    // auth.initFirebaseAuth(authStateObserver);
 
     // // user logged in
     // //

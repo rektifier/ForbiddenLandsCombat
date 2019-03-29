@@ -68,11 +68,3 @@ var DiceRolls = function (rollsDbRef,maxNrOfDiceRollsInList,startOfDay, appendMs
     }
 
 }
-
-var Auth = function(){
-    // Initiate firebase auth.
-    this.initFirebaseAuth = function (authStateObserver) {
-        // Listen to auth state changes.
-        firebase.auth().onAuthStateChanged(authStateObserver);
-    };
-};
