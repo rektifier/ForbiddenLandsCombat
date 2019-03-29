@@ -8,6 +8,8 @@ var currentAdventure;
 var currentCharacterSheet;
 
 var latestDiceRoll = null;
+var diceRolls;
+var auth = new Auth();
 // var latestDiceRoll = {
 //     message:'',
 //     owner:'',
@@ -44,7 +46,17 @@ var latestDiceRoll = null;
 //     value:'7'
 // }
 
+function saveDiceRoll(message){
 
+    var owner = currentUser.displayName;
+    if(currentAdventureMember !== undefined)
+    {
+        if(isEmpty(currentAdventureMember.displayName) === false){
+            owner = currentAdventureMember.displayName;
+        }
+    }
+    diceRolls.sendDiceRoll(message,owner);
+}
 
 function addUserToList(key, user) {
 
@@ -76,29 +88,6 @@ function removeUserFromList(username) {
     }
 }
 
-
-
-function sendDiceRoll(text) {
-
-    var owner = currentUser.displayName;
-    if(currentAdventureMember !== undefined)
-    {
-        if(isEmpty(currentAdventureMember.displayName) === false){
-            owner = currentAdventureMember.displayName;
-        }
-    }
-
-    database.ref('/rolls/').push({
-
-        adventureId:adventureId,
-        createdOn: firebase.database.ServerValue.TIMESTAMP,
-        message: text,
-        owner: owner
-
-    }).catch(function (error) {
-        console.error('Error writing new message to Firebase Database', error);
-    });
-}
 
 function createDiceRollsMessage(sender, message, createdOn, isLatest) {
     var messageTemplate = '';
@@ -231,8 +220,13 @@ function printStat(key,stat,eventtype){
 function initGame() {
 
     console.log('init game');
+    var startOfDay = moment().startOf('day').valueOf();
 
-    var diceRollsRef = database.ref('rolls').orderByChild('adventureId').equalTo(adventureId);
+    //var diceRollsRef = database.ref('rolls').orderByChild('adventureId').equalTo(adventureId);
+    var diceRollsRef = database.ref('rolls/' + adventureId);
+    diceRolls = new DiceRolls(diceRollsRef,roomConfig.maxNrOfDiceRollsInList,startOfDay,appendDiceRollsMessage);
+    diceRolls.cleanOldData();
+
     var usersRef = database.ref('/adventures/' + adventureId);
 
     var characterSheetsRef = database.ref('/charactersheets/' + adventureId);
@@ -292,12 +286,12 @@ function initGame() {
     
 
     
-    diceRollsRef.limitToLast(roomConfig.maxNrOfDiceRollsInList).on('child_added', function (snapshot) {
-        console.log('diceRollsRef.orderByChild(createdOn).limitToLast(roomConfig.maxNrOfDiceRollsInList).on(child_added');
-        var mess = snapshot.val();
+    // diceRollsRef.limitToLast(roomConfig.maxNrOfDiceRollsInList).on('child_added', function (snapshot) {
+    //     console.log('diceRollsRef.orderByChild(createdOn).limitToLast(roomConfig.maxNrOfDiceRollsInList).on(child_added');
+    //     var mess = snapshot.val();
 
-        appendDiceRollsMessage(mess.message, mess.owner, mess.createdOn, true);
-    });
+    //     appendDiceRollsMessage(mess.message, mess.owner, mess.createdOn, true);
+    // });
 
 
     //remove user when disconnected
@@ -376,11 +370,7 @@ function initGame() {
 //     });
 // }
 
-// Initiate firebase auth.
-function initFirebaseAuth() {
-    // Listen to auth state changes.
-    firebase.auth().onAuthStateChanged(authStateObserver);
-}
+
 
 function authStateObserver(user) {
 
@@ -443,8 +433,8 @@ $(document).ready(function () {
     }
 
 
-    // initialize Firebase
-    initFirebaseAuth();
+    // initialize Firebase user auth
+    auth.initFirebaseAuth(authStateObserver);
 
 
     //leave the room
@@ -501,7 +491,7 @@ $(document).ready(function () {
         }
 
         if (totalResult.length > 0) {
-            sendDiceRoll(totalResult);
+            saveDiceRoll(totalResult);
         }
 
         //reset all active labels
