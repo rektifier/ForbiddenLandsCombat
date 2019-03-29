@@ -96,18 +96,18 @@ function removeUserFromList(username) {
 //     });
 // }
 
-function sendDiceRoll(text){
+// function sendDiceRoll(text){
 
-    database.ref('dicerolls/' + currentRoomName).push({
+//     database.ref('dicerolls/' + currentRoomName).push({
 
-        createdOn: firebase.database.ServerValue.TIMESTAMP,
-        message: text,
-        sender:currentUser.displayName
+//         createdOn: firebase.database.ServerValue.TIMESTAMP,
+//         message: text,
+//         sender:currentUser.displayName
 
-    }).catch(function(error){
-        console.error('Error writing new message to Firebase Database', error);
-    });
-}
+//     }).catch(function(error){
+//         console.error('Error writing new message to Firebase Database', error);
+//     });
+// }
 
 // function createChatMessage(sender,message,createdOn){
 //     var messageTemplate = '<li class="list-group-item-light"><div class="chat-body1"><p><small>'+sender+':<br>'+message+'<i><br>('+createdOn+')</i></small></p></div></li>';

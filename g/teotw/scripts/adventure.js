@@ -3,11 +3,15 @@ var currentUser;
 var currentAdventureMember;
 var adventureId;
 var currentAdventure;
-// var adminAction = '';
-// var isInCombat = false;
+
+
 var currentCharacterSheet;
 
 var latestDiceRoll = null;
+
+var diceRolls;
+var auth = new Auth();
+
 // var latestDiceRoll = {
 //     message:'',
 //     owner:'',
@@ -44,7 +48,17 @@ var latestDiceRoll = null;
 //     value:'7'
 // }
 
+function saveDiceRoll(message){
 
+    var owner = currentUser.displayName;
+    if(currentAdventureMember !== undefined)
+    {
+        if(isEmpty(currentAdventureMember.displayName) === false){
+            owner = currentAdventureMember.displayName;
+        }
+    }
+    diceRolls.sendDiceRoll(message,owner);
+}
 
 function addUserToList(key, user) {
 
@@ -79,29 +93,6 @@ function removeUserFromList(username) {
     if (user !== 'undefined' && user !== null && user.length > 0) {
         $(user).remove();
     }
-}
-
-
-
-function sendDiceRoll(text) {
-
-    var owner = currentUser.displayName;
-    if(currentAdventureMember !== undefined)
-    {
-        if(isEmpty(currentAdventureMember.displayName) === false){
-            owner = currentAdventureMember.displayName;
-        }
-    }
-
-    database.ref('/rolls/' + adventureId).push({
-        
-        createdOn: firebase.database.ServerValue.TIMESTAMP,
-        message: text,
-        owner: owner
-
-    }).catch(function (error) {
-        console.error('Error writing new message to Firebase Database', error);
-    });
 }
 
 
@@ -280,10 +271,14 @@ function printStat(key,stat,eventtype){
 function initGame() {
 
     console.log('init game');
-
-    var diceRollsRef = database.ref('rolls/' + adventureId);//.orderByChild('createdOn').equalTo(adventureId);
-    var usersRef = database.ref('/adventures/' + adventureId + '/members/');
     var startOfDay = moment().startOf('day').valueOf();
+
+    var diceRollsRef = database.ref('rolls/' + adventureId);
+    diceRolls = new DiceRolls(diceRollsRef,roomConfig.maxNrOfDiceRollsInList,startOfDay,appendDiceRollsMessage);
+
+    var usersRef = database.ref('/adventures/' + adventureId + '/members/');
+    
+
 
     if (isRoomAdmin === false) {        
 
@@ -357,12 +352,15 @@ function initGame() {
         
     }
 
-    diceRollsRef.orderByChild('createdOn').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function (snapshot) {
-        console.log('diceRollsRef.orderByChild(createdOn).limitToLast(roomConfig.maxNrOfDiceRollsInList).on(child_added');
-        var mess = snapshot.val();
+    // diceRollsRef.orderByChild('c').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function (snapshot) {
+    //     console.log('diceRollsRef.orderByChild(createdOn).limitToLast(roomConfig.maxNrOfDiceRollsInList).on(child_added');
+    //     var mess = snapshot.val();
 
-        appendDiceRollsMessage(mess.message, mess.owner, mess.createdOn, true);
-    });
+    //     var decompmessage = LZString.decompressFromUTF16(mess.m);
+    //     var decompowner = LZString.decompressFromUTF16(mess.o);
+
+    //     appendDiceRollsMessage(decompmessage,decompowner,mess.c,true);
+    // });
 
 
     //remove user when disconnected
@@ -425,29 +423,11 @@ function initGame() {
 
 }
 
-
-function cleanDBData() {
-    console.log('Clean old db data.')
-
-    //clear old adventure data 24 hours ago
-    //
-    if(isEmpty(adventureId) !== false){
-        var cutOff = moment().subtract(24, 'hours').valueOf();
-        database.ref('/rolls/' + adventureId).orderByChild('createdOn').endAt(cutOff).once("value").then(function (snapshot) {
-            if (snapshot.exists()) {
-                console.log('we have old dice rolls. removing..');
-                snapshot.ref.remove();
-            }
-        });
-    }
-
-}
-
-// Initiate firebase auth.
-function initFirebaseAuth() {
-    // Listen to auth state changes.
-    firebase.auth().onAuthStateChanged(authStateObserver);
-}
+// // Initiate firebase auth.
+// function initFirebaseAuth() {
+//     // Listen to auth state changes.
+//     firebase.auth().onAuthStateChanged(authStateObserver);
+// }
 
 function authStateObserver(user) {
 
@@ -469,8 +449,6 @@ function authStateObserver(user) {
                 $(".adventure_owner").text(currentAdventure.owner);
                 $(".adventure_title").text(currentAdventure.title);
                 $(".adventure_game").text(currentAdventure.game);
-             
-
 
 
                 //is the logged in user the room admin?
@@ -656,8 +634,8 @@ $(document).ready(function () {
     $("#info-alert").hide();
     $(".admingroup").hide();
 
-    // initialize Firebase
-    initFirebaseAuth();
+    // initialize Firebase user auth
+    auth.initFirebaseAuth(authStateObserver);
 
     $('#checkbox1').change(function() {
         if(this.checked) {
@@ -727,7 +705,7 @@ $(document).ready(function () {
         }
 
         if (totalResult.length > 0) {
-            sendDiceRoll(totalResult);
+            saveDiceRoll(totalResult);
         }
 
         //reset all active labels

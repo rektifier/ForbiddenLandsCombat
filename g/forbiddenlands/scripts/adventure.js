@@ -8,8 +8,9 @@ var isInCombat = false;
 
 var currentCharacterSheet;
 
+var diceRolls;
+var auth = new Auth();
 var latestDiceRoll = null;
-//var diceToReroll = null;
 
 var diceToReroll = {
     nrOfHits:0,
@@ -24,7 +25,17 @@ var diceToReroll = {
 }
 
 
+function saveDiceRoll(message){
 
+    var owner = currentUser.displayName;
+    if(currentAdventureMember !== undefined)
+    {
+        if(isEmpty(currentAdventureMember.displayName) === false){
+            owner = currentAdventureMember.displayName;
+        }
+    }
+    diceRolls.sendDiceRoll(message,owner);
+}
 
 function updateDbWithUserListOrder() {
     console.log('updateDbWithUserListOrder()');
@@ -86,34 +97,7 @@ function removeUserFromList(username) {
 
 
 
-function sendDiceRoll(text){
 
-    var owner = currentUser.displayName;
-    if(currentAdventureMember !== undefined)
-    {
-        if(isEmpty(currentAdventureMember.displayName) === false){
-            owner = currentAdventureMember.displayName;
-        }
-    }
-
-    // console.log(text);
-    // console.log(owner);
-
-    var compressed = LZString.compressToUTF16(text);
-    var coOwner = LZString.compressToUTF16(owner);
-
-    // console.log(compressed);
-    // console.log(coOwner);
-
-
-    database.ref('rolls/' + adventureId).push({
-        c: firebase.database.ServerValue.TIMESTAMP,
-        m: compressed,
-        o: coOwner
-    }).catch(function(error){
-        console.error('Error writing new message to Firebase Database', error);
-    });
-}
 
 function replaceHitAndMissWithImages(str){
 
@@ -158,33 +142,22 @@ function appendDiceRollsMessage(message,owner,createdOn,isLatest){
     $('#dicerolls-messages').prepend(result);  
 }
 
-function cleanDBData() {
-    console.log('Clean old db data.')
 
-    //clear old adventure data 24 hours ago
-    //
-    if(isEmpty(adventureId) !== false){
-        var cutOff = moment().subtract(24, 'hours').valueOf();
-        database.ref('/rolls/' + adventureId).orderByChild('c').endAt(cutOff).once("value").then(function (snapshot) {
-            if (snapshot.exists()) {
-                console.log('we have old dice rolls. removing..');
-                snapshot.ref.remove();
-            }
-        });
-    }
-
-}
 
 function initGame() {
 
     console.log('init game');
+    var startOfDay = moment().startOf('day').valueOf();
 
     var diceRollsRef = database.ref('rolls/' + adventureId);
-    var messageRef = database.ref('messages/' + adventureId);
+    diceRolls = new DiceRolls(diceRollsRef,roomConfig.maxNrOfDiceRollsInList,startOfDay,appendDiceRollsMessage);
+
     var usersRef = database.ref('adventures/' + adventureId + '/members/');
     var conflictRef = database.ref('adventures/' + adventureId + '/conflict/');
 
     var roomRef = database.ref('adventures/' + adventureId + '/info/')
+
+    
 
     if(isAdmin === false)
     {
@@ -227,15 +200,15 @@ function initGame() {
     //var startNow = moment().valueOf();
     
     
-    diceRollsRef.orderByChild('c').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function(snapshot) {
-        console.log('diceRollsRef.orderByChild(createdOn).startAt(startNow).on(child_added');
-        var mess = snapshot.val();
+    // diceRollsRef.orderByChild('c').limitToLast(roomConfig.maxNrOfDiceRollsInList).startAt(startOfDay).on('child_added', function(snapshot) {
+    //     console.log('diceRollsRef.orderByChild(createdOn).startAt(startNow).on(child_added');
+    //     var mess = snapshot.val();
 
-        var decompmessage = LZString.decompressFromUTF16(mess.m);
-        var decompowner = LZString.decompressFromUTF16(mess.o);
+    //     var decompmessage = LZString.decompressFromUTF16(mess.m);
+    //     var decompowner = LZString.decompressFromUTF16(mess.o);
 
-        appendDiceRollsMessage(decompmessage,decompowner,mess.c,true);
-    });
+    //     appendDiceRollsMessage(decompmessage,decompowner,mess.c,true);
+    // });
 
 
     //remove user when disconnected
@@ -349,6 +322,59 @@ function initGame() {
 
 }
 
+function authStateObserver(user) {
+    if (user) {
+        currentuser = user;
+
+        if(user.isAnonymous === true){
+            redirectToLogin('Please register to play TEOTW.');
+        };
+
+        //load current room
+        //
+        database.ref('adventures/' + adventureId).once("value").then(function (snapshot) {
+
+            if (snapshot.exists()) {
+
+                currentAdventure = snapshot.val();
+                
+                var adventureDescription = currentAdventure.description ? currentAdventure.description : '';
+
+                $("#roomNameHeader").html('<strong>' + currentAdventure.title + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+ adventureDescription +'</small></p><footer class="blockquote-footer"a><small>' + currentAdventure.owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
+
+                //load current user
+                //
+                currentUser = firebase.auth().currentUser;
+                if (currentUser != null) {
+
+                    $("#navbarDropdown").text(currentUser.displayName);
+                    //is the logged in user the room admin?
+                    //
+                    if (currentAdventure.ownerId === currentUser.uid) {
+                        isAdmin = true;
+
+                        $("#settingsRoomOwner").val(currentAdventure.owner);
+                        $("#settingsRoomName").val(currentAdventure.title);
+                        $("#settingsRoomTitle").val(currentAdventure.description);
+                        
+                        activateAdminFeatures();
+                    }
+
+                    initGame();
+                } else {
+                    redirectToLogin();
+                }
+
+            } else {
+                redirectToLogin();
+            }
+        });
+    } else {
+        redirectToLogin();
+        window.user = null;
+    }
+}
+
 function showPlayground(owner) {
 
     var currentPlayground = detectPlayground(owner);
@@ -413,61 +439,64 @@ $(document).ready(function () {
 
     hidePlaygrounds();
 
-    // user logged in
-    //
-    firebase.auth().onAuthStateChanged(function (user) {
+    // initialize Firebase user auth
+    auth.initFirebaseAuth(authStateObserver);
 
-        if (user) {
-            currentuser = user;
+    // // user logged in
+    // //
+    // firebase.auth().onAuthStateChanged(function (user) {
 
-            if(user.isAnonymous === true){
-                redirectToLogin('Please register to play TEOTW.');
-            };
+    //     if (user) {
+    //         currentuser = user;
 
-            //load current room
-            //
-            database.ref('adventures/' + adventureId).once("value").then(function (snapshot) {
+    //         if(user.isAnonymous === true){
+    //             redirectToLogin('Please register to play TEOTW.');
+    //         };
 
-                if (snapshot.exists()) {
+    //         //load current room
+    //         //
+    //         database.ref('adventures/' + adventureId).once("value").then(function (snapshot) {
 
-                    currentAdventure = snapshot.val();
+    //             if (snapshot.exists()) {
+
+    //                 currentAdventure = snapshot.val();
                     
-                    var adventureDescription = currentAdventure.description ? currentAdventure.description : '';
+    //                 var adventureDescription = currentAdventure.description ? currentAdventure.description : '';
 
-                    $("#roomNameHeader").html('<strong>' + currentAdventure.title + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+ adventureDescription +'</small></p><footer class="blockquote-footer"a><small>' + currentAdventure.owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
+    //                 $("#roomNameHeader").html('<strong>' + currentAdventure.title + '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+ adventureDescription +'</small></p><footer class="blockquote-footer"a><small>' + currentAdventure.owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
 
-                    //load current user
-                    //
-                    currentUser = firebase.auth().currentUser;
-                    if (currentUser != null) {
+    //                 //load current user
+    //                 //
+    //                 currentUser = firebase.auth().currentUser;
+    //                 if (currentUser != null) {
 
-                        $("#navbarDropdown").text(currentUser.displayName);
-                        //is the logged in user the room admin?
-                        //
-                        if (currentAdventure.ownerId === currentUser.uid) {
-                            isAdmin = true;
+    //                     $("#navbarDropdown").text(currentUser.displayName);
+    //                     //is the logged in user the room admin?
+    //                     //
+    //                     if (currentAdventure.ownerId === currentUser.uid) {
+    //                         isAdmin = true;
 
-                            $("#settingsRoomOwner").val(currentAdventure.owner);
-                            $("#settingsRoomName").val(currentAdventure.title);
-                            $("#settingsRoomTitle").val(currentAdventure.description);
+    //                         $("#settingsRoomOwner").val(currentAdventure.owner);
+    //                         $("#settingsRoomName").val(currentAdventure.title);
+    //                         $("#settingsRoomTitle").val(currentAdventure.description);
                             
-                            activateAdminFeatures();
-                        }
+    //                         activateAdminFeatures();
+    //                     }
 
-                        initGame();
-                    } else {
-                        redirectToLogin();
-                    }
+    //                     initGame();
+    //                 } else {
+    //                     redirectToLogin();
+    //                 }
 
-                } else {
-                    redirectToLogin();
-                }
-            });
-        } else {
-            redirectToLogin();
-            window.user = null;
-        }
-    });
+    //             } else {
+    //                 redirectToLogin();
+    //             }
+    //         });
+    //     } else {
+    //         redirectToLogin();
+    //         window.user = null;
+    //     }
+    // });
 
     //leave the room
     //
@@ -563,7 +592,7 @@ $(document).ready(function () {
         }
         var result = 'Stolthet:[' + diceRoll.total+ '] ' + hitResult;
 
-        sendDiceRoll(result);
+        saveDiceRoll(result);
     });
 
     $("#btn-dice-reroll").click(function (e) {
@@ -573,7 +602,7 @@ $(document).ready(function () {
 
         var results = getTheRollResult(diceToReroll.ge,diceToReroll.fv,diceToReroll.va,diceToReroll.might,diceToReroll.epic,diceToReroll.legendary,diceToReroll.modifier);
         if(results.length > 0){
-            sendDiceRoll(results);
+            saveDiceRoll(results);
         } 
     });
 
@@ -788,7 +817,7 @@ $(document).ready(function () {
 
         var results = getTheRollResult(nrOfDiceGE,nrOfDiceFV,nrOfDiceVA,nrOfMight,nrOfEpic,nrOfLegendary,modifier);
         if(results.length > 0){
-            sendDiceRoll(results);
+            saveDiceRoll(results);
         } 
        
     });    
@@ -807,7 +836,7 @@ $(document).ready(function () {
             result = 'Resurs: ' + diceRoll.output + ' - Ingen effekt';
         }
 
-        sendDiceRoll(result);        
+        saveDiceRoll(result);        
     });    
     
 

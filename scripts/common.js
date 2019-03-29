@@ -20,25 +20,7 @@ function redirectToLogin(message) {
     window.location.href = "index.html";
 }
 
-var showAlert = function () { }
-showAlert.displayInfo = function (message) {
-    $("#alerttext").text(message);
-    $("#info-alert").slideDown('slow').delay(2000).slideUp('slow')
-}
 
-showAlert.setInfo = function (message) {
-
-    if (message !== latestMessage) {
-        latestMessage = message;
-
-        var newMessageRef = database.ref('rooms/' + currentRoom + '/messages/').push();
-        newMessageRef.set({
-            "sender": "robot",
-            "message": message,
-            "sentOn": Date.toString()
-        });
-    }
-}
 
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -80,6 +62,5 @@ var generateId = function () {
     // after the decimal.
     return '_' + Math.random().toString(36).substr(2, 9);
   };
-  
 
 //logger.disableLogger();
