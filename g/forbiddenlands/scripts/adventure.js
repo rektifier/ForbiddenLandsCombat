@@ -159,7 +159,10 @@ function initGame() {
 
     
 
-    if(isAdmin === false)
+    if(isAdmin === true){
+        diceRolls.cleanOldData();
+
+    }else
     {
         var currentMemberRef = database.ref('adventures/' + adventureId + '/members/' + currentUser.uid);
         

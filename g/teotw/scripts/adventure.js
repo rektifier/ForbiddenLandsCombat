@@ -275,6 +275,7 @@ function initGame() {
 
     var diceRollsRef = database.ref('rolls/' + adventureId);
     diceRolls = new DiceRolls(diceRollsRef,roomConfig.maxNrOfDiceRollsInList,startOfDay,appendDiceRollsMessage);
+    diceRolls.cleanOldData();
 
     var usersRef = database.ref('/adventures/' + adventureId + '/members/');
     
@@ -462,8 +463,6 @@ function authStateObserver(user) {
 
                     activateAdminFeatures();
 
-                    // rensa gammal databas-info
-                    cleanDBData();
                 }
 
                 initGame();
