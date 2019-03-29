@@ -421,7 +421,245 @@ function validateSelectedCards(firstCard,secondCard){
     return response;
 }
 
+    //admin fearur41
+    //
+    function activateAdminFeatures() {
 
+        $('#settings-button').show();
+        $(".admingroup").show();
+        $(".btn-select-card").prop('disabled', false);
+        $("#add-enemy-button").prop("disabled", true);
+
+        $('#add-enemy-input').keyup(validateAddEnemyButton);
+    
+        function validateAddEnemyButton(){
+         
+            if ($('#add-enemy-input').val().length > 0) {
+                $("#add-enemy-button").prop("disabled", false);
+            }
+            else {
+                $("#add-enemy-button").prop("disabled", true);
+            }
+        }
+
+       
+
+        $("#userslist").sortable({
+            delay: 150,
+            axis: "y",
+            opacity: 0.8,
+            connectWith: "ul",
+            sort: function () {
+                if ($(this).hasClass("cancel")) {
+                    $(this).sortable("cancel");
+                }
+            },
+            update: function (event, ui) {
+                console.log('userslist.sortable update event ');
+                if (adminAction === '') {
+                    updateDbWithUserListOrder();
+                }
+            },
+            stop: function (event, ui) {
+                console.log('userslist.sortable stop event ');
+                if (adminAction === 'killFighter') {
+                    $(this).sortable("cancel");
+
+                    var userToKick = ui.item[0].id
+
+                    database.ref('adventures/' + adventureId + '/members/' + userToKick).remove();
+                    adminAction = '';
+                }
+
+            },
+            receive: function (event, ui) {
+                console.log('userslist.sortable stop event ');
+            },
+            remove: function (event, ui) {
+                console.log('userslist.sortable remove event ');
+            }
+
+        }).disableSelection();
+
+        $(".list-group-item").draggable({
+            helper: 'clone',
+            revert: 'invalid',
+            connectToSortable: "#userslist"
+        }).disableSelection();
+
+        $(".list-group-item-action").droppable({
+            classes: {
+                "ui-droppable-active": "ui-state-highlight",
+                "ui-droppable-hover": "bg-danger"
+            },
+            drop: function (event, ui) {
+                console.log('kickActionDroppable.droppable drop event ');
+                adminAction = 'killFighter';
+            }
+        });
+
+
+        // ############## click events ##############
+        //
+        function showPlayedCards(cardOrder,adventureId){
+
+            $(".card-played-" + cardOrder).each(function(index){
+
+                var cardOwner = $(this).data('owner');
+                var cardId = $(this).data('cardid');
+
+                if(cardOwner !== undefined && cardId !== undefined)
+                {
+                    firebase.database().ref().child('/adventures/' + adventureId + '/conflict/' + cardOwner+"/cards/"+cardId).update({ isVisible: true });
+                }
+            });  
+        }
+
+        $("#btn-start-fight-1").click(function (e) {
+            console.log('brt-fight!');
+
+            var nr1CardsPlayed = $(".card-played-1:visible").length;
+            var nr2CardsPlayed = $(".card-played-2:visible").length;
+
+            //is all the cards played?
+            if(nr1CardsPlayed === 2 && nr2CardsPlayed === 2){
+                showPlayedCards(1,adventureId)
+            }
+        });
+
+        $("#btn-start-fight-2").click(function (e) {
+            console.log('brt-fight!');
+
+            var nr1CardsPlayed = $(".card-played-1:visible").length;
+            var nr2CardsPlayed = $(".card-played-2:visible").length;
+
+            //is all the cards played?
+            if(nr1CardsPlayed === 2 && nr2CardsPlayed === 2){
+                showPlayedCards(2,adventureId)
+            }
+        });
+
+        //fight button in users list
+        //
+        $("#userslist").on('click', 'a', function () {
+
+            console.log('click.btn-user-fight');
+
+            var li = $(this).parent();
+
+            $(li).toggleClass('incombat');
+
+            var nrOfPlayersInFight = $("#userslist .incombat").length;
+            if (nrOfPlayersInFight > roomConfig.maxNrOfPlayersInFight) {
+                //toggle back the combat class
+                //
+                $(li).toggleClass('incombat');
+
+            } else {
+                var isInCombat = $(li).hasClass('incombat');
+                var userid = $(li).attr('id');
+                var displayName = $(li).data('displayname');
+
+                if (isInCombat === true) {
+                    //add user to combat
+                    firebase.database().ref().child('/adventures/' + adventureId + '/conflict/' + userid).set({ "displayName": displayName });
+                } else {
+                    //remove user from combat
+                    firebase.database().ref().child('/adventures/' + adventureId + '/conflict/' + userid).remove();
+                }
+            }
+
+            console.log(li);
+        });
+
+        $("#add-enemy-button").click(function (e) {
+
+            console.log('add-enemy-button.click ');
+            e.preventDefault();
+
+            var enemyName = $("#add-enemy-input").val();
+            var enemyId = generateId();
+
+            //add enemy to room
+            //
+            database.ref('adventures/' + adventureId + '/members/' + enemyId).set({ "displayName": roomConfig.enemyNamePrefix + enemyName + roomConfig.enemyNameSuffix, "sortOrder": 99, "inCombat": false }).then(() => {
+                $("#add-enemy-input").val('');
+            });
+        });
+
+        $("#btn-random-initiative").click(function (e) {
+            console.log('btn-random-initiative.click ');
+            e.preventDefault();
+
+            var userList = $("#userslist li");
+
+            if ($(userList).length > 1) {
+                shuffleArray(userList);
+
+                var users = {};
+                if ($(userList).each(function (index) {
+                    var userid = $(this).attr('id');
+                    var isInCombat = $(this).hasClass('incombat');
+                    database.ref('adventures/' + adventureId + '/members/' + userid).update({"sortOrder": index, "inCombat": isInCombat});
+                })); 
+            }
+        });
+
+        //room settings
+        //
+        $("#btn-settings-save").click(function (e) {
+            console.log('btn-settings-save.click');
+            e.preventDefault();
+
+            var owner = $("#settingsRoomOwner").val();
+            var title = $("#settingsRoomName").val();
+            var description = $("#settingsRoomTitle").val();
+
+            database.ref('adventures/' + adventureId).update({ "owner": owner, "title": title, "description":description});
+
+            $("#roomNameHeader").html('<strong>' + title+ '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+description+'</small></p><footer class="blockquote-footer"a><small>' + owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
+
+        });
+
+        $("#nextQuarterDay").click(function (e) {
+            console.log('nextQuarterDay.click');
+            e.preventDefault();
+            
+            var day = $("#nrOfDays").text();
+            var quarterDay = $(".quarterDay .active").data('quarterdayid');
+
+            if(quarterDay === 0){
+                if(day > 0){
+                    day = day-1;
+                    quarterDay = 3;                    
+                }
+            }else{
+                quarterDay--;
+            }
+
+            database.ref('adventures/' + adventureId + '/info').update({ "quarterDay": quarterDay, "day":day});
+
+        });
+
+        $("#previousQuarterDay").click(function (e) {
+            console.log('previousQuarterDay.click');
+            e.preventDefault();
+
+            //get current  day and quarterday
+            var day = $("#nrOfDays").text();
+            var quarterDay = $(".quarterDay .active").data('quarterdayid');
+
+            if(quarterDay === 3){
+                day++;
+                quarterDay = 0;                    
+            }else{
+                quarterDay++;
+            }
+            database.ref('adventures/' + adventureId + '/info').update({ "quarterDay": quarterDay, "day":day});
+        });
+
+
+    }
 
 $(document).ready(function () {
     
@@ -846,244 +1084,6 @@ $(document).ready(function () {
     
 
 
-    //admin fearur41
-    //
-    function activateAdminFeatures() {
 
-        $('#settings-button').show();
-        $(".admingroup").show();
-        $(".btn-select-card").prop('disabled', false);
-        $("#add-enemy-button").prop("disabled", true);
-
-        $('#add-enemy-input').keyup(validateAddEnemyButton);
-    
-        function validateAddEnemyButton(){
-         
-            if ($('#add-enemy-input').val().length > 0) {
-                $("#add-enemy-button").prop("disabled", false);
-            }
-            else {
-                $("#add-enemy-button").prop("disabled", true);
-            }
-        }
-
-       
-
-        $("#userslist").sortable({
-            delay: 150,
-            axis: "y",
-            opacity: 0.8,
-            connectWith: "ul",
-            sort: function () {
-                if ($(this).hasClass("cancel")) {
-                    $(this).sortable("cancel");
-                }
-            },
-            update: function (event, ui) {
-                console.log('userslist.sortable update event ');
-                if (adminAction === '') {
-                    updateDbWithUserListOrder();
-                }
-            },
-            stop: function (event, ui) {
-                console.log('userslist.sortable stop event ');
-                if (adminAction === 'killFighter') {
-                    $(this).sortable("cancel");
-
-                    var userToKick = ui.item[0].id
-
-                    database.ref('adventures/' + adventureId + '/members/' + userToKick).remove();
-                    adminAction = '';
-                }
-
-            },
-            receive: function (event, ui) {
-                console.log('userslist.sortable stop event ');
-            },
-            remove: function (event, ui) {
-                console.log('userslist.sortable remove event ');
-            }
-
-        }).disableSelection();
-
-        $(".list-group-item").draggable({
-            helper: 'clone',
-            revert: 'invalid',
-            connectToSortable: "#userslist"
-        }).disableSelection();
-
-        $(".list-group-item-action").droppable({
-            classes: {
-                "ui-droppable-active": "ui-state-highlight",
-                "ui-droppable-hover": "bg-danger"
-            },
-            drop: function (event, ui) {
-                console.log('kickActionDroppable.droppable drop event ');
-                adminAction = 'killFighter';
-            }
-        });
-
-
-        // ############## click events ##############
-        //
-        function showPlayedCards(cardOrder,adventureId){
-
-            $(".card-played-" + cardOrder).each(function(index){
-
-                var cardOwner = $(this).data('owner');
-                var cardId = $(this).data('cardid');
-
-                if(cardOwner !== undefined && cardId !== undefined)
-                {
-                    firebase.database().ref().child('/adventures/' + adventureId + '/conflict/' + cardOwner+"/cards/"+cardId).update({ isVisible: true });
-                }
-            });  
-        }
-
-        $("#btn-start-fight-1").click(function (e) {
-            console.log('brt-fight!');
-
-            var nr1CardsPlayed = $(".card-played-1:visible").length;
-            var nr2CardsPlayed = $(".card-played-2:visible").length;
-
-            //is all the cards played?
-            if(nr1CardsPlayed === 2 && nr2CardsPlayed === 2){
-                showPlayedCards(1,adventureId)
-            }
-        });
-
-        $("#btn-start-fight-2").click(function (e) {
-            console.log('brt-fight!');
-
-            var nr1CardsPlayed = $(".card-played-1:visible").length;
-            var nr2CardsPlayed = $(".card-played-2:visible").length;
-
-            //is all the cards played?
-            if(nr1CardsPlayed === 2 && nr2CardsPlayed === 2){
-                showPlayedCards(2,adventureId)
-            }
-        });
-
-        //fight button in users list
-        //
-        $("#userslist").on('click', 'a', function () {
-
-            console.log('click.btn-user-fight');
-
-            var li = $(this).parent();
-
-            $(li).toggleClass('incombat');
-
-            var nrOfPlayersInFight = $("#userslist .incombat").length;
-            if (nrOfPlayersInFight > roomConfig.maxNrOfPlayersInFight) {
-                //toggle back the combat class
-                //
-                $(li).toggleClass('incombat');
-
-            } else {
-                var isInCombat = $(li).hasClass('incombat');
-                var userid = $(li).attr('id');
-                var displayName = $(li).data('displayname');
-
-                if (isInCombat === true) {
-                    //add user to combat
-                    firebase.database().ref().child('/adventures/' + adventureId + '/conflict/' + userid).set({ "displayName": displayName });
-                } else {
-                    //remove user from combat
-                    firebase.database().ref().child('/adventures/' + adventureId + '/conflict/' + userid).remove();
-                }
-            }
-
-            console.log(li);
-        });
-
-        $("#add-enemy-button").click(function (e) {
-
-            console.log('add-enemy-button.click ');
-            e.preventDefault();
-
-            var enemyName = $("#add-enemy-input").val();
-            var enemyId = generateId();
-
-            //add enemy to room
-            //
-            database.ref('adventures/' + adventureId + '/members/' + enemyId).set({ "displayName": roomConfig.enemyNamePrefix + enemyName + roomConfig.enemyNameSuffix, "sortOrder": 99, "inCombat": false }).then(() => {
-                $("#add-enemy-input").val('');
-            });
-        });
-
-        $("#btn-random-initiative").click(function (e) {
-            console.log('btn-random-initiative.click ');
-            e.preventDefault();
-
-            var userList = $("#userslist li");
-
-            if ($(userList).length > 1) {
-                shuffleArray(userList);
-
-                var users = {};
-                if ($(userList).each(function (index) {
-                    var userid = $(this).attr('id');
-                    var isInCombat = $(this).hasClass('incombat');
-                    database.ref('adventures/' + adventureId + '/members/' + userid).update({"sortOrder": index, "inCombat": isInCombat});
-                })); 
-            }
-        });
-
-        //room settings
-        //
-        $("#btn-settings-save").click(function (e) {
-            console.log('btn-settings-save.click');
-            e.preventDefault();
-
-            var owner = $("#settingsRoomOwner").val();
-            var title = $("#settingsRoomName").val();
-            var description = $("#settingsRoomTitle").val();
-
-            database.ref('adventures/' + adventureId).update({ "owner": owner, "title": title, "description":description});
-
-            $("#roomNameHeader").html('<strong>' + title+ '</strong><blockquote class="blockquote"><p class="mb-0" id="roomTitle"><small>'+description+'</small></p><footer class="blockquote-footer"a><small>' + owner + ' in <cite title="Source Title">Svärdets Sång</cite></small></footer></blockquote>');
-
-        });
-
-        $("#nextQuarterDay").click(function (e) {
-            console.log('nextQuarterDay.click');
-            e.preventDefault();
-            
-            var day = $("#nrOfDays").text();
-            var quarterDay = $(".quarterDay .active").data('quarterdayid');
-
-            if(quarterDay === 0){
-                if(day > 0){
-                    day = day-1;
-                    quarterDay = 3;                    
-                }
-            }else{
-                quarterDay--;
-            }
-
-            database.ref('adventures/' + adventureId + '/info').update({ "quarterDay": quarterDay, "day":day});
-
-        });
-
-        $("#previousQuarterDay").click(function (e) {
-            console.log('previousQuarterDay.click');
-            e.preventDefault();
-
-            //get current  day and quarterday
-            var day = $("#nrOfDays").text();
-            var quarterDay = $(".quarterDay .active").data('quarterdayid');
-
-            if(quarterDay === 3){
-                day++;
-                quarterDay = 0;                    
-            }else{
-                quarterDay++;
-            }
-            database.ref('adventures/' + adventureId + '/info').update({ "quarterDay": quarterDay, "day":day});
-        });
-
-
-    }
 
 });

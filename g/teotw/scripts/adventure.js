@@ -477,69 +477,6 @@ function authStateObserver(user) {
 
 }
 
-//admin fearur41
-//
-function activateAdminFeatures() {
-
-    $(".admingroup").show();
-    $("#add-enemy-button").prop("disabled", true);
-
-    $('#add-enemy-input').keyup(validateAddEnemyButton);
-
-    function validateAddEnemyButton() {
-
-        if ($('#add-enemy-input').val().length > 0) {
-            $("#add-enemy-button").prop("disabled", false);
-        }
-        else {
-            $("#add-enemy-button").prop("disabled", true);
-        }
-    }
-
-    $("#userslist").sortable({
-        delay: 150,
-        axis: "y",
-        opacity: 0.8,
-        connectWith: "ul",
-        sort: function () {
-            if ($(this).hasClass("cancel")) {
-                $(this).sortable("cancel");
-            }
-        },
-        update: function (event, ui) {
-            console.log('userslist.sortable update event ');
-            // if (adminAction === '') {
-            //     updateDbWithUserListOrder();
-            // }
-        },
-        // stop: function (event, ui) {
-        //     console.log('userslist.sortable stop event ');
-        //     if (adminAction === 'killFighter') {
-        //         $(this).sortable("cancel");
-
-
-        //     }
-
-        // },
-        receive: function (event, ui) {
-            console.log('userslist.sortable stop event ');
-        },
-        remove: function (event, ui) {
-            console.log('userslist.sortable remove event ');
-        }
-
-    }).disableSelection();
-
-    $(".list-group-item").draggable({
-        helper: 'clone',
-        revert: 'invalid',
-        connectToSortable: "#userslist"
-    }).disableSelection();
-
-
-
-}
-
 function setCharacterSheetValue(category,type,name,value){
 
     for (var item in currentCharacterSheet) {
@@ -618,6 +555,69 @@ function updateCharacterSheet(){
     });
 
     database.ref('/charactersheets/' + adventureId + '/' + currentUser.uid).update(updates);
+}
+
+//admin fearur41
+//
+function activateAdminFeatures() {
+
+    $(".admingroup").show();
+    $("#add-enemy-button").prop("disabled", true);
+
+    $('#add-enemy-input').keyup(validateAddEnemyButton);
+
+    function validateAddEnemyButton() {
+
+        if ($('#add-enemy-input').val().length > 0) {
+            $("#add-enemy-button").prop("disabled", false);
+        }
+        else {
+            $("#add-enemy-button").prop("disabled", true);
+        }
+    }
+
+    $("#userslist").sortable({
+        delay: 150,
+        axis: "y",
+        opacity: 0.8,
+        connectWith: "ul",
+        sort: function () {
+            if ($(this).hasClass("cancel")) {
+                $(this).sortable("cancel");
+            }
+        },
+        update: function (event, ui) {
+            console.log('userslist.sortable update event ');
+            // if (adminAction === '') {
+            //     updateDbWithUserListOrder();
+            // }
+        },
+        // stop: function (event, ui) {
+        //     console.log('userslist.sortable stop event ');
+        //     if (adminAction === 'killFighter') {
+        //         $(this).sortable("cancel");
+
+
+        //     }
+
+        // },
+        receive: function (event, ui) {
+            console.log('userslist.sortable stop event ');
+        },
+        remove: function (event, ui) {
+            console.log('userslist.sortable remove event ');
+        }
+
+    }).disableSelection();
+
+    $(".list-group-item").draggable({
+        helper: 'clone',
+        revert: 'invalid',
+        connectToSortable: "#userslist"
+    }).disableSelection();
+
+
+
 }
 
 $(document).ready(function () {
