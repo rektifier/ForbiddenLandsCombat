@@ -960,12 +960,15 @@ $(document).ready(function () {
                 hit += artefactDiceSuccess[result-1];
             });
 
-            for (let index = 0; index < hit; index++) {
-                diceToReroll.nrOfHits++;
-                hitResult += '$H';//'<img src="images/dice_hit.png" height="25">';                
-            }
+            if(hit > 0)
+            {
+                diceToReroll.might = 0;
 
-            diceToReroll.might = 0;
+                for (let index = 0; index < hit; index++) {
+                    diceToReroll.nrOfHits++;
+                    hitResult += '$H';               
+                }
+            }
             
             var result = 'Mäktig: [' + output.join(",") + '] ' + hitResult ;
             totalResult += result + '<br>';
@@ -982,12 +985,15 @@ $(document).ready(function () {
                 hit += artefactDiceSuccess[result-1];
             });
 
-            for (let index = 0; index < hit; index++) {
-                diceToReroll.nrOfHits++;
-                hitResult += '$H';//'<img src="images/dice_hit.png" height="25">';                
-            }
+            if(hit > 0)
+            {
+                diceToReroll.epic = 0;
 
-            diceToReroll.epic = 0;
+                for (let index = 0; index < hit; index++) {
+                    diceToReroll.nrOfHits++;
+                    hitResult += '$H'             
+                }
+            }
             
             var result = 'Episk: [' + output.join(",") + '] ' + hitResult ;
             totalResult += result + '<br>';
@@ -1004,13 +1010,16 @@ $(document).ready(function () {
                 hit += artefactDiceSuccess[result-1];
             });
 
-            for (let index = 0; index < hit; index++) {
-                diceToReroll.nrOfHits++;
-                hitResult += '$H';//'<img src="images/dice_hit.png" height="25">';                
+            if(hit > 0)
+            {
+                diceToReroll.legendary = 0;
+
+                for (let index = 0; index < hit; index++) {
+                    diceToReroll.nrOfHits++;
+                    hitResult += '$H';               
+                }
             }
 
-            diceToReroll.legendary = 0;
-            
             var result = 'Legendarisk: [' + output.join(",") + '] ' + hitResult ;
             totalResult += result;
         }
