@@ -2,7 +2,7 @@ var roomConfig = {
     gameName:'Svärdets Sång',
     gameRoot:'forbiddenlands',
     enemyNamePrefix : '',
-    enemyNameSuffix : ' ( enemy )',
+    enemyNameSuffix : ' ( SLP )',
     maxNrOfPlayersInFight : 2,
     maxNrOfDiceRollsInList : 35
 };
