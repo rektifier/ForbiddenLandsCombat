@@ -15,7 +15,6 @@
         <link rel="stylesheet" href="../../css/simple-sidebar.css">
         <link rel="stylesheet" href="../../css/jquery-ui.min.css">
 
-
         <style>
 
             .tab-content>.tab-pane {
@@ -127,7 +126,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="settingsModalLabel">Room settings</h5>
+                        <h5 class="modal-title" id="settingsModalLabel">Adventure settings</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -139,7 +138,7 @@
                                 <input type="text" class="form-control" id="settingsRoomOwner">
                             </div>
                             <div class="form-group">
-                                <label for="settingsRoomName">Name</label>
+                                <label for="settingsRoomName">Adventure name</label>
                                 <input type="text" class="form-control" id="settingsRoomName">
                             </div>
                             <div class="form-group">
@@ -228,58 +227,13 @@
 
                 <div class="container-fluid">
 
-                    <!--
-                <div class="row">
-                    <div class="col-md-12">
-                        <h1 class="mt-4">Fight!</h1>
-                        <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-                        <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>. The top navbar is optional, and just for demonstration. Just create an element with the <code>#menu-toggle</code> ID which will toggle the menu when clicked.</p>
-                    </div>
-                </div>
-           -->
-                    <div class="row" id="playground">
-                        <div class="col">
-                            <div id="playground-player-1" class="row">
-                                <div class="col-12 text-center">
-                                    <h6 class="playground-title"></h6>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <h6 class="title-nr-card-1">1</h6>
-                                    <img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fbaksida.jpg?alt=media&token=53401f1f-aee5-43bc-89d0-a0a06ca6fe5c" width="150" class="card-played-1">
-                                </div>
-                                <div class="col-6 text-center">
-                                    <h6 class="title-nr-card-2">2</h6>
-                                    <img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fbaksida.jpg?alt=media&token=53401f1f-aee5-43bc-89d0-a0a06ca6fe5c" width="150" class="card-played-2">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div id="playground-player-2" class="row">
-                                <div class="col-12 text-center playground-title">
-                                    <h6></h6>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <h6 class="title-nr-card-1">1</h6>
-                                    <img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fbaksida.jpg?alt=media&token=53401f1f-aee5-43bc-89d0-a0a06ca6fe5c" width="150" class="card-played-1">
-                                </div>
-                                <div class="col-6 text-center">
-                                    <h6 class="title-nr-card-2">2</h6>
-                                    <img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fbaksida.jpg?alt=media&token=53401f1f-aee5-43bc-89d0-a0a06ca6fe5c" width="150" class="card-played-2">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="dicerolls_area">
-                                <ul id="dicerolls-messages" class="list-group list-group-flush list-dicerolls-messages"></ul>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="row"><div class="col" style="height: 25px"></div></div>
 
                     <div class="row">
-                        <div class="col">
+                        <div class="col-8">
                             <nav>
                                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                    <a class="nav-item nav-link active" id="nav-fight-tab" data-toggle="tab" href="#nav-fight" role="tab" aria-controls="nav-fight" aria-selected="true">Fight</a>
+                                    <a class="nav-item nav-link active" id="nav-fight-tab" data-toggle="tab" href="#nav-fight" role="tab" aria-controls="nav-fight" aria-selected="true">Konflikt</a>
                                     <a class="nav-item nav-link admingroup" id="nav-initiative-tab" data-toggle="tab" href="#nav-initiative" role="tab" aria-controls="nav-initiative" aria-selected="false">Initiative</a>
                                     <a class="nav-item nav-link" id="nav-dice-tab" data-toggle="tab" href="#nav-dice" role="tab" aria-controls="nav-dice" aria-selected="false">Tärningar</a>
                                     <a class="nav-item nav-link" id="nav-map-tab" data-toggle="tab" href="#nav-map" role="tab" aria-controls="nav-dice" aria-selected="false">Karta</a>
@@ -292,58 +246,112 @@
                             <div class="tab-content" id="nav-tabContent">
                                 <!-- fighting cards -->
                                 <div class="tab-pane fade show active  p-3" id="nav-fight" role="tabpanel" aria-labelledby="nav-fight-tab">
-                                    <table class="table table-sm table-borderless table-cards">
-                                        <thead>
-                                            <th>Attackera</th>
-                                            <th>Avvakta</th>
-                                            <th>Dubblera</th>
-                                            <th>Förbereda</th>
-                                            <th>Försvara</th>
-                                            <th>Hindra</th>
-                                            <th>Manövrera</th>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fattackera.jpg?alt=media&token=3e07ec6f-8e32-44f7-86f0-02bdb9e57922" width="100" id="card-attackera" class="cardimage"></td>
-                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Favvakta.jpg?alt=media&token=37b4cedd-1ff6-4714-bd6b-7747490b0d2e" width="100" id="card-avvakta" class="cardimage"></td>
-                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fdubblera.jpg?alt=media&token=dcb20707-f798-48c7-b134-bb6384d5f471" width="100" id="card-dubblera" class="cardimage"></td>
-                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fforbereda.jpg?alt=media&token=49ab0e81-f254-43e6-b662-02879afacbc7" width="100" id="card-forbereda" class="cardimage"></td>
-                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fforsvara.jpg?alt=media&token=189d8484-3238-41b2-a359-03e2394d1e3d" width="100" id="card-forsvara" class="cardimage"></td>
-                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fhindra.jpg?alt=media&token=373be894-7f57-4537-b895-25136c26249a" width="100" id="card-hindra" class="cardimage"></td>
-                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fmanovrera.jpg?alt=media&token=4d6ea3b6-ab7a-49d7-842b-81815628520a" width="100" id="card-manovrera" class="cardimage"></td>
-                                            </tr>
-                                            <tr>
-                                                <td><button id="attackera1" type="button" data-cardid="attackera" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
-                                                    <button id="attackera2" type="button" data-cardid="attackera" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
-                                                </td>
-                                                <td><button id="avvakta1" type="button" data-cardid="avvakta" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
-                                                    <button id="avvakta2" type="button" data-cardid="avvakta" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
-                                                </td>
-                                                <td><button id="dubblera1" type="button" data-cardid="dubblera" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
-                                                    <button id="dubblera2" type="button" data-cardid="dubblera" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
-                                                </td>
-                                                <td><button id="forbereda1" type="button" data-cardid="forbereda" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
-                                                    <button id="forbereda2" type="button" data-cardid="forbereda" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
-                                                </td>
-                                                <td><button id="forsvara1" type="button" data-cardid="forsvara" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
-                                                    <button id="forsvara2" type="button" data-cardid="forsvara" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
-                                                </td>
-                                                <td><button id="hindra1" type="button" data-cardid="hindra" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
-                                                    <button id="hindra2" type="button" data-cardid="hindra" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
-                                                </td>
-                                                <td><button id="manovrera1" type="button" data-cardid="manovrera" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
-                                                    <button id="manovrera2" type="button" data-cardid="manovrera" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="row">
+                                        <div class="col">
+                                                <table class="table table-sm table-borderless table-cards">
+                                                        <thead>
+                                                            <th>Attackera</th>
+                                                            <th>Avvakta</th>
+                                                            <th>Dubblera</th>
+                                                            <th>Förbereda</th>
+                                                            <th>Försvara</th>
+                                                            <th>Hindra</th>
+                                                            <th>Manövrera</th>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fattackera.jpg?alt=media&token=3e07ec6f-8e32-44f7-86f0-02bdb9e57922" width="100" id="card-attackera" class="cardimage"></td>
+                                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Favvakta.jpg?alt=media&token=37b4cedd-1ff6-4714-bd6b-7747490b0d2e" width="100" id="card-avvakta" class="cardimage"></td>
+                                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fdubblera.jpg?alt=media&token=dcb20707-f798-48c7-b134-bb6384d5f471" width="100" id="card-dubblera" class="cardimage"></td>
+                                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fforbereda.jpg?alt=media&token=49ab0e81-f254-43e6-b662-02879afacbc7" width="100" id="card-forbereda" class="cardimage"></td>
+                                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fforsvara.jpg?alt=media&token=189d8484-3238-41b2-a359-03e2394d1e3d" width="100" id="card-forsvara" class="cardimage"></td>
+                                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fhindra.jpg?alt=media&token=373be894-7f57-4537-b895-25136c26249a" width="100" id="card-hindra" class="cardimage"></td>
+                                                                <td><img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fmanovrera.jpg?alt=media&token=4d6ea3b6-ab7a-49d7-842b-81815628520a" width="100" id="card-manovrera" class="cardimage"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><button id="attackera1" type="button" data-cardid="attackera" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
+                                                                    <button id="attackera2" type="button" data-cardid="attackera" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
+                                                                </td>
+                                                                <td><button id="avvakta1" type="button" data-cardid="avvakta" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
+                                                                    <button id="avvakta2" type="button" data-cardid="avvakta" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
+                                                                </td>
+                                                                <td><button id="dubblera1" type="button" data-cardid="dubblera" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
+                                                                    <button id="dubblera2" type="button" data-cardid="dubblera" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
+                                                                </td>
+                                                                <td><button id="forbereda1" type="button" data-cardid="forbereda" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
+                                                                    <button id="forbereda2" type="button" data-cardid="forbereda" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
+                                                                </td>
+                                                                <td><button id="forsvara1" type="button" data-cardid="forsvara" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
+                                                                    <button id="forsvara2" type="button" data-cardid="forsvara" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
+                                                                </td>
+                                                                <td><button id="hindra1" type="button" data-cardid="hindra" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
+                                                                    <button id="hindra2" type="button" data-cardid="hindra" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
+                                                                </td>
+                                                                <td><button id="manovrera1" type="button" data-cardid="manovrera" data-cardnr="1" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-1">1</button>
+                                                                    <button id="manovrera2" type="button" data-cardid="manovrera" data-cardnr="2" class="btn btn-outline-secondary btn-sm btn-select-card btn-select-card-2">2</button>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row"><div class="col" style="height: 25px"></div></div>
+
+                                    <div class="row" id="playground">
+                                        <div class="col">
+                                            <div id="playground-player-1" class="row">
+                                                <div class="col-12 text-center">
+                                                    <h6 class="playground-title"></h6>
+                                                </div>
+                                                <div class="col-6 text-center">
+                                                    <h6 class="title-nr-card-1">1</h6>
+                                                    <img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fbaksida.jpg?alt=media&token=53401f1f-aee5-43bc-89d0-a0a06ca6fe5c" width="150" class="card-played-1">
+                                                </div>
+                                                <div class="col-6 text-center">
+                                                    <h6 class="title-nr-card-2">2</h6>
+                                                    <img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fbaksida.jpg?alt=media&token=53401f1f-aee5-43bc-89d0-a0a06ca6fe5c" width="150" class="card-played-2">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div id="playground-player-2" class="row">
+                                                <div class="col-12 text-center playground-title">
+                                                    <h6></h6>
+                                                </div>
+                                                <div class="col-6 text-center">
+                                                    <h6 class="title-nr-card-1">1</h6>
+                                                    <img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fbaksida.jpg?alt=media&token=53401f1f-aee5-43bc-89d0-a0a06ca6fe5c" width="150" class="card-played-1">
+                                                </div>
+                                                <div class="col-6 text-center">
+                                                    <h6 class="title-nr-card-2">2</h6>
+                                                    <img src="https://firebasestorage.googleapis.com/v0/b/fbcombat-11ea1.appspot.com/o/g%2Fforbiddenlands%2Fcards%2Fbaksida.jpg?alt=media&token=53401f1f-aee5-43bc-89d0-a0a06ca6fe5c" width="150" class="card-played-2">
+                                                </div>
+                                            </div>
+                                        </div>  
+                                    </div>
                                 </div>
 
-                                <!-- dice rolls -->
+                                <!-- dice  -->
                                 <div class="tab-pane fade p-3" id="nav-dice" role="tabpanel" aria-labelledby="nav-dice-tab">
                                     <div class="col-9">
                                         <table class="table table-sm table-borderless" style="height:250px">
                                             <tbody>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <div class="text-left">                                                             
+                                                            <div class="dropdown ">
+                                                                <select class="form-control w-50" id="drp-modifier">
+                                                                    <option selected>Modifikation</option>
+                                                                    <option value="1">Krävande (-1)</option>
+                                                                    <option value="2">Svår (-2)</option>
+                                                                    <option value="3">Vanvettig (-3)</option>
+                                                                </select>
+                                                                </div>
+                                                        </div>  
+                                                    </td>
+                                                </tr>
                                                 <tr>
                                                     <td>Grundegenskap</td>
                                                     <td class="text-left">
@@ -356,28 +364,6 @@
                                                             <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="5" autocomplete="off"> 5</label>
                                                             <label class="btn btn-light btn-sm"><input type="radio" name="dice-ge" value="6" autocomplete="off"> 6</label>
                                                         </div>
-                                                    </td>
-                                                    <td rowspan="5" class="align-top">                                                        
-                                                        <div class="text-left">
-                                                            <button id="btn-throw-dice" type="button" class="btn shadow-none btn-primary" style="white-space: nowrap;">Kasta tärningarna</button>
-                                                        </div>
-                                                        <div class="top-buffer text-left">
-                                                            <button type="button" class="btn shadow-none btn-info" style="white-space: nowrap;" id="btn-dice-reroll">Pressa slaget</button>
-                                                        </div>
-                                                        <div class="top-buffer text-left">
-                                                                <button type="button" class="btn shadow-none btn-dark" style="white-space: nowrap;" id="btn-dice-pride">Stolthet</button>
-                                                            </div>      
-                                                        <div class="top-buffer text-left">                                                             
-                                                            <div class="dropdown ">
-                                                                <select class="form-control w-100" id="drp-modifier">
-                                                                    <option selected>Modifikation</option>
-                                                                    <!-- <option value="0">Normal</option> -->
-                                                                    <option value="1">Krävande (-1)</option>
-                                                                    <option value="2">Svår (-2)</option>
-                                                                    <option value="3">Vanvettig (-3)</option>
-                                                                </select>
-                                                                </div>
-                                                        </div>                                                                                                                
                                                     </td>
                                                     <td rowspan="5" class="align-top">
 
@@ -431,9 +417,6 @@
                                                                                     </td>                                                                                    
                                                                                 </tr>                                                                                
                                                                                 </table>
-
-
-
                                                                         <!-- </p> -->
                                                                     </div>
                                                                   </div>
@@ -498,6 +481,20 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <div class="top-buffer text-left">
+                                                            <button id="btn-throw-dice" type="button" class="btn shadow-none btn-primary" style="white-space: nowrap;">Kasta tärningarna</button>
+                                                        </div>
+                                                        <div class="top-buffer text-left">
+                                                            <button type="button" class="btn shadow-none btn-info" style="white-space: nowrap;" id="btn-dice-reroll">Pressa slaget</button>
+                                                        </div>
+                                                        <div class="top-buffer text-left">
+                                                            <button type="button" class="btn shadow-none btn-dark" style="white-space: nowrap;" id="btn-dice-pride">Stolthet</button>
+                                                        </div>     
+                                                    </td>
+                                                </tr>
                                              
                                             </tbody>
                                         </table>
@@ -517,20 +514,23 @@
                                 <div class="tab-pane fade p-3" id="nav-map" role="tabpanel" aria-labelledby="nav-map-tab">
                                     <div class="row">
                                         <div class="col">
-                                            <iframe width="640" height="360" src="https://realtimeboard.com/app/embed/o9J_kyafh6s=/?" frameborder="0" scrolling="no" allowfullscreen></iframe>
+                                                <!-- <iframe width="640" height="360" src="https://realtimeboard.com/app/embed/o9J_kyafh6s=/?" frameborder="0" scrolling="no" allowfullscreen></iframe> -->
+                                      
+                                            <iframe width="800" height="600" src="https://realtimeboard.com/app/embed/o9J_kyafh6s=/?" frameborder="0" scrolling="no" allowfullscreen></iframe>
                                         </div>
                                     </div>
                                 </div>
-
-
-
-
 
                                 <!-- <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div> -->
                             </div>
 
 
 
+                        </div>
+                        <div class="col">
+                            <div class="dicerolls_area">
+                                <ul id="dicerolls-messages" class="list-group list-group-flush list-dicerolls-messages"></ul>
+                            </div>
                         </div>
                     </div>
 
