@@ -332,6 +332,8 @@
 
                         if(user.isAnonymous == true){
 
+                            firebase.auth().signOut();
+
                             showSection('login');
                             $("#message").text('Please register to play Svärdets Sång.');
                             $("#message").show();

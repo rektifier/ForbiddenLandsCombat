@@ -329,6 +329,8 @@
 
                         if(user.isAnonymous == true){
 
+                            firebase.auth().signOut();
+                            
                             showSection('login');
                             $("#message").text('Please register to play TEOTW.');
                             $("#message").show();
