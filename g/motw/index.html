@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Monster of the week">
+        <meta name="author" content="Mikael Ribeiro">
+        <title>Svärdets Sång - Login</title>
+        <link rel="shortcut icon" type="image/x-icon" href="../../images/favicon.ico">
+        <link rel="icon" type="image/x-icon" href="../../images/favicon.ico">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="../../css/bootstrap.min.css">
+
+    </head>
+
+    <!-- <body onload="printValues()"> -->
+
+    <body>
+        <div class="container">
+
+            <div class="row">
+                <div class="col" style="height:100px"></div>
+            </div>
+
+            <div class="row section" id="login">
+
+                <div class="col"></div>
+                <div class="col-6">
+
+                    <div class="card">
+                        <div class="card-header gameName"></div>
+                        <article class="card-body">
+
+                            <button id="show-register-button" type="button" class="float-right btn btn-outline-primary">Registrera</button>
+                            <h5 id="message"></h5>
+                            <h4 class="card-title mb-4 mt-1">Logga in</h4>
+                            <form>
+                                <div class="form-group">
+                                    <label>Din epost</label>
+                                    <input id="login-username-input" class="form-control" placeholder="Epost" type="email">
+                                </div> <!-- form-group// -->
+                                <div class="form-group">                                    
+                                    <label>Your password</label>
+                                    <input id="login-password-input" class="form-control" placeholder="******" type="password">
+                                </div> <!-- form-group// -->
+                                <div class="form-group">
+                                    <button id="login-button" type="button" class="btn btn-primary btn-block" name="login-button">Logga in</button>
+                                    <a class="float-right" href="#">Glömt lösenordet?</a>
+                                </div> <!-- form-group// -->
+                            </form>
+                        </article>
+                    </div> <!-- card.// -->
+
+                </div>
+                <div class="col"></div>
+            </div>
+
+            <div class="row section" id="register">
+
+                <div class="col"></div>
+                <div class="col-6">
+
+                    <div class="card">
+                        <div class="card-header gameName"></div>
+                        <article class="card-body">
+                            <button id="show-login-button" type="button" class="float-right btn btn-outline-primary">Logga in</button>
+                            <h4 class="card-title mb-4 mt-1">Registrera</h4>
+                            <form>
+                                <div class="form-group">
+                                    <label>Namn</label>
+                                    <input id="reg-displayname-input" class="form-control" placeholder="Namn" type="text">
+                                </div> <!-- form-group// -->
+                                <div class="form-group">
+                                    <label>Din epost</label>
+                                    <input id="reg-username-input" class="form-control" placeholder="Epost" type="email">
+                                </div> <!-- form-group// -->
+                                <div class="form-group">
+                                    <label>Your password</label>
+                                    <input id="reg-password-input" class="form-control" placeholder="******" type="password">
+                                </div> <!-- form-group// -->
+                                <div class="form-group">
+                                    <button id="reg-button" type="button" class="btn btn-primary btn-block" name="reg-button">Registrera</button>
+                                </div> <!-- form-group// -->
+                            </form>
+                        </article>
+                    </div> <!-- card.// -->
+
+
+
+                </div>
+                <div class="col"></div>
+            </div>
+
+            <div class="row section" id="adventure">
+
+                <div class="col"></div>
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header gameName"></div>
+                        <div class="card-body">
+                            <label for="input-group mb-3">Anslut till ett äventyr</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-default">Karaktär</span>
+                                </div>
+                                <input type="text" id="adventure-username-input" class="form-control" aria-label="Fighter" aria-describedby="inputGroup-sizing-default">
+                                <div class="input-group-append">
+                                    <button id="logout-button" type="button" class="btn btn-primary">Logga ut</button>
+                                </div>
+
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroup-sizing-room">Äventyr</span>
+                                </div>
+                                <input type="text" id="adventure-input" class="form-control" aria-label="Rum" aria-describedby="inputGroup-sizing-room">
+
+                            </div>
+
+                            <div class="form-group">
+                                <button id="adventure-button" type="button" class="btn btn-primary" name="adventure-button">Börja spela!</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col"></div>
+            </div>
+
+        </div>
+
+        <script src="../../scripts/jquery-3.3.1.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+        <script src="../../scripts/globalconfig.js"></script>
+        <script src="../../scripts/common.js"></script>
+        <script src="scripts/config.js"></script>
+
+        <script type="text/javascript">
+
+            var currentUser = null;
+
+            function showSection(sectionid) {
+                
+                $(".section").hide();
+                $("#" + sectionid).show();
+            }
+
+
+            $(document).ready(function () {
+
+                $("#message").hide();
+
+                var m = getParameterByName('m');
+                if(m !== undefined){
+                    if(isEmpty(m) == false){
+
+                        $("#message").text(decodeURIComponent(m));
+                        $("#message").show();
+                    }
+                }
+
+                $("div.gameName").text(roomConfig.gameName);
+
+                $(".section").hide();
+
+                //$("#logout-button").hide();
+
+                $("#logout-button").click(function (e) {
+                    firebase.auth().signOut();
+                });
+
+                $("#show-register-button").click(function (e) {
+                    showSection('register');
+                });
+
+                $("#show-login-button").click(function (e) {
+                    showSection('login');
+                });
+
+
+
+                // $('#room-input').keypress(function (e) {
+                //     var key = e.which;
+                //     if (key == 13) {  // the enter key code                
+                //         $('button[name = login-button]').click();
+                //         return false;
+                //     }
+                // });
+
+                //register
+                $("#reg-button").click(function (e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    var name = $("#reg-displayname-input").val();
+                    var email = $("#reg-username-input").val();
+                    var password = $("#reg-password-input").val();
+
+                    if (isEmpty(name) === false && isEmpty(password) === false && isEmpty(email) === false){
+
+                        firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
+
+                        $("#reg-displayname-input").val();
+                        $("#reg-username-input").val();
+                        $("#reg-password-input").val();
+
+                            var user = firebase.auth().currentUser;
+                            if(user){
+                                user.updateProfile({
+                                    displayName: name
+                                }).then(
+                                    (s)=> {
+                                        showSection('adventure');
+                                    }
+                                );
+                            }
+
+                        }).catch(function(error) {
+
+                            var errorCode = error.code;
+                            var errorMessage = error.message;
+                            if (errorCode == 'auth/weak-password') {
+                                alert('The password is too weak.');
+                            } else {
+                                alert(errorMessage);
+                            }
+                            console.log(error);
+                        });
+
+
+                    }
+                    
+
+                });
+
+                //login
+                $("#login-button").click(function (e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    var email = $("#login-username-input").val();
+                    var password = $("#login-password-input").val();
+
+                    if (isEmpty(email) === false && isEmpty(password) === false) {
+
+                        $("#login-password-input").val();
+
+                        $("body").css("cursor", "progress");
+
+                        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                            
+                            $("body").css("cursor", "default");
+
+                            var errorCode = error.code;
+                            var errorMessage = error.message;
+                            if (errorCode == 'auth/weak-password') {
+                                alert('The password is too weak.');
+                            } else {
+                                alert(errorMessage);
+                            }
+                            console.log(error);
+                        });
+                    }
+                });
+
+                $("#adventure-button").click(function(e){
+
+                    var adventureName = $("#adventure-input").val();
+
+                    if(isEmpty(adventureName) === false) {
+                        //check if adventure exists
+                        //
+                        let ref = firebase.database().ref('adventures').orderByChild('title').equalTo(adventureName).limitToFirst(1);
+                        ref.once("value", function(snapshot) {
+
+                            if(snapshot.exists()){
+
+                                var adventure;// = snapshot.val(); 
+                                var adventureId;// = adventure.owner;
+                                var displayName = currentUser.displayName;    
+                                var characterName = $("#adventure-username-input").val();
+
+                                snapshot.forEach(function(data) {
+                                    adventure = data.val(); 
+                                    adventureId = data.key;
+                                    console.log(data.key);
+                                });
+
+                                var currentUserId = currentUser.uid;
+                                if (currentUserId === adventure.ownerId) {
+                                    window.location.href = 'adventure.html?id=' + adventureId;
+                                } else {                                    
+                                  //  add user to adventure
+                                    database.ref('/adventures/' + adventureId + '/members/' + currentUserId).set({ "displayName": characterName, "userName":displayName }).then(() => {
+                                        window.location.href = 'adventure.html?id=' + adventureId;
+                                    });
+                                }
+                            }else{
+                                database.ref('/adventures/').push({
+
+                                    info:{day:1, quarterDay:0}, // day
+                                    game: 'Svärdets Sång', // game
+                                    owner: currentUser.displayName, //owner
+                                    ownerId:currentUser.uid,
+                                    title: adventureName, //title,
+                                    description: adventureName
+
+                                    }).then((adventureId) => {
+                                        window.location.href = 'adventure.html?id=' + adventureId.key;
+                                    }).catch(function (error) {
+                                    console.error('Error writing new message to Firebase Database', error);
+                                });
+                            }
+
+                            
+                            
+                          
+                        });
+
+                    }
+                    
+                });
+
+                firebase.auth().onAuthStateChanged(function (user) {
+
+                    if (user) {
+
+                        if(user.isAnonymous == true){
+
+                            firebase.auth().signOut();
+
+                            showSection('login');
+                            $("#message").text('Please register to play Svärdets Sång.');
+                            $("#message").show();
+                            
+
+                        }else{
+                            showSection('adventure');
+                            $("body").css("cursor", "default");
+
+                            currentUser = user;
+
+                            var displayName = user.displayName;
+
+                            $("#adventure-username-input").val(displayName);
+                        }
+
+
+
+                    } else {
+
+                        showSection('login');
+
+                        currentUser = null;
+                    }
+                });
+
+
+
+            });
+        </script>
+
+
+    </body>
+
+</html>

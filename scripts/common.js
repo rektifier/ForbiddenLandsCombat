@@ -54,7 +54,7 @@ var logger = function()
     return pub;
 }();
 
-var gamesToPlay = [{name:'Svärdets Sång',url:'g/forbiddenlands/index.html'},{name:'The End Of The World',url:'g/teotw/index.html'}];
+var gamesToPlay = [{name:'Svärdets Sång',url:'g/forbiddenlands/index.html'},{name:'The End Of The World',url:'g/teotw/index.html'},{name:'Monster of the week',url:'g/motw/index.html'}];
 
 var generateId = function () {
     // Math.random should be unique because of its seeding algorithm.

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Monster of the week">
+        <meta name="author" content="Mikael Ribeiro">
+        <title>The End Of The World</title>
+        <link rel="shortcut icon" type="image/x-icon" href="../../images/favicon.ico">
+        <link rel="icon" href="../../images/favicon.ico" type="image/x-icon">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="../../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../css/simple-sidebar.css">
+        <link rel="stylesheet" href="../../css/jquery-ui.min.css">
+
+
+        <style>
+            .selectedAttribute{
+
+                /* padding: 10 10 10 10;
+                margin: 10 10 10 10; */
+                font-size: larger;
+
+            }
+
+            .selectable_attribute{
+              cursor: pointer;
+            }
+
+            .btn-group-xs>.btn,
+            .btn-xs {
+                padding: .25rem .25rem;
+                font-size: .875rem;
+                line-height: .5;
+                border-radius: .2rem;
+            }
+
+            .top-buffer {
+                margin-top: 20px;
+            }
+
+            .table>tbody>tr>td,
+            th {
+                vertical-align: middle;
+                text-align: center;
+            }
+
+            .incombat {
+                color: #f8f8f8;
+                background-color: #fc7100;
+                font-weight: bold;
+            }
+
+            .incombat:hover {
+                color: #f8f8f8;
+                background-color: #fc7100;
+            }
+
+            .dicerolls_area {
+                float: left;
+                /* height: 400px; */
+                overflow-x: hidden;
+                overflow-y: auto;
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .dicerolls_area li {
+                padding: 14px 14px 0;
+            }
+
+            .chat-body1 p {
+                background: #fbf9fa none repeat scroll 0 0;
+                padding: 10px;
+            }
+
+
+            .list-dicerolls-messages {
+
+                max-height: 580px;
+                margin-bottom: 10px;
+                overflow-y: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .pull-right {
+                float: right !important;
+            }
+
+            .chat_time {
+                font-size: small;
+                font-style: italic;
+                margin-top: 10px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+        <!-- Settings Modal -->
+        <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="settingsModalLabel">Character stats</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- <form> -->
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                    <input id="inputDisplayName" type="text" class="form-control" placeholder="Name">
+                                </div>
+
+                            </div>
+                            <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Dexterity</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiodexterity" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiodexterity" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiodexterity" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiodexterity" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiodexterity" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Vitality</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiovitality" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiovitality" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiovitality" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiovitality" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiovitality" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Logic</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiologic" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiologic" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiologic" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiologic" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiologic" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Willpower</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiowillpower" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiowillpower" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiowillpower" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiowillpower" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiowillpower" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Charisma</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiocharisma" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiocharisma" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiocharisma" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiocharisma" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radiocharisma" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Empathy</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioempathy" value="1" checked>
+                                            <label class="form-check-label">1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioempathy" value="2">
+                                            <label class="form-check-label">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioempathy" value="3">
+                                            <label class="form-check-label">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioempathy" value="4">
+                                            <label class="form-check-label">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioempathy" value="5">
+                                            <label class="form-check-label">5</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                        <!-- </form> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="btn-attributes-save">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex" id="wrapper">
+
+            <!-- Sidebar -->
+            <div class="bg-light border-right" id="sidebar-wrapper">
+
+                <div class="sidebar-heading">
+                        <strong><span class="adventure_title"></span></strong><blockquote class="blockquote"><footer class="blockquote-footer"><small> by <span class="adventure_owner">owner</span> in <cite title="Source Title"><span class="adventure_game"></span></cite></small></footer></blockquote>
+                    </div>
+
+
+                <div class="list-group list-group-flush ">
+                    <div id="userslist" class="list-group list-group-flush ">
+                    </div>
+
+
+                    <!-- <ul class="list-group">
+                        <li id="Chrome" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">rektifier</li>
+                    </ul> -->
+
+                    <!-- <ul class="list-group" id="userslist">                        
+                    </ul> -->
+
+
+                    <!-- <div class="input-group admingroup">
+                        <input type="text" id="add-enemy-input" class="form-control" placeholder="Enemy name">
+                        <div class="input-group-append">
+                            <button id="add-enemy-button" type="button" class="btn btn-primary">Add</button>
+                        </div>
+                    </div> -->
+
+                    <hr />
+                    <a id="settings-button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="modal" data-target="#settingsModal" href="#"> >> Character stats</a>
+                    <a id="leave-room-button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="modal" data-target="#settingsModal" href="javascript:void(0)"> >> Leave room</a>
+                </div>
+            </div>
+            <!-- /#sidebar-wrapper -->
+            <!-- <button class="btn btn-primary" id="menu-toggle" data-toggle="tooltip" data-placement="top" title="Dölj meny"> Menu</button>  -->
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+
+
+                <div class="container-fluid">
+
+
+                    <div class="row">
+                        <div class="col-md-12 mb-1">
+                        </div>
+                    </div>
+
+                    <div class="row h-100" id="playground">
+                        <div class="col h-100">
+                            <div class="row">
+ 
+                               
+                                <div class="col">
+                                    <!-- EQUIPMENT -->
+                                    <ul class="list-group mb-3 shadow-sm bg-white rounded" id="equipment-items">
+                                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>EQUIPMENT</strong> 
+                                            <div style="float:right" class="dropdown">
+                                                <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                                <ul class="dropdown-menu dropdown-menu-right" style="padding: 15px;min-width: 250px;">
+                                                    <li>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input id="input-add-equpiment" type="text" class="form-control" placeholder="Equipment">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <button type="button" class="btn btn-success btn-block btn-add-equpiment">Add</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>                                                    
+                                            </div>
+                                        </li>                                            
+                                    </ul>           
+
+                                    <!-- WEAPONs -->
+                                    <ul class="list-group mb-3 shadow-sm bg-white rounded" id="weapon-items">
+                                        <li class="list-group-item py-1 list-group-item-warning text-center"><strong>WEAPONS</strong> 
+                                            <div style="float:right" class="dropdown">
+                                                <a href="#" data-toggle="dropdown" style="color:black">+</a>
+                                                <ul class="dropdown-menu dropdown-menu-right" style="padding: 15px;min-width: 250px;">
+                                                    <li>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <input id="input-add-weapon" type="text" class="form-control" placeholder="Weapon">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <button type="button" class="btn btn-success btn-block btn-add-weapon">Add</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>                                                    
+                                            </div>
+                                        </li>                                            
+                                    </ul>     
+                                </div>
+
+                                
+                                
+
+                                <!-- dice -->
+                                <div class="col h-100">
+                                    <div>
+                                        <table class="table table-sm table-borderless">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Tärningar</td>
+                                                    <td class="text-left">
+                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                            <label class="btn btn-primary btn-sm disabled"><input type="radio" autocomplete="off" disabled> 0</label>
+                                                            <label class="btn btn-primary btn-sm active"><input type="radio" name="dice-toroll" value="1d6" autocomplete="off" checked=""> 1</label>
+                                                            <label class="btn btn-primary btn-sm"><input type="radio" name="dice-toroll" value="2d6" autocomplete="off"> 2</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td class="text-left"><button id="btn-throw-dice" type="button" class="btn btn-primary btn-sm" style="white-space: nowrap;">Kasta tärningarna</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="dicerolls_area">
+                                        <ul id="dicerolls-messages" class="list-group list-group-flush list-dicerolls-messages"></ul>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                 <div class="alert alert-success" id="info-alert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <strong>! </strong><span id="alerttext"></span>
+                        </div>
+
+
+
+                </div>
+
+            <!-- /#page-content-wrapper -->
+            </div>
+
+        </div>
+        <!-- /#wrapper -->
+
+        <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+        <script src="../../scripts/jquery-3.3.1.min.js"></script>
+        <script src="../../scripts/jquery-ui.min.js"></script>
+        <script src="../../scripts/globalconfig.js?v=2"></script>
+        <script src="scripts/config.js?v=1"></script>
+        <script src="../../scripts/common.js?v=1"></script>
+        <script src="../../scripts/lz-string.js"></script>
+        <script src="../../scripts/db.js?v=1"></script>
+        <script src="../../scripts/bootstrap.bundle.min.js"></script>
+
+        <script src="../../scripts/moment.js"></script>
+        <script src="scripts/adventure.js?v=4"></script>
+        <script src="../../scripts/dice-roller.js"></script>
+
+        <!-- Menu Toggle Script -->
+        <script type="text/javascript">
+
+
+
+            $("#menu-toggle").click(function (e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+
+            //microplugin for excluding children when needing .text()
+            //
+            $.fn.ignore = function (sel) {
+                return this.clone().find(sel || ">*").remove().end();
+            };
+
+            $('.dropdown-menu').find('label').click(function (e) {
+                e.stopPropagation();
+            });
+
+  
+
+        </script>
+
+    </body>
+
+</html>
